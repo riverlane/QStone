@@ -212,6 +212,12 @@ def load_jobs(config_path, schema):
     """Loading a json file and checking it against the schema"""
     with open(config_path, "r", encoding="utf8") as _file:
         config = json.load(_file)
+    
+    # Set default values (100) for num_shots_min and num_shots_max if missing
+    for job in config["jobs"]:
+        job["num_shots_min"] = job.get("num_shots_min", 100)
+        job["num_shots_max"] = job.get("num_shots_max", 100)
+    
     return schema(pd.DataFrame.from_dict(config["jobs"], orient="columns"))
 
 

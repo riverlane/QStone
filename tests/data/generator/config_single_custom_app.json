@@ -11,9 +11,9 @@
       "qubit_max": 4,
       "num_shots_min": 2,
       "num_shots_max": 4,
-       "walltime": 3,
+      "walltime": 3,
       "nthreads": 2,
-       "lsf/jsrun_opt": "-nnodes=4"
+      "lsf/jsrun_opt": "-nnodes=4"
     },
     {
       "type": "RB",
@@ -23,7 +23,7 @@
       "num_shots_max": 4,
       "walltime": 3,
       "nthreads": 2,
-      "slurm/schedmd_opt": "--cpus-per-task=4" 
+      "slurm/schedmd_opt": "--cpus-per-task=4"
     },
     {
       "type": "custom1.Custom1",
@@ -34,9 +34,8 @@
       "num_shots_max": 4,
       "walltime": 3,
       "nthreads": 2,
-      "slurm/schedmd_opt": "--cpus-per-task=4" 
+      "slurm/schedmd_opt": "--cpus-per-task=4"
     }
-
   ],
   "users": [
     {
@@ -46,7 +45,7 @@
         "VQE": 0.05,
         "RB": 0.44,
         "PyMatching": 0.01,
-        "custom1.Custom1" : 0.50
+        "custom1.Custom1": 0.50
       }
     }
   ]
