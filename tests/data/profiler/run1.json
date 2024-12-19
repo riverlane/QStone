@@ -1,0 +1,22 @@
+{
+	"users" :
+	[{
+	"user": "user0",
+	"weight" : 0.5,
+	"computations" : {
+		"VQE": 0.05,
+		"RB": 0.94,
+		"PyMatching": 0.01
+	}
+},
+{
+	"user": "user1",
+	"weight" : 0.5,
+	"computations" : {
+		"VQE": 0.10,
+		"RB": 0.85,
+		"PyMatching": 0.05
+	}
+}
+]
+}

@@ -1,0 +1,88 @@
+[tool.poetry]
+name = "qstone"
+authors = ["Riverlane  <team@riverlane.com>"]
+description = "Benchmarking suite for Quantum Computers integration into HPC Systems"
+readme = "README.md"
+version = "0.1.0"
+license = "Apache 2.0"
+packages = [{include = "qstone"}]
+keywords = ["Quantum", "HPC"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+include = ["CHANGELOG.md", "CONFIG_JSON.md"]
+
+[tool.poetry.dependencies]
+python = ">=3.9, <=3.13"
+matplotlib = "*"
+pyGSTi = "*"
+PyMatching = ">=2.2.1"
+numpy = "^1.22"
+json5 = "*"
+pandera = "*"
+stim = "1.14.0"
+jinja2 = "*"
+simple_slurm = "*"
+protobuf = "*"
+requests = "*"
+click = "*"
+waiting = "*"
+pyquil = {version = ">= 4.10.1", optional = true}
+grpcio = {version = "*", optional = true, markers = "platform_machine == 'amd64'" }
+pytest = { version = "*", optional = true }
+pytest-cov = {version = "*", optional = true}
+pytest-manual-marker = {version = "*", optional = true}
+pytest-mock = {version = "*", optional = true}
+pytest-depends = {version = "*", optional = true}
+ochrona = { version = "*", optional = true }
+safety = { version = "*", optional = true }
+bandit = { version = "*", optional = true }
+pylint = { version = "*", optional = true }
+mypy =  { version = "*", optional = true }
+black = { version = "*", optional = true} 
+grpcio-tools = { version = "*", optional = true }
+types-protobuf = { version = "*", optional = true }
+requests-mock = { version = "*", optional = true }
+flask = {version = "*", optional = true} 
+pandas-stubs = "*"
+pip-audit = { version = "*", optional = true }
+
+[tool.poetry.extras]
+test = ["pytest", "pytest-cov", "pytest-depends", "pytest-manual-marker", "requests-mock", "types-protobuf", "grpcio-tools", "imageio", "nbmake", "ipython", "pytest-xdist", "pytest-mock"]
+lint = ["pylint", "mypy", "pycodestyle", "black", "isort"]
+security = ["ochrona", "safety", "bandit"]
+
+[tool.pylint.MASTER]
+ignore-paths = 'qstone/connectors/riverlane/grpc.*$'
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = """
+    line-too-long,
+    duplicate-code,
+    too-many-locals,
+    too-many-arguments,
+    too-few-public-methods,
+    too-many-instance-attributes
+"""
+
+
+[tool.poetry.scripts]
+qstone = "qstone.__main__:main"
+
+[tool.mypy]
+exclude = "(qstone/connectors/riverlane/grpc.*$)|(qstone/generators/slurm/schedmd)|(tests)|(my_venv)"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.setuptools.packages.find]
+where = ["qstone/conf/steps"]
+
+[tool.setuptools.package-data]
+"*" = ["*.json"]
+
+
+ignore_missing_imports = true
+disallow_any_unimported = true

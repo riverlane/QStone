@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#BSUB -P {{ project_name }}
+#BSUB -W {{ walltime }}
+#BSUB -nnodes {{ nthreads }}
+#BSUB -J QStone
+#BSUB -o out.%J
+#BSUB -e err.%J
+
+{% if atomic %}
+jsrun {{ sched_args }} python "$EXEC_PATH"/jobs.py full --src "${qs_src}" --cfg "${qs_cfg}"
+{% else %}
+jsrun {{ sched_args }} python "$EXEC_PATH"/jobs.py pre --src "${qs_src}" --cfg "${qs_cfg}"
+jsrun {{ sched_args }} python "$EXEC_PATH"/jobs.py run --src "${qs_src}" --cfg "${qs_cfg}" 
+jsrun {{ sched_args }} python "$EXEC_PATH"/jobs.py post --src "${qs_src}" --cfg "${qs_cfg}"
+{% endif %}

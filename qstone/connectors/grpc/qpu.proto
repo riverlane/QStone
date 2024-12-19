@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package qstone.connectors.grpc;
+
+service QPU{
+ rpc RunQuantumCircuit(Circuit) returns (CircuitResponse) {}
+}
+
+message Circuit{
+ string circuit = 1;
+ int32 pkt_id = 2;
+ int32 reps = 3; 
+}
+
+message CircuitResponse{
+ string result = 1;
+ int32 capacity = 2;
+}

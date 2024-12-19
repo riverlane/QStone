@@ -1,0 +1,106 @@
+name: Pylint Static Analysis and Tests
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  pull_request:
+    branches: [main, v.*, feat*]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  pytest_ubuntu:
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setting up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Installing dependencies
+        run: pip install -U tox
+      - name: Testing
+        run: tox -r -e pytest-all 
+      - name: Collecting coverage
+        uses: 5monkeys/cobertura-action@master
+        with:
+          repo_token : ${{ secrets.GITHUB_TOKEN }}
+          path: coverage.xml
+          minimum_coverage: 30
+
+  pylint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Installing dependencies
+        run: pip install -U tox
+      - name: Running pylint
+        run: tox -r -e pylint -- --output-format text:pylint.log,text
+
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Installing dependencies
+        run: pip install -U tox
+      - name: Running mypy
+        run: tox -r -e mypy -- --junit-xml mypy.xml
+
+  black:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Installing dependencies
+        run: pip install -U tox
+      - name: Running black
+        run: tox -e black -- --check --color --diff
+
+  isort:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Installing dependencies
+        run: pip install -U tox
+      - name: Running isortcheck
+        run: tox -e isort -- --check-only --diff
+
+  wheel:
+    name: Build distribution
+    runs-on: ubuntu-latest
+    env:
+      POETRY_HOME: /opt/poetry
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - run: python3 -m pip install --upgrade pip
+      - run: python3 -m venv $POETRY_HOME
+      - run: $POETRY_HOME/bin/pip install poetry==1.8.3
+      - run: $POETRY_HOME/bin/poetry --version
+      - run: echo "$POETRY_HOME/bin" >> $GITHUB_PATH
+      - run: poetry install --all-extras
+      - run: poetry build
+      - run: pip3 install dist/qstone-*.whl
+      - run: python3 -c "import qstone"
+

@@ -1,0 +1,7 @@
+[run]
+omit =
+    */generators/bare_metal/*
+    */generators/slurm/*
+    */connectors/grpc/qpu_pb2*
+    */generators/lsf/*
+

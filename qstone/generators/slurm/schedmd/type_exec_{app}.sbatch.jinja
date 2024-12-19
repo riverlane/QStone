@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#SBATCH -A {{ project_name }}
+#SBATCH -t {{ walltime }}
+#SBATCH -N {{ nthreads }}
+#SBATCH -J QStone
+#SBATCH -o out.%J
+#SBATCH -e err.%J
+
+{% if atomic %}
+srun {{ sched_args }} python "$EXEC_PATH"/jobs.py full --src "${qs_src}" --cfg "${qs_cfg}"
+{% else %}
+srun {{ sched_args }} python "$EXEC_PATH"/jobs.py pre --src "${qs_src}" --cfg "${qs_cfg}"
+srun {{ sched_args }} python "$EXEC_PATH"/jobs.py run --src "${qs_src}" --cfg "${qs_cfg}" --num {{num_shots}}
+srun {{ sched_args }} python "$EXEC_PATH"/jobs.py post --src "${qs_src}" --cfg "${qs_cfg}"
+{% endif %} 

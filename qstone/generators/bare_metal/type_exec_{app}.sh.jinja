@@ -1,0 +1,9 @@
+#!/bin/bash
+
+{% if atomic %}
+python "$EXEC_PATH"/jobs.py full --src "${qs_src}" --cfg "${qs_cfg}"
+{% else %}
+python "$EXEC_PATH"/jobs.py pre --src "${qs_src}" --cfg "${qs_cfg}"
+python "$EXEC_PATH"/jobs.py run --src "${qs_src}" --cfg "${qs_cfg}"
+python "$EXEC_PATH"/jobs.py post --src "${qs_src}" --cfg "${qs_cfg}"
+{% endif %} 

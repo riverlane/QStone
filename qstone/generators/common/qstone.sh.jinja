@@ -1,0 +1,14 @@
+#!/bin/bash
+
+REAL_PATH="$(realpath $0)"
+export EXEC_PATH="$(dirname "$REAL_PATH")"
+
+export OUTPUT_PATH="$EXEC_PATH"/qstone_runs
+export PROFILE_PATH="$EXEC_PATH"/qstone_profile
+
+rm -rf $LOCKFILE
+. "$EXEC_PATH"/initialise.sh
+mkdir -p "$OUTPUT_PATH"
+mkdir -p "$PROFILE_PATH"
+{{ exports }}
+{{ jobs }}

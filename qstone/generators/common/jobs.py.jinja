@@ -1,0 +1,65 @@
+""" Click based interface to expose all the subroutines in one single file """
+
+import json
+
+import click
+
+from qstone.apps import ENV_VARS, get_computation_src
+from qstone.connectors import connector
+
+
+@click.group()
+def cli():
+    """Groups all the other commands"""
+
+
+@cli.command()
+@click.option("--src", help="Computation src file.")
+@click.option("--cfg", help="Computation cfg json.")
+def pre(src: str, cfg: str):
+    """Run pre step of computation."""
+    click.echo(f"pre type {src}")
+    computation_src = get_computation_src(src)(json.loads(cfg))
+    computation_src.pre(ENV_VARS["OUTPUT_PATH"])
+
+
+@cli.command()
+@click.option("--src", help="Computation src file.")
+@click.option("--cfg", help="Computation cfg json.")
+def run(src: str, cfg: str):
+    """Run QPU run step of computation."""
+    click.echo(f"run type {src}")
+    computation_src = get_computation_src(src)(json.loads(cfg))
+    computation_src.run(
+        ENV_VARS["OUTPUT_PATH"],
+        connector.Connector(
+            ENV_VARS["CONNECTOR_TYPE"],  # type: ignore [arg-type]
+            ENV_VARS["QPU_IP_ADDRESS"],  # type: ignore [arg-type]
+            ENV_VARS["QPU_PORT"],  # type: ignore [arg-type]
+            ENV_VARS["LOCKFILE"],  # type: ignore [arg-type]
+        ),
+    )
+
+
+@cli.command()
+@click.option("--src", help="Computation src file.")
+@click.option("--cfg", help="Computation cfg json.")
+def post(src: str, cfg: str):
+    """Run post step of computation"""
+    click.echo(f"post type {src}")
+    computation_src = get_computation_src(src)(json.loads(cfg))
+    computation_src.post(ENV_VARS["OUTPUT_PATH"])
+
+
+@cli.command()
+@click.option("--src", help="Computation src file.")
+@click.option("--cfg", help="Computation cfg json.")
+def full(src: str, cfg: str):
+    """Run all steps of computation"""
+    pre(src, cfg)
+    run(src, cfg)
+    post(src, cfg)
+
+
+if __name__ == "__main__":
+    cli()

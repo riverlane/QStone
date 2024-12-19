@@ -1,0 +1,36 @@
+name: Security checks
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  pull_request:
+    branches: [main, v.*, feat*]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  security:
+    runs-on: ubuntu-22.04
+    steps:
+      # Check out the pull request's source code.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setting up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.9
+
+      - name: Install Python dependencies
+        run: pip install -U tox 
+      
+      - name: Run Ochrona
+        continue-on-error: true
+        run: tox -e ochrona -- --report_type FULL
+
+      - name: Pip-Audit
+        continue-on-error: false
+        run: tox -e pip-audit
+
+      - name: Bandit
+        continue-on-error: false
+        run: tox -e bandit
