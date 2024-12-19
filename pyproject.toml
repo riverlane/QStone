@@ -3,8 +3,9 @@ name = "qstone"
 authors = ["Riverlane  <team@riverlane.com>"]
 description = "Benchmarking suite for Quantum Computers integration into HPC Systems"
 readme = "README.md"
-version = "0.1.0"
+version = "0.1.1"
 license = "Apache 2.0"
+repository = "https://github.com/riverlane/QStone"
 packages = [{include = "qstone"}]
 keywords = ["Quantum", "HPC"]
 classifiers = [
@@ -81,7 +82,7 @@ build-backend = "poetry.core.masonry.api"
 where = ["qstone/conf/steps"]
 
 [tool.setuptools.package-data]
-"*" = ["*.json"]
+"*" = ["*.json", ".md"]
 
 
 ignore_missing_imports = true
