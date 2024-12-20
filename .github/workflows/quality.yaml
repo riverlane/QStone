@@ -14,6 +14,8 @@ jobs:
         python-version: ['3.9', '3.10', '3.11', '3.12']
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
+    permissions:
+      actions: write
     steps:
       - uses: actions/checkout@v4
       - name: Setting up Python
