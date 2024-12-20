@@ -4,15 +4,15 @@
   "qpu_ip_address": "0.0.0.0",
   "qpu_port": "55",
   "qpu_management": "LOCK",
-  "timeouts" : {
-      "http": 5,
-      "lock": 4
+  "timeouts": {
+    "http": 5,
+    "lock": 4
   },
   "jobs": [
     {
       "type": "VQE",
       "qubit_min": 2,
-      "qubit_max": 4, 
+      "qubit_max": 4,
       "num_shots_min": 2,
       "num_shots_max": 4,
       "nthreads": 2,
@@ -27,7 +27,7 @@
       "qubit_max": 4,
       "walltime": 1,
       "nthreads": 1,
-      "slurm/schedmd_opt": "--cpus-per-task=4" 
+      "slurm/schedmd_opt": "--cpus-per-task=4"
     }
   ],
   "users": [
