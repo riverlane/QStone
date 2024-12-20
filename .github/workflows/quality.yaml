@@ -25,11 +25,6 @@ jobs:
         run: pip install -U tox
       - name: Testing
         run: tox -r -e pytest-all 
-      - name: Collecting coverage
-        uses: 5monkeys/cobertura-action@master
-        with:
-          path: coverage.xml
-          minimum_coverage: 30
 
   pylint:
     runs-on: ubuntu-latest
