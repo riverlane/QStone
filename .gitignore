@@ -166,3 +166,14 @@ cython_debug/
 
 # nektos/act local GitHub actions tests
 .actrc
+
+# Due to environments
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Python specific environment files
+Source/
