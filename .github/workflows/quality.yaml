@@ -29,7 +29,6 @@ jobs:
       - name: Collecting coverage
         uses: 5monkeys/cobertura-action@master
         with:
-          repo_token : ${{ secrets.GITHUB_TOKEN }}
           path: coverage.xml
           minimum_coverage: 30
 
