@@ -215,6 +215,8 @@ def load_jobs(config_path, schema):
 
     # Set default values (100) for num_shots_min and num_shots_max if missing
     for job in config["jobs"]:
+        job["qubit_min"] = job.get("qubit_min", 2)
+        job["qubit_max"] = job.get("qubit_max", 2)
         job["num_shots_min"] = job.get("num_shots_min", 100)
         job["num_shots_max"] = job.get("num_shots_max", 100)
 
