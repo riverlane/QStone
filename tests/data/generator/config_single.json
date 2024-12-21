@@ -14,8 +14,6 @@
       "type": "VQE",
       "qubit_min": 2,
       "qubit_max": 4,
-      "num_shots_min": 2,
-      "num_shots_max": 4,
       "walltime": 3,
       "nthreads": 2,
       "lsf/jsrun_opt": "-special_setting=True"

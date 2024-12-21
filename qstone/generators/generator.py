@@ -138,6 +138,15 @@ def _compute_job_pdf(usr_cfg: dict) -> List[float]:
     return normalized
 
 
+def _randomise(min_val, max_val):
+    """Return randomised value from range when available"""
+    if max_val.iloc[0] > min_val.iloc[0]:
+        val = numpy.random.randint(min_val.iloc[0], max_val.iloc[0]) 
+    else:
+        val = max_val.iloc[0]
+    return val
+
+
 def _generate_user_jobs(
     usr_cfg: dict, jobs_cfg: dict, job_pdf: List[float], num_calls: int
 ):
@@ -159,12 +168,12 @@ def _generate_user_jobs(
     num_shots = []
     for j in job_types:
         app_cfg = jobs_cfg[jobs_cfg["type"] == j]
-        num_qubits.extend(
-            numpy.random.randint(app_cfg["qubit_min"], app_cfg["qubit_max"])
-        )
-        num_shots.extend(
-            numpy.random.randint(app_cfg["num_shots_min"], app_cfg["num_shots_max"])
-        )
+        if app_cfg.empty:
+           num_qubits.append(2)
+           num_shots.append(100)
+        else:
+            num_qubits.append(_randomise(app_cfg["qubit_min"], app_cfg["qubit_max"]))
+            num_shots.append(_randomise(app_cfg["num_shots_min"], app_cfg["num_shots_max"]))
 
     # Assign job id and pack
     job_ids = list(range(len(job_types)))
