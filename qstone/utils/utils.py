@@ -220,7 +220,6 @@ def load_jobs(config_path, schema):
         job["num_shots_min"] = job.get("num_shots_min", 100)
         job["num_shots_max"] = job.get("num_shots_max", 100)
 
-
     return schema(pd.DataFrame.from_dict(config["jobs"], orient="columns"))
 
 
