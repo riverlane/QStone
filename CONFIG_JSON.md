@@ -8,8 +8,10 @@ This page describes the format of the configuration file.
   "connector": "NO_LINK",       // Type of connector. Options are NO_LINK, HTTP, GRPC
   "qpu_ip_address": "0.0.0.0",  // The address of the QPU (or associated gateway PC). Used in HTTP and GRPC mode.
   "qpu_port": "55",             // The port number of the QPU. Used in HTTP mode.
-  "qpu_management": "LOCK",     // [Optional] Type of sharing mechanism. If scheduler does not support quantum resources jobs can either 
-                                // query (QUERY) the remote resource or lock (LOCK) via a local file. If it does, leave it empty or set it to "NONE" 
+  "qpu_management": "LOCK",     // [Optional] Type of sharing mechanism. If the scheduler is configured to supports QPU resource allocation, set it to 
+                                // scheduler (SCHEDULER). 
+                                // If not set it to query (QUERY) the remote resource or lock (LOCK) via a local file. 
+                                // It can be set to "NONE" and nothing will manage the quantum resource. 
   "lock_file": "path_to_the_lock", // [Optional] Path to the lockfile. Use when qpu_management == "LOCK". If not specified default is "qstone.lock".
   "timeouts": {
     "http": 3,  // Time before failing the http response
