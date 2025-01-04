@@ -21,15 +21,16 @@ SCHED_EXT = {"slurm": "sbatch", "jsrun": "bsub", "bare_metal": None}
 
 
 @pytest.mark.parametrize(
-    "test_input,expected,atomic,scheduler",
+    "test_input,expected,atomic,scheduler,use_gres",
     [
-        ("config_single.json", ["user0"], False, "bare_metal"),
-        ("config_single_custom_app.json", ["user0"], False, "jsrun"),
-        ("config_multi.json", ["user0", "user1", "user2"], False, "slurm"),
-        ("config_single.json", ["user0"], True, "jsrun"),
+        ("config_single.json", ["user0"], False, "bare_metal", False),
+        ("config_single_custom_app.json", ["user0"], False, "jsrun", False),
+        ("config_multi.json", ["user0", "user1", "user2"], False, "slurm", False),
+        ("config_single.json", ["user0"], True, "jsrun", False),
+        ("config_single_scheduler.json", ["user0"], True, "slurm", True),
     ],
 )
-def test_packaging(tmp_path, test_input, expected, atomic, scheduler):
+def test_packaging(tmp_path, test_input, expected, atomic, scheduler, use_gres):
     output_folder = tmp_path
     tmp_path.mkdir(exist_ok=True)
     generator.generate_suite(
@@ -45,13 +46,12 @@ def test_packaging(tmp_path, test_input, expected, atomic, scheduler):
         with tarfile.open(filename, "r:gz") as t:
             ext = SCHED_EXT[scheduler]
             if ext:
-                if atomic:
-                    keyword = "full"
-                else:
-                    keyword = "pre"
-                assert keyword in str(
-                    t.extractfile(f"qstone_suite/type_exec_VQE.{ext}").read()
-                )
+                keywords = [
+                    "full" if atomic else "pre",
+                    "--gres=qpu:1" if use_gres else "",
+                ]
+                content = str(t.extractfile(f"qstone_suite/type_exec_VQE.{ext}").read())
+                assert all(x in content for x in keywords)
 
 
 @pytest.mark.parametrize(
