@@ -83,6 +83,9 @@ Run QStone using Command Line Interface
 ```
 
 For more information on the `config.json` format refer to [config](CONFIG_JSON.md).
+Among the other things, the config file allows setting different polling/querying/scheduling policies for handling shared access to the QPU.
+Only SLURM currently supports the high-performance (lowest-latency) "SCHEDULER" mode" please refer to [SLURM](SLURM.md) for more information. 
+
 
 - Alternatively call the generator in script:
 
