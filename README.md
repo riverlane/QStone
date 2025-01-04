@@ -83,6 +83,8 @@ Run QStone using Command Line Interface
 ```
 
 For more information on the `config.json` format refer to [config](CONFIG_JSON.md).
+To configure SLURM (as administrator) to schedule the "Quantum Computer" resource refer to [SLURM](SLURM.md)
+
 
 - Alternatively call the generator in script:
 
