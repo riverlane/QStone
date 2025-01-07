@@ -3,6 +3,7 @@ Generation of the testbench.
 """
 
 import argparse
+import jsonschema
 import os
 import shutil
 import tarfile
@@ -15,6 +16,7 @@ from jinja2 import Template
 from qstone.utils.utils import (
     JOB_SCHEMA,
     USER_SCHEMA,
+    FULL_SCHEMA,
     QpuConfiguration,
     get_config_environ_vars,
     load_jobs,
@@ -212,6 +214,8 @@ def generate_suite(
 
     Returns list of output file paths
     """
+    with open(config) as f:
+    	jsonschema.validate(f.read(), FULL_SCHEMA)
     users_cfg = load_users(config, USER_SCHEMA)
     jobs_cfg = load_jobs(config, JOB_SCHEMA)
     env_vars = get_config_environ_vars(config)
