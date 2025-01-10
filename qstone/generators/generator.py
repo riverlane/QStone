@@ -4,18 +4,18 @@ Generation of the testbench.
 
 import argparse
 import json
-import jsonschema
 import os
 import shutil
 import tarfile
-import pandas as pa
 from typing import List
 
+import jsonschema
 import numpy
+import pandas as pa
 import pandas as pd
 from jinja2 import Template
 
-from qstone.utils.utils import parse_json, QpuConfiguration
+from qstone.utils.utils import QpuConfiguration, parse_json
 
 SCHEDULERS = {
     "bare_metal": "bare_metal",

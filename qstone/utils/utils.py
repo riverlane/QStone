@@ -1,20 +1,20 @@
 """ General utilities. Used across the jobs """
 
 import json
-import jsonschema
 import os
 import random
 import re
 import time
-
 from collections import defaultdict
 from enum import Enum
 from functools import wraps
 from typing import Callable, Dict, Optional
 
-from .config_schema import FULL_SCHEMA
+import jsonschema
 import pandas as pd
 import pandera as pa
+
+from .config_schema import FULL_SCHEMA
 
 
 class JobReturnCode(Enum):
