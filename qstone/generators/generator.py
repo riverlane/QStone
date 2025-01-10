@@ -122,7 +122,7 @@ def _render_and_pack(
     shutil.rmtree(GEN_PATH)
 
 
-def _compute_job_pdf(usr_cfg: pd.Series[Any]) -> List[float]:
+def _compute_job_pdf(usr_cfg: 'pd.Series[Any]') -> List[float]:
     """Computes the normalized pdf to assign to different jobs based on user
     configurations and speciified qubit capacity
     """
@@ -150,7 +150,7 @@ def Convert(lst):
 
 
 def _generate_user_jobs(
-    usr_cfg: pd.Series[Any], jobs_cfg: pa.DataFrame, job_pdf: List[float], num_calls: int
+    usr_cfg: 'pd.Series[Any]', jobs_cfg: pa.DataFrame, job_pdf: List[float], num_calls: int
 ):
     """
     Generates the different user jobs provided given the configuration and the number of
