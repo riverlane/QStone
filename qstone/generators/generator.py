@@ -140,12 +140,16 @@ def _compute_job_pdf(usr_cfg: "pd.Series[Any]") -> List[float]:
 
 def _randomise(vals, def_val):
     """Return randomised value from range when available"""
+
     if pd.isnull(vals).any():
-        return def_val
+        value = def_val
     else:
         values = vals.tolist()[0]
-    print(f"VALUES - {type(values)} - {values}")
-    return numpy.random.randint(values[0], values[1])
+        if len(values) > 1:
+            value = numpy.random.randint(values[0], values[1])
+        else:
+            value = values[0]
+    return value
 
 
 def Convert(lst):
