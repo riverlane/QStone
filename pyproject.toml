@@ -29,6 +29,7 @@ protobuf = "*"
 requests = "*"
 click = "*"
 waiting = "*"
+jsonschema = "*"
 pyquil = {version = ">= 4.10.1", optional = true}
 grpcio = {version = "*", optional = true, markers = "platform_machine == 'amd64'" }
 pytest = { version = "*", optional = true }

@@ -10,8 +10,11 @@ from enum import Enum
 from functools import wraps
 from typing import Callable, Dict, Optional
 
+import jsonschema
 import pandas as pd
 import pandera as pa
+
+from .config_schema import FULL_SCHEMA
 
 
 class JobReturnCode(Enum):
@@ -44,34 +47,13 @@ CFG_ENVIRONMENT_VARIABLES = {
     "timeouts.lock",
 }
 
-JOB_SCHEMA = pa.DataFrameSchema(
-    {
-        "type": pa.Column(str),
-        "qubit_min": pa.Column(int),
-        "qubit_max": pa.Column(int),
-        "num_shots_min": pa.Column(int),
-        "num_shots_max": pa.Column(int),
-        "path": pa.Column(str, nullable=True, required=False),
-        "walltime": pa.Column(int, nullable=True, required=False),
-        "nthreads": pa.Column(int, nullable=True, required=False),
-    }
-)
 
-
-USER_SCHEMA = pa.DataFrameSchema(
-    {
-        "user": pa.Column(str),
-        "weight": pa.Column(checks=pa.Check.in_range(0, 1.0)),
-        "computations": pa.Column(Dict),
-    }
-)
-
-TIMEOUT_SCHEMA = pa.DataFrameSchema(
-    {
-        "http": pa.Column(int),
-        "lock": pa.Column(int),
-    }
-)
+def parse_json(config: str) -> Dict:
+    """Parses the JSON file, validates it against the schema and returns a dictionary representation"""
+    with open(config) as f:
+        config_dict = json.loads(f.read())
+    jsonschema.validate(config_dict, FULL_SCHEMA)
+    return config_dict
 
 
 class QpuConfiguration:
@@ -199,55 +181,6 @@ def trace(
         return wrapper_func
 
     return wrapper
-
-
-def load_users(config_path, schema):
-    """Loading a json file and checking it against the schema"""
-    with open(config_path, "r", encoding="utf8") as _file:
-        config = json.load(_file)
-    return schema(pd.DataFrame.from_dict(config["users"], orient="columns"))
-
-
-def load_jobs(config_path, schema):
-    """Loading a json file and checking it against the schema"""
-    with open(config_path, "r", encoding="utf8") as _file:
-        config = json.load(_file)
-
-    # Set default values (100) for num_shots_min and num_shots_max if missing
-    for job in config["jobs"]:
-        job["qubit_min"] = job.get("qubit_min", 2)
-        job["qubit_max"] = job.get("qubit_max", 2)
-        job["num_shots_min"] = job.get("num_shots_min", 100)
-        job["num_shots_max"] = job.get("num_shots_max", 100)
-
-    return schema(pd.DataFrame.from_dict(config["jobs"], orient="columns"))
-
-
-def _get_value(config, env_var):
-    """Get dictionary values represented in root based hierarchical representation"""
-    tokens = env_var.split(".")
-    for token in tokens:
-        config = config.get(token, {})
-    return config if config else "NONE"
-
-
-def get_config_environ_vars(config_path: str) -> dict:
-    """Gets the config type from the input configuration
-
-    Parses the config to extract the connector type and returns the associated enum value
-
-    Args:
-        config_path: path to config file
-
-    Returns:
-        ConnectorType enum value
-    """
-    with open(config_path, "r", encoding="utf8") as _file:
-        config = json.load(_file)
-    environ_vars = {
-        env_var: _get_value(config, env_var) for env_var in CFG_ENVIRONMENT_VARIABLES
-    }
-    return environ_vars
 
 
 def load_json_profile(trace_info: str, schema: pa.DataFrameSchema) -> pd.DataFrame:
