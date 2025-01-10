@@ -33,22 +33,24 @@ Run QStone using Command Line Interface
 
 - Run the **generator** command
 
-    ```qstone generate -i conf.json [--atomic/-a] [--scheduler/-s "slurm"/"jsrun"/"bare_metal"]```
+  `qstone generate -i conf.json [--atomic/-a] [--scheduler/-s "slurm"/"jsrun"/"bare_metal"]`
 
-    Generates tar.gz files that contains all the scripts to run scheduler for each user. Currently supported schedulers: [baremetal, altair/fnc, slurm/schedmd]. QStone expects an input configuration describing the users to want to generate jobs for as well as the description of the quantum computer you are generating jobs for. The optional `--atomic` flag forces the generation of single step jobs, instead of the default repartition in three jobs (pre, run, post). The `-s` flag allows selecting the output scheduler, default is `bare_metal`.
+  Generates tar.gz files that contains all the scripts to run scheduler for each user. Currently supported schedulers: [baremetal, altair/fnc, slurm/schedmd]. QStone expects an input configuration describing the users to want to generate jobs for as well as the description of the quantum computer you are generating jobs for. The optional `--atomic` flag forces the generation of single step jobs, instead of the default repartition in three jobs (pre, run, post). The `-s` flag allows selecting the output scheduler, default is `bare_metal`.
 
-    With `config.json`:
+  With `config.json`:
 
 ```json
 {
-  "project_name": "proj_name",
-  "connector": "NO_LINK",
-  "qpu_ip_address": "0.0.0.0",
-  "qpu_port": "55",
-  "qpu_management": "LOCK",
-  "timeouts" : {
-      "http": 5,
-      "lock": 4
+  "environment": { 
+     "project_name": "proj_name",
+     "connector": "NO_LINK",
+     "qpu_ip_address": "0.0.0.0",
+     "qpu_port": "55",
+     "qpu_management": "LOCK",
+     "timeouts" : {
+         "http": 5,
+         "lock": 4
+     } 
   },
   "jobs": [
     {
@@ -84,8 +86,7 @@ Run QStone using Command Line Interface
 
 For more information on the `config.json` format refer to the associated [json schema](qstone/utils/config_schema.py).
 Among the other things, the config file allows setting different polling/querying/scheduling policies for handling shared access to the QPU.
-Only SLURM currently supports the high-performance (lowest-latency) "SCHEDULER" mode" please refer to [SLURM](SLURM.md) for more information. 
-
+Only SLURM currently supports the high-performance (lowest-latency) "SCHEDULER" mode" please refer to [SLURM](SLURM.md) for more information.
 
 - Alternatively call the generator in script:
 
@@ -100,27 +101,25 @@ if __name__ == "__main__":
      main()
 ```
 
+- Run the **run** command to execute chosen scheduler/workload selecting an optional output folder
 
--  Run the **run** command to execute chosen scheduler/workload selecting an optional output folder
-
-    ```qstone run -i scheduler.qstone.tar.gz [-o folder]```
+  `qstone run -i scheduler.qstone.tar.gz [-o folder]`
 
 The optional `-o` allows selecting the output folder in which to run the benchmark instance.
 
 - Alternatively may untar on your machine of choice and run as the selected user.
 
-    - Run the jobs by executing `sh qstone_suite/qstone.sh`
+  - Run the jobs by executing `sh qstone_suite/qstone.sh`
 
-    - Run the profiling tool to extract metrics of interest. 
+  - Run the profiling tool to extract metrics of interest.
 
--  Run the **profile** command providing the initial input configuration and output folder to run profiling tool on run information
+- Run the **profile** command providing the initial input configuration and output folder to run profiling tool on run information
 
-    ```qstone profile --cfg conf.json --folder qstone_profile```
+  `qstone profile --cfg conf.json --folder qstone_profile`
 
--  Run the **profile** command providing the initial input configuration and multiple output folders (in case of multi-user run) to run profiling tool on run information
+- Run the **profile** command providing the initial input configuration and multiple output folders (in case of multi-user run) to run profiling tool on run information
 
-    ```qstone profile --cfg conf.json --folder qstone_profile --folder qstone_profile2```
-
+  `qstone profile --cfg conf.json --folder qstone_profile --folder qstone_profile2`
 
 ### Supported backend connectivities
 
@@ -138,5 +137,3 @@ The optional `-o` allows selecting the output folder in which to run the benchma
 ### Contributing
 
 Guidance on how to [contribute](CONTRIBUTING.md) and [change logs](CHANGELOG.md)
-
-

@@ -22,8 +22,8 @@ FULL_SCHEMA = {
                 "items": {
                     "type": "object",
                     "properties": {
-                        "qubit": {"type": "array"},
-                        "shots": {"type": "array"},
+                        "qubit": {"type": "array", "minItems": 1, "maxItems": 2},
+                        "shots": {"type": "array", "minItems": 1, "maxItems": 2},
                         "walltime": {"type": "number"},
                     },
                 },
