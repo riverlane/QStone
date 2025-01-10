@@ -1,16 +1,18 @@
 {
-  "project_name": "test",
-  "connector": "NO_LINK",
-  "qpu_ip_address": "0.0.0.0",
-  "qpu_port": "55",
-  "qpu_management": "LOCK",
-  "lock_file": "my_lock.lock",
-  "timeouts": {
-    "http": 5,
-    "lock": 4
+  "environment": {
+  	"project_name": "test",
+  	"connector": "NO_LINK",
+  	"qpu_ip_address": "0.0.0.0",
+  	"qpu_port": 55,
+  	"qpu_management": "LOCK",
+  	"lock_file": "my_lock.lock",
+  	"timeouts": {
+  	  "http": 5,
+  	  "lock": 4
+  	}
   },
   "jobs": [
-    {
+     { 
       "type": "VQE",
       "qubit_min": 2,
       "qubit_max": 4,
@@ -18,12 +20,10 @@
       "nthreads": 2,
       "lsf/jsrun_opt": "-special_setting=True"
     },
-    {
+    { 
       "type": "RB",
-      "qubit_min": 2,
-      "qubit_max": 4,
-      "num_shots_min": 2,
-      "num_shots_max": 4,
+      "qubits": [2, 4],
+      "num_shots": [2, 4],
       "walltime": 1,
       "nthreads": 1,
       "slurm/schedmd_opt": "--special_setting=4"

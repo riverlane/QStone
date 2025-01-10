@@ -7,12 +7,7 @@ import os
 import pandas as pd
 import pandera as pa
 
-from qstone.utils.utils import (
-    USER_SCHEMA,
-    ComputationStep,
-    load_json_profile,
-    load_users,
-)
+from qstone.utils.utils import parse_json, ComputationStep, load_json_profile
 
 PROFILER_SCHEMA = pa.DataFrameSchema(
     {
@@ -74,7 +69,8 @@ def profile(config: str, folder: list[str], pickle: str):
     """
     # Get system configuration
 
-    cfg = load_users(config, USER_SCHEMA)
+    config_dict = parse_json(config)
+    cfg = config_dict["users"]
     # Merging the results
     stats = pd.concat(
         [_get_stats_from_dir(f, PROFILER_SCHEMA) for f in folder], ignore_index=True

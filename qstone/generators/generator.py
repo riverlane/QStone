@@ -3,25 +3,19 @@ Generation of the testbench.
 """
 
 import argparse
+import json
 import jsonschema
 import os
 import shutil
 import tarfile
+import pandas as pa
 from typing import List
 
 import numpy
 import pandas as pd
 from jinja2 import Template
 
-from qstone.utils.utils import (
-    JOB_SCHEMA,
-    USER_SCHEMA,
-    FULL_SCHEMA,
-    QpuConfiguration,
-    get_config_environ_vars,
-    load_jobs,
-    load_users,
-)
+from qstone.utils.utils import parse_json, QpuConfiguration
 
 SCHEDULERS = {
     "bare_metal": "bare_metal",
@@ -140,17 +134,23 @@ def _compute_job_pdf(usr_cfg: dict) -> List[float]:
     return normalized
 
 
-def _randomise(min_val, max_val):
+def _randomise(vals, def_val):
     """Return randomised value from range when available"""
-    if max_val.iloc[0] > min_val.iloc[0]:
-        val = numpy.random.randint(min_val.iloc[0], max_val.iloc[0])
+    if pd.isnull(vals).any():
+        return def_val
     else:
-        val = max_val.iloc[0]
-    return val
+        values = vals.tolist()[0]
+    print(f"VALUES - {type(values)} - {values}")
+    return numpy.random.randint(values[0], values[1])
+
+
+def Convert(lst):
+    res_dct = {lst[i]: lst[i + 1] for i in range(0, len(lst), 2)}
+    return res_dct
 
 
 def _generate_user_jobs(
-    usr_cfg: dict, jobs_cfg: dict, job_pdf: List[float], num_calls: int
+    usr_cfg: pa.DataFrame, jobs_cfg: pa.DataFrame, job_pdf: List[float], num_calls: int
 ):
     """
     Generates the different user jobs provided given the configuration and the number of
@@ -168,16 +168,17 @@ def _generate_user_jobs(
     # Randomise number of qubits
     num_qubits = []
     num_shots = []
+
+    DEF_QUBITS = 2
+    DEF_SHOTS = 100
     for j in job_types:
         app_cfg = jobs_cfg[jobs_cfg["type"] == j]
         if app_cfg.empty:
-            num_qubits.append(2)
-            num_shots.append(100)
+            num_qubits.append(DEF_QUBITS)
+            num_shots.append(DEF_SHOTS)
         else:
-            num_qubits.append(_randomise(app_cfg["qubit_min"], app_cfg["qubit_max"]))
-            num_shots.append(
-                _randomise(app_cfg["num_shots_min"], app_cfg["num_shots_max"])
-            )
+            num_qubits.append(_randomise(app_cfg["qubits"], DEF_QUBITS))
+            num_shots.append(_randomise(app_cfg["num_shots"], DEF_SHOTS))
 
     # Assign job id and pack
     job_ids = list(range(len(job_types)))
@@ -214,15 +215,16 @@ def generate_suite(
 
     Returns list of output file paths
     """
-    with open(config) as f:
-    	jsonschema.validate(f.read(), FULL_SCHEMA)
-    users_cfg = load_users(config, USER_SCHEMA)
-    jobs_cfg = load_jobs(config, JOB_SCHEMA)
-    env_vars = get_config_environ_vars(config)
-    env_exports = _environment_variables_exports(env_vars)
+    # Get configurations
+    config_dict = parse_json(config)
+    env_cfg = config_dict["environment"]
+    users_cfg = pa.DataFrame(config_dict["users"])
+    jobs_cfg = pa.DataFrame(config_dict["jobs"])
+
+    env_exports = _environment_variables_exports(env_cfg)
 
     qpu_config = QpuConfiguration()
-    qpu_config.load_configuration(get_config_environ_vars(config))
+    qpu_config.load_configuration(env_cfg)
 
     # Generating list of jobs
     output_paths = []
@@ -243,11 +245,11 @@ def generate_suite(
         subs = {
             "exports": "\n".join(env_exports + usr_env_exports),
             "jobs": "\n".join(formatted_jobs),
-            "project_name": env_vars["project_name"],
+            "project_name": env_cfg["project_name"],
             "atomic": atomic,
             "sched_ext": SCHEDULER_EXTS[scheduler],
             "sched_cmd": SCHEDULER_CMDS[scheduler],
-            "sched_aware": True if env_vars["qpu_management"] == "SCHEDULER" else False,
+            "sched_aware": True if env_cfg["qpu_management"] == "SCHEDULER" else False,
         }
         # Pack project files
         filename = os.path.join(output_folder, f"{scheduler}_{user_name}.qstone.tar.gz")
