@@ -94,7 +94,7 @@ def _render_and_pack(
     output_filename: str,
     subs: dict,
     job_types: List[str],
-    jobs_cfg: dict,
+    jobs_cfg: pa.DataFrame,
 ):
     """
     Renders and packs all the necessary files to run as a user
@@ -122,7 +122,7 @@ def _render_and_pack(
     shutil.rmtree(GEN_PATH)
 
 
-def _compute_job_pdf(usr_cfg: dict) -> List[float]:
+def _compute_job_pdf(usr_cfg: pa.DataFrame) -> List[float]:
     """Computes the normalized pdf to assign to different jobs based on user
     configurations and speciified qubit capacity
     """
