@@ -14,7 +14,16 @@ Versioning <https: semver.org="" spec="" v2.0.0.html="">`__.
 -  quantum volume application
 -  faster and more modular generation of benchmarks
 
-[0.2.0] - on-going
+[0.2.1] - 2025-01-28
+------------------
+
+Added
+~~~~~
+
+-  Documentation via Sphinx
+
+
+[0.2.0] - 2025-01-15
 ------------------
 
 Fixed
@@ -93,4 +102,3 @@ Added
 
 -  first public drop, key functionalities to run custom and default apps
    to profile integration
-</https:></https:>

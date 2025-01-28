@@ -1,8 +1,3 @@
-.. QStone documentation master file, created by
-   sphinx-quickstart on Tue Jan 28 15:43:45 2025.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 QStone documentation
 ====================
 
@@ -116,7 +111,7 @@ Generates tar.gz files that contains all the scripts to run scheduler for each u
 
 For more information on the `config.json` format refer to the associated [json schema](qstone/utils/config_schema.py).
 Among the other things, the config file allows setting different polling/querying/scheduling policies for handling shared access to the QPU.
-Only SLURM currently supports the high-performance (lowest-latency) "SCHEDULER" mode" please refer to [SLURM](SLURM.md) for more information.
+Only SLURM currently supports the high-performance (lowest-latency) "SCHEDULER" mode" please refer to :ref:`slurm-label` for more information.
 
 - Alternatively call the generator in script:
 
@@ -159,7 +154,7 @@ The optional `-o` allows selecting the output folder in which to run the benchma
 	qstone profile --cfg conf.json --folder qstone_profile --folder qstone_profile2
 
 Supported backend connectivities
----
+--------------------------------
 
 - Local no-link runner
 - gRPC
@@ -167,20 +162,22 @@ Supported backend connectivities
 - Rigetti
 
 Examples
----
+--------
 
 - Getting started [notebook](examples/running/getting_started.ipynb)
 - How to add a [new type of computation](examples/adding/computation/README.md)
 - How to create a simple [gateway](examples/node/README.md)
 
 Contributing
----
+------------
 
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    
    assumptions
    changelog
    slurm 
+   modules
+

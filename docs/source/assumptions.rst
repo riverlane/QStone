@@ -62,7 +62,8 @@ improving the responsiveness of the system.
 Users
 -----
 
-###&nbsp;Language
+Language
+~~~~~~~~~~
 
 All the applications use OpenQASM2.0 as core language. We believe it is
 the most used language and the one that requires the least dependencies

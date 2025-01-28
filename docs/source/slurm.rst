@@ -1,3 +1,4 @@
+.. _slurm-label:
 
 SLURM
 =====
