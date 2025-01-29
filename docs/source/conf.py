@@ -25,7 +25,7 @@ release = __version__
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [ 'nbsphinx', 'sphinx_copybutton', 'sphinx.ext.autodoc', 'sphinx.ext.viewcode',
-    'sphinx.ext.napoleon']
+    'sphinx.ext.napoleon', 'sphinx_mdinclude']
 autodoc_mock_imports = ['django']
 
 templates_path = ['_templates']

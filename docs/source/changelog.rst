@@ -15,7 +15,7 @@ Versioning <https: semver.org="" spec="" v2.0.0.html="">`__.
 -  faster and more modular generation of benchmarks
 
 [0.2.1] - 2025-01-28
-------------------
+--------------------
 
 Added
 ~~~~~
@@ -24,7 +24,7 @@ Added
 
 
 [0.2.0] - 2025-01-15
-------------------
+--------------------
 
 Fixed
 ~~~~~

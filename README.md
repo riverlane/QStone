@@ -1,5 +1,3 @@
-# QStone
-
 ## What
 
 An utility to benchmark the quality of an HPC and Quantum Computers integration. The benchmark allows the definition of a set of users for which a set of configurable quantum applications will be randomly selected. Example of currently supported quantum applications: VQE, PyMatching, RB. Users can create custom applications and use them together with the core applications.
@@ -136,4 +134,4 @@ The optional `-o` allows selecting the output folder in which to run the benchma
 
 ### Contributing
 
-Guidance on how to [contribute](CONTRIBUTING.md) and [change logs](CHANGELOG.md)
+Guidance on how to [contribute](contributing.md) and [change logs](changelog.md)
