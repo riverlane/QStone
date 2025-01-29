@@ -9,7 +9,7 @@ jobs:
     # Triggers the workflow on on tag pushes
     # Be sure to add tag rulesets to ensure only admins can push tags
     if: startsWith(github.ref, 'refs/tags/')
-    name: Build distribution
+    name: Build docs
     runs-on: ubuntu-latest
     env:
       POETRY_HOME: /opt/poetry  
