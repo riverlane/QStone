@@ -1,4 +1,4 @@
-""" General utilities. Used across the jobs """
+"""General utilities. Used across the jobs"""
 
 import json
 import os
@@ -49,8 +49,11 @@ CFG_ENVIRONMENT_VARIABLES = {
 
 
 def parse_json(config: str) -> Dict:
-    """Parses the JSON file, validates it against the schema and returns a dictionary representation"""
-    with open(config) as f:
+    """
+    Parses the JSON file, validates it against the schema and returns a dictionary
+    representation
+    """
+    with open(config, "r", encoding="UTF-8") as f:
         config_dict = json.loads(f.read())
     jsonschema.validate(config_dict, FULL_SCHEMA)
     return config_dict

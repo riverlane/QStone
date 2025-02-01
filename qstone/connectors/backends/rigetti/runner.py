@@ -1,4 +1,4 @@
-""" Quantum executor for Rigetti backend """
+"""Quantum executor for Rigetti backend"""
 
 import calendar
 import time

@@ -1,4 +1,4 @@
-""" VQE computations steps. """
+"""VQE computations steps."""
 
 import os
 import time

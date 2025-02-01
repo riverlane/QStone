@@ -1,4 +1,4 @@
-""" Quantum executor over a HTTP channel """
+"""Quantum executor over a HTTP channel"""
 
 import json
 import os
