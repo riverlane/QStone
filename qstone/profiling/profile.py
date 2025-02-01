@@ -52,8 +52,8 @@ def _extrapolate(stats):
         # We are aggregating all the steps associated with the same job
         for s in ["PRE", "RUN", "POST"]:
             stats.loc[mask, f"{s}_agg"] = jobs[jobs.job_step == s]["total"].sum()
-    stats['count'] = len(stats[stats['success']].groupby(['job_id', 'user']).groups)
-    stats['connection_total'] = stats.query('job_type == "CONNECTION"')['total'].sum() 
+    stats["count"] = len(stats[stats["success"]].groupby(["job_id", "user"]).groups)
+    stats["connection_total"] = stats.query('job_type == "CONNECTION"')["total"].sum()
     return stats
 
 
@@ -64,22 +64,25 @@ def _store(stats, pickle):
     else:
         stats.to_pickle(pickle)
 
+
 NS_TO_MS = 1_000_000
+
 
 def _print_stats(stats: pd.DataFrame):
     """
     Print general statistics
     """
-    tot_classical = (stats['PRE_agg'].iloc[0] + stats['POST_agg'].iloc[0] ) / NS_TO_MS
-    tot_quantum = stats['RUN_agg'].iloc[0] / NS_TO_MS
-    connection_total = stats['connection_total'].iloc[0] / NS_TO_MS
-    tot_runs = stats['count'].iloc[0] 
-    print ('########### Stats ######################')
-    print (f'Total classical computation   [ms]:  {tot_classical:>12.2f}') 
-    print (f'Total quantum computation     [ms]:  {tot_quantum:>12.2f}')
-    print (f'Average classical computation [ms]:  {tot_classical/tot_runs:>12.2f}')
-    print (f'Average quantum computation   [ms]:  {tot_quantum/tot_runs:>12.2f}')
-    print (f'Average connection time       [ms]:  {connection_total/tot_runs:>12.2f}')  
+    tot_classical = (stats["PRE_agg"].iloc[0] + stats["POST_agg"].iloc[0]) / NS_TO_MS
+    tot_quantum = stats["RUN_agg"].iloc[0] / NS_TO_MS
+    connection_total = stats["connection_total"].iloc[0] / NS_TO_MS
+    tot_runs = stats["count"].iloc[0]
+    print("########### Stats ######################")
+    print(f"Total classical computation   [ms]:  {tot_classical:>12.2f}")
+    print(f"Total quantum computation     [ms]:  {tot_quantum:>12.2f}")
+    print(f"Average classical computation [ms]:  {tot_classical/tot_runs:>12.2f}")
+    print(f"Average quantum computation   [ms]:  {tot_quantum/tot_runs:>12.2f}")
+    print(f"Average connection time       [ms]:  {connection_total/tot_runs:>12.2f}")
+
 
 def profile(config: str, folder: list[str], pickle: str):
     """
@@ -89,7 +92,6 @@ def profile(config: str, folder: list[str], pickle: str):
     # Get system configuration
 
     config_dict = parse_json(config)
-    cfg = config_dict["users"]
     # Merging the results
     stats = pd.concat(
         [_get_stats_from_dir(f, PROFILER_SCHEMA) for f in folder], ignore_index=True
@@ -98,8 +100,9 @@ def profile(config: str, folder: list[str], pickle: str):
     _extrapolate(stats)
     # Store into an pickle file
     _store(stats, pickle)
-    # Stats 
+    # Stats
     _print_stats(stats)
+
 
 def main():
     """Main profile routine"""
