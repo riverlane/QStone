@@ -19,6 +19,7 @@ PROFILER_SCHEMA = pa.DataFrameSchema(
             str, checks=pa.Check.isin([e.name for e in ComputationStep])
         ),
         "start": pa.Column(int),
+        "success": pa.Column(bool),
         "end": pa.Column(int),
     }
 )
