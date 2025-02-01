@@ -51,11 +51,20 @@ flask = {version = "*", optional = true}
 pandas-stubs = "*"
 pip-audit = { version = "*", optional = true }
 
+sphinx-mdinclude = { version = "*", optional = true }
+sphinx = { version = "*", optional = true }
+sphinx_rtd_theme = { version = "*", optional = true }
+myst_parser = { version = "*", optional = true }
+nbsphinx = { version = "*", optional = true }
+sphinx-copybutton = { version = "*", optional = true }
+
+
+
 [tool.poetry.extras]
 test = ["pytest", "pytest-cov", "pytest-depends", "pytest-manual-marker", "requests-mock", "types-protobuf", "grpcio-tools", "imageio", "nbmake", "ipython", "pytest-xdist", "pytest-mock"]
 lint = ["pylint", "mypy", "pycodestyle", "black", "isort"]
 security = ["ochrona", "safety", "bandit"]
-
+docs = ["sphinx", "sphinx-mdinclude", "sphinx_rtd_theme", "nbsphinx", "sphinx-copybutton"]
 [tool.pylint.MASTER]
 ignore-paths = 'qstone/connectors/riverlane/grpc.*$'
 
