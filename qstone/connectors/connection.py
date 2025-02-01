@@ -1,4 +1,4 @@
-""" Connection abstraction for nodes."""
+"""Connection abstraction for nodes."""
 
 import os
 from abc import ABC, abstractmethod

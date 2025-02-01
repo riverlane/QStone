@@ -1,3 +1,5 @@
+"""Schema for the configuration file"""
+
 FULL_SCHEMA = {
     "type": "object",
     "properties": {

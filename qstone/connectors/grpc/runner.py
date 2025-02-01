@@ -1,4 +1,4 @@
-""" Quantum executor over a grpc channel """
+"""Quantum executor over a grpc channel"""
 
 import json
 import secrets

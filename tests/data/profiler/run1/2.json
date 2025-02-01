@@ -4,6 +4,7 @@
     "job_id": "5",
     "job_type": "PyMatching",
     "job_step": "POST",
+    "success" : true,
     "start": 5191382558383260,
     "end": 5191382563894748
 }

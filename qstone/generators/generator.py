@@ -3,16 +3,13 @@ Generation of the testbench.
 """
 
 import argparse
-import json
 import os
 import shutil
 import tarfile
 from typing import Any, List
 
-import jsonschema
 import numpy
 import pandas as pa
-import pandas as pd
 from jinja2 import Template
 
 from qstone.utils.utils import QpuConfiguration, parse_json
@@ -31,7 +28,7 @@ CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 GEN_PATH = "qstone_suite"
 
 
-def _get_value(job_cfg: pd.DataFrame, key: str, default: str):
+def _get_value(job_cfg: pa.DataFrame, key: str, default: str):
     val = default
     try:
         val = job_cfg[key].values[0]
@@ -126,7 +123,7 @@ def _render_and_pack(
     shutil.rmtree(GEN_PATH)
 
 
-def _compute_job_pdf(usr_cfg: "pd.Series[Any]") -> List[float]:
+def _compute_job_pdf(usr_cfg: "pa.Series[Any]") -> List[float]:
     """Computes the normalized pdf to assign to different jobs based on user
     configurations and speciified qubit capacity
     """
@@ -141,7 +138,7 @@ def _compute_job_pdf(usr_cfg: "pd.Series[Any]") -> List[float]:
 def _randomise(vals, def_val):
     """Return randomised value from range when available"""
 
-    if pd.isnull(vals).any():
+    if pa.isnull(vals).any():
         value = def_val
     else:
         values = vals.tolist()[0]
@@ -158,7 +155,7 @@ def Convert(lst):
 
 
 def _generate_user_jobs(
-    usr_cfg: "pd.Series[Any]",
+    usr_cfg: "pa.Series[Any]",
     jobs_cfg: pa.DataFrame,
     job_pdf: List[float],
     num_calls: int,
