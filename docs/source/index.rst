@@ -1,11 +1,10 @@
-.. include:: readme_link.rst
+QStone Documentation
+====================
 
 .. toctree::
    :maxdepth: 1
-   
-   readme_link 
-   assumptions
-   changelog
-   slurm 
+ 
+   basics 
+   advanced
    modules
 
