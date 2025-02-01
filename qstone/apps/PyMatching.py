@@ -1,4 +1,4 @@
-""" Defines the two steps of PyMatching jobs """
+"""Defines the two steps of PyMatching jobs"""
 
 import os
 from typing import Dict, List

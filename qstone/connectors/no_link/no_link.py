@@ -1,4 +1,4 @@
-""" Runner for no-link connector"""
+"""Runner for no-link connector"""
 
 from qstone.connectors import connection
 from qstone.utils.utils import (

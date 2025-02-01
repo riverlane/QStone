@@ -1,4 +1,4 @@
-""" Profile utilities """
+"""Profile utilities"""
 
 import argparse
 import logging

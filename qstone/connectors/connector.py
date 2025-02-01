@@ -1,4 +1,4 @@
-""" Connectors for different Quantum Stacks """
+"""Connectors for different Quantum Stacks"""
 
 import warnings
 from enum import Enum

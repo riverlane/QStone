@@ -1,4 +1,4 @@
-""" General utilities. Used across the jobs """
+"""General utilities. Used across the jobs"""
 
 import json
 import os

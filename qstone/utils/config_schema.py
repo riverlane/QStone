@@ -1,4 +1,4 @@
-""" Schema for the configuration file """
+"""Schema for the configuration file"""
 
 FULL_SCHEMA = {
     "type": "object",
