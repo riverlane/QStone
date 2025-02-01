@@ -19,26 +19,25 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3.9
-       - name: Installing dependencies
+      - name: Installing dependencies
         run: pip install -U tox
-       - name: Doc-gen
+      - name: Doc-gen
         run: tox -r -e sphinx
 
       - name: Commit documentation changes
       - run: |
-        git clone https://github.com/your_git/repository.git --branch gh-pages --single-branch gh-pages
-        cp -r docs/build/html/* gh-pages/
-        cd gh-pages
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add .
-        git commit -m "Update documentation" -a || true
-        # The above command will fail if no changes were present, so we ignore
-        # the return code.
+          git clone https://github.com/your_git/repository.git --branch gh-pages --single-branch gh-pages
+          cp -r docs/build/html/* gh-pages/
+          cd gh-pages
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Update documentation" -a || true
+          # The above command will fail if no changes were present, so we ignore
+          # the return code.
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           branch: gh-pages
           directory: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
