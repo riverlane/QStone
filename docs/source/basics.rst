@@ -32,6 +32,6 @@ From this first run, running the profiler could already highlight some interesti
 
 .. code-block:: bash
     
-   qstone profile --cfg config_single.json --folder run_user0 
+   qstone profile --cfg config_single.json --folder run_user0/qstone_suite/qstone_profile  
 
 that will return the overall execution time, the average execution time on the QPU and on the classical resources. This information can be already useful to understand the average computation duration for standard operations. 
