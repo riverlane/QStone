@@ -4111,4 +4111,4 @@ test = ["grpcio-tools", "pytest", "pytest-cov", "pytest-depends", "pytest-manual
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9, <=3.13"
-content-hash = "b7945b4958dc9024017c09b5ec00ea7c9f5f6d66e583c8f994ff1b1b567e1404"
+content-hash = "a8a1e57776395df9159ed019c1024f1df7c6344d6d3168eec36911a04b8b76c8"
