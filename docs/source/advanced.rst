@@ -30,7 +30,7 @@ The jobs (only for a single user in this case) will now start and execute one af
 Analysis
 ~~~~~~~~
 
-From this first run, running the profiler could already highlight some interesting aspects of the HPC/Quantum system. To run the profiler execute:
+Running the profiler could highlight some interesting aspects of the HPC/Quantum system. To run the profiler execute:
 
 .. code-block:: bash
     
