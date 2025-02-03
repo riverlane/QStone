@@ -25,7 +25,7 @@ jobs:
         run: tox -r -e sphinx
 
       - name: Commit documentation changes
-      - run: |
+        run: |
           git clone https://github.com/your_git/repository.git --branch gh-pages --single-branch gh-pages
           cp -r docs/build/html/* gh-pages/
           cd gh-pages
