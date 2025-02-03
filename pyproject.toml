@@ -13,8 +13,10 @@ classifiers = [
   "Programming Language :: Python"
 ]
 include = ["CHANGELOG.md", "CONFIG_JSON.md"]
-Documentation = "https://riverlane.github.io/QStone"
-Changelog = "https://github.com/riverlane/QStone/blob/main/CHANGELOG.md"
+
+[project.urls]
+documentation = "https://riverlane.github.io/QStone"
+changelog = "https://github.com/riverlane/QStone/blob/main/CHANGELOG.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9, <=3.13"
