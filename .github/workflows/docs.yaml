@@ -9,7 +9,7 @@ jobs:
   build:
     # Triggers the workflow on on tag pushes
     # Be sure to add tag rulesets to ensure only admins can push tags
-    if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
     name: Build docs
     runs-on: ubuntu-latest
     env:
