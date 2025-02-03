@@ -3,7 +3,7 @@ name = "qstone"
 authors = ["Riverlane  <team@riverlane.com>"]
 description = "Benchmarking suite for Quantum Computers integration into HPC Systems"
 readme = "README.md"
-version = "0.2.0"
+version = "0.2.1"
 license = "Apache 2.0"
 repository = "https://github.com/riverlane/QStone"
 packages = [{include = "qstone"}]
@@ -13,6 +13,10 @@ classifiers = [
   "Programming Language :: Python"
 ]
 include = ["CHANGELOG.md", "CONFIG_JSON.md"]
+
+[tool.poetry.urls]
+documentation = "https://riverlane.github.io/QStone"
+changelog = "https://github.com/riverlane/QStone/blob/main/CHANGELOG.md"
 
 [tool.poetry.dependencies]
 python = ">=3.9, <=3.13"
