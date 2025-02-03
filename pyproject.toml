@@ -14,7 +14,7 @@ classifiers = [
 ]
 include = ["CHANGELOG.md", "CONFIG_JSON.md"]
 
-[project.urls]
+[tool.poetry.urls]
 documentation = "https://riverlane.github.io/QStone"
 changelog = "https://github.com/riverlane/QStone/blob/main/CHANGELOG.md"
 
