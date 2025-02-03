@@ -10,12 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - quantum volume application
 - faster and more modular generation of benchmarks
 
-## [0.2.1] - on-going
+## [0.2.1] - 2025-01-03
 
 ### Added
 
 - github pages with basic and advanced usage examples plus API documentation.
-
+- profile command now returns statistics as text
 
 ## [0.2.0] - 2025-14-01
 
