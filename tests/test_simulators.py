@@ -6,7 +6,7 @@ import shutil
 import numpy as np
 import pytest
 
-from qstone.simulators.qutip_quantum_simulator import QuTiP
+from qstone.simulators.qutip_sim import QuTiPSim
 
 
 @pytest.fixture()

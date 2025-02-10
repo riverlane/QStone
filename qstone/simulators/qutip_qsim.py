@@ -5,7 +5,7 @@ import qutip as qt
 from simulation import Simulation
 
 
-class QuTiP(Simulation):
+class QuTiPSim(Simulation):
     def __init__(self):
         # Standard single-qubit gates as QuTiP operators
         self.gates = {

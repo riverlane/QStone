@@ -12,7 +12,10 @@ from qstone.apps.computation import Computation
 from qstone.connectors import connector
 from qstone.utils.utils import ComputationStep, trace
 
-# from cuquantum import custatevec as cusv
+try:
+    from qstone.simulators.cuda_sim import CudaSim
+except:
+    from qstone.simulators.qutip_sim import QuTiPSim
 
 
 class QuantumVolume(Computation):
