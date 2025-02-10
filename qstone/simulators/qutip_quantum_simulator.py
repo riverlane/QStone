@@ -74,6 +74,13 @@ class QuTiP (Simulation):
                 circuit.append((gate, angle, int(qubit)))
                 continue
             
+            # Parse CNOT gates
+            cx_match = re.match(r'cx\s+q\[(\d+)\],\s*q\[(\d+)\]', line)
+            if cx_match:
+                control, target = map(int, cx_match.groups())
+                circuit.append(('cx', control, target))
+                continue
+
             # Parse standard gates
             gate_match = re.match(r'([a-z]+)\s+(q\[\d+\])', line)
             if gate_match:
@@ -81,12 +88,6 @@ class QuTiP (Simulation):
                 qubit_idx = int(re.search(r'\[(\d+)\]', qubit).group(1))
                 circuit.append((gate, qubit_idx))
                 continue
-                
-            # Parse CNOT gates
-            cx_match = re.match(r'cx\s+q\[(\d+)\],\s*q\[(\d+)\]', line)
-            if cx_match:
-                control, target = map(int, cx_match.groups())
-                circuit.append(('cx', control, target))
                 
         return circuit
 
@@ -130,11 +131,13 @@ class QuTiP (Simulation):
         M0 = qt.tensor(meas_ops)
         meas_ops[qubit] = P1
         M1 = qt.tensor(meas_ops)
-        
-        # Calculate probabilities
-        p0 = abs((M0 * state).norm())
-        p1 = abs((M1 * state).norm())
-        
+       
+        # Calculate probabilities and normalize
+        p0 = float(abs((M0 * state).norm())**2)
+        p1 = float(abs((M1 * state).norm())**2)
+        total_p = p0 + p1
+        p0, p1 = p0/total_p, p1/total_p
+
         # Random measurement outcome
         result = np.random.choice([0, 1], p=[p0, p1])
         
@@ -149,7 +152,6 @@ class QuTiP (Simulation):
     def run(self, qasm_str: str) -> Dict:
         """Translate QASM to QuTiP and return measurements"""
         circuit = self.qasm_to_qutip(qasm_str)
-        
         # Initialize state to |0...0>
         psi = qt.basis([2] * self.num_qubits)
         
