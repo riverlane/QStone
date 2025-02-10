@@ -6,12 +6,14 @@ from typing import Dict, List
 import numpy as np
 import pymatching
 from pandera import Check, Column, DataFrameSchema
-from stim import Circuit  # pylint:disable=no-name-in-module
 
+import random
 from qstone.apps.computation import Computation
 from qstone.connectors import connector
 from qstone.utils.utils import ComputationStep, trace
-from cuquantum import custatevec as cusv
+
+# from cuquantum import custatevec as cusv
+
 
 class QuantumVolume(Computation):
     """
@@ -40,35 +42,33 @@ class QuantumVolume(Computation):
         self.repetitions: int
         self.num_shots = int(os.environ.get("NUM_SHOTS", self.repetitions))
         self.num_qubits = int(os.environ.get("NUM_QUBITS", self.num_qubits))
-	self.results = None
+        self.results = None
 
     def _random_sampling(self, num_qubits) -> str:
         """Generate a circuit random sampling"""
-	gates = []
+        gates = []
         for _ in range(num_qubits):
-		# Single qubit gate 
-		for i in range(num_qubits)
-			1q_gate = random.randchoice("RX", "RY", "RZ")
-			theta = random.random()
-			gates.append(f"{1q_gate} {i} {theta}")
+            # Single qubit gate
+            for i in range(num_qubits):
+                q1_gate = random.choices(["RX", "RY", "RZ"])
+                theta = random.random()
+                gates.append(f"{q1_gate} {i} {theta}")
 
-		nums = random.sample(range(num_qubits), num_qubits)
-		2q_gates = list(zip(nums[:n//2], nums[n//2:]))
-		gates.append(f"CZ {2q_gates}")
-		gates.append("barrier")
-	return gates
+            nums = random.sample(range(num_qubits), num_qubits)
+            q2_gates = list(zip(nums[: n // 2], nums[n // 2 :]))
+            gates.append(f"CZ {', '.join(q2_gates)}")
+            gates.append("barrier")
+        return gates
 
     def _generate_circuit(self, num_qubits) -> str:
         """Initialise the square circuit of size num_qubits"""
-        
-	while (hops < 0.66):
-                gates = _random_sampling(num_qubits)
-        	hops = _compute_hop(circuit)
+
+        while hops < 0.66:
+            gates = _random_sampling(num_qubits)
+            hops = _compute_hop(circuit)
         return (circuit, hops)
 
-    def _compute_hop(self, qasm) -> str:
-        
-
+    #    def _compute_hop(self, qasm) -> str:
 
     @trace(computation_type=COMPUTATION_NAME, computation_step=ComputationStep.PRE)
     def pre(self, datapath: str):
@@ -79,14 +79,16 @@ class QuantumVolume(Computation):
 
         Returns: path location of written circuit, without extension
         """
-        for i in range(self.num_qubits): 
-        	circuit = _generate_circuit() 
-        	print(f"datapath: {datapath}")
-        	circuit_path = os.path.join(datapath, f"QuantumVolume_q{self.num_qubits}_{os.environ['JOB_ID']}")
+        for i in range(self.num_qubits):
+            circuit = _generate_circuit()
+            print(f"datapath: {datapath}")
+            circuit_path = os.path.join(
+                datapath, f"QuantumVolume_q{self.num_qubits}_{os.environ['JOB_ID']}"
+            )
 
-        	# Write qasm circuit
-        	with open(f"{circuit_path}.qasm", "w", encoding="utf-8") as fid:
-            		fid.write(str(qasm_circuit))
+            # Write qasm circuit
+            with open(f"{circuit_path}.qasm", "w", encoding="utf-8") as fid:
+                fid.write(str(qasm_circuit))
 
         return circuit_path
 
@@ -101,17 +103,19 @@ class QuantumVolume(Computation):
 
         Returns: path location of syndromes file
         """
-	self.results = {}
-	for i in range(self.num_qubits):
-        	circuit_path = os.path.join(datapath, f"QuantumVolume_q{i}_{os.environ['JOB_ID']}")
-
-        	# Send circuit to connector
-        	results.append(connection.run(qasm=f"{circuit_path}.qasm", reps=self.num_shots))
-	
+        self.results = {}
+        for i in range(self.num_qubits):
+            circuit_path = os.path.join(
+                datapath, f"QuantumVolume_q{i}_{os.environ['JOB_ID']}"
+            )
+            # Send circuit to connector
+            results.append(
+                connection.run(qasm=f"{circuit_path}.qasm", reps=self.num_shots)
+            )
 
     @trace(computation_type=COMPUTATION_NAME, computation_step=ComputationStep.POST)
     def post(self, datapath: str):
-        """Runs the postprocessing analysis to obtain volume 
+        """Runs the postprocessing analysis to obtain volume
 
         Args:
             datapath: path location to write circuit
@@ -119,11 +123,11 @@ class QuantumVolume(Computation):
         Returns: quantum volume
         """
 
-	for i in range(self.num_qubits):
-        	circuit_path = os.path.join(datapath, f"QuantumVolume_q{i}_{os.environ['JOB_ID']}")
-                # Run simulation and get back results
-
-                # Compare results
-                self.results[i] = 
-
+        for i in range(self.num_qubits):
+            circuit_path = os.path.join(
+                datapath, f"QuantumVolume_q{i}_{os.environ['JOB_ID']}"
+            )
+            # Run simulation and get back results
+            # Compare results
+            # self.results[i] =
         return num_errors
