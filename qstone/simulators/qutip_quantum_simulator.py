@@ -2,8 +2,10 @@ import re
 from typing import List, Tuple, Dict
 import numpy as np
 import qutip as qt
+from simulation import Simulation
 
-class QASMToQuTiP:
+
+class QuTiP (Simulation):
     def __init__(self):
         # Standard single-qubit gates as QuTiP operators
         self.gates = {
@@ -31,7 +33,7 @@ class QASMToQuTiP:
         return qt.Qobj([[np.exp(-1j*theta/2), 0],
                        [0, np.exp(1j*theta/2)]])
     
-    def parse_qasm(self, qasm_str: str) -> List[Tuple]:
+    def qasm_to_qutip(self, qasm_str: str) -> List[Tuple]:
         """Parse QASM string into list of operations"""
         circuit = []
         
@@ -144,9 +146,9 @@ class QASMToQuTiP:
             
         return result, new_state
     
-    def translate(self, qasm_str: str) -> Tuple[qt.Qobj, Dict]:
-        """Translate QASM to QuTiP and return final state and measurements"""
-        circuit = self.parse_qasm(qasm_str)
+    def run(self, qasm_str: str) -> Dict:
+        """Translate QASM to QuTiP and return measurements"""
+        circuit = self.qasm_to_qutip(qasm_str)
         
         # Initialize state to |0...0>
         psi = qt.basis([2] * self.num_qubits)
@@ -170,28 +172,4 @@ class QASMToQuTiP:
                 U = self.apply_single_qubit_gate(gate, target)
                 psi = U * psi
             
-        return psi, self.measurements
-
-# Example usage
-if __name__ == "__main__":
-    # Example QASM string with rotations and measurement
-    qasm_str = """
-    OPENQASM 2.0;
-    include "qelib1.inc";
-    qreg q[2];
-    creg c[2];
-    rx(pi/4) q[0];
-    ry(pi/2) q[1];
-    cx q[0],q[1];
-    measure q[0] -> c[0];
-    measure q[1] -> c[1];
-    """
-    
-    # Create translator and run
-    translator = QASMToQuTiP()
-    final_state, measurements = translator.translate(qasm_str)
-    
-    print("Final state:")
-    print(final_state)
-    print("\nMeasurement results:")
-    print(measurements)
+        return self.measurements
