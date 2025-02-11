@@ -18,7 +18,7 @@ def env(tmp_path):
     os.environ["QS_USER"] = "test"
     os.environ["PROFILE_PATH"] = str(tmp_path.absolute())
     os.environ["OUTPUT_PATH"] = str(tmp_path.absolute())
-    os.environ["NUM_QUBITS"] = "2"
+    os.environ["NUM_QUBITS"] = "3"
     os.environ["NUM_SHOTS"] = "12"
 
 
@@ -120,3 +120,15 @@ def test_pre_custom_app(tmp_path, env):
     compute_src = get_computation_src("tests.data.apps.custom1.Custom1").from_json()
     compute_src.pre(tmp_path)
     assert os.path.exists(os.path.join(tmp_path, "pre.txt"))
+
+def test_pre_quantum_volume(tmp_path, env):
+    """capability to call custom application"""
+    compute_src = get_computation_src("QuantumVolume").from_json()
+    compute_src.pre(tmp_path)
+    print ("hello")
+    expected_qasm = f"QuantumVolume_q{os.environ['NUM_QUBITS']}_{os.environ['JOB_ID']}.qasm"
+    assert os.path.exists(os.path.join(tmp_path, expected_qasm))
+
+
+
+
