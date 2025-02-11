@@ -6,7 +6,7 @@ import shutil
 import numpy as np
 import pytest
 
-from qstone.simulators.qutip_sim import QuTiPSim
+from qstone.simulators.qutip_qsim import QuTiPSim
 
 
 @pytest.fixture()
@@ -38,5 +38,5 @@ def test_app_logs_failures(tmp_path, env):
     measure q[2] -> c[2];
     measure q[3] -> c[3];
     """
-    measurements = QuTiP().run(qasm)
-    assert measurements == ["0", "1", "0", "1"]
+    measurements = QuTiPSim().run(qasm, shots=10)
+    assert measurements[0] == [1, 0, 1, 0]

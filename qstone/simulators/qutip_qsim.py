@@ -165,6 +165,8 @@ class QuTiPSim(Simulation):
     def run(self, qasm_str: str, shots: int) -> Dict:
         """Translate QASM to QuTiP and return measurements"""
         circuit = self.qasm_to_qutip(qasm_str)
+    
+        measurements = [] 
 
         for s in range(shots):
             # Initialize state to |0...0>
@@ -188,5 +190,6 @@ class QuTiPSim(Simulation):
                     gate, target = operation
                     U = self.apply_single_qubit_gate(gate, target)
                     psi = U * psi
+            measurements.append(self.measurements['c'])
 
-        return self.measurements['c']
+        return measurements
