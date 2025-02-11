@@ -59,13 +59,12 @@ class QuantumVolume(Computation):
 
             nums = random.sample(range(num_qubits), num_qubits)
             q2_gates = list(zip(nums[: n // 2], nums[n // 2 :]))
-            gates.append(f"CZ {', '.join(q2_gates)}")
-            gates.append("barrier")
+            gates.append(f"CX {', '.join(q2_gates)}")
         return gates
 
     def _generate_circuit(self, num_qubits) -> str:
         """Initialise the square circuit of size num_qubits"""
-
+        hops = 0
         while hops < 0.66:
             gates = _random_sampling(num_qubits)
             hops = _compute_hop(circuit)

@@ -2,7 +2,7 @@ import re
 from typing import List, Tuple, Dict
 import numpy as np
 import qutip as qt
-from simulation import Simulation
+from qstone.simulators.simulation import Simulation
 
 
 class QuTiPSim(Simulation):
@@ -162,29 +162,31 @@ class QuTiPSim(Simulation):
 
         return result, new_state
 
-    def run(self, qasm_str: str) -> Dict:
+    def run(self, qasm_str: str, shots: int) -> Dict:
         """Translate QASM to QuTiP and return measurements"""
         circuit = self.qasm_to_qutip(qasm_str)
-        # Initialize state to |0...0>
-        psi = qt.basis([2] * self.num_qubits)
 
-        # Apply gates and measurements
-        for operation in circuit:
-            if operation[0] == "measure":
-                _, qubit, reg, bit = operation
-                result, psi = self.measure_qubit(psi, qubit)
-                self.measurements[reg][bit] = result
-            elif operation[0] in ["rx", "ry", "rz"]:
-                gate, theta, qubit = operation
-                U = self.apply_single_qubit_gate(gate, qubit, theta)
-                psi = U * psi
-            elif operation[0] == "cx":
-                _, control, target = operation
-                U = self.apply_cnot(control, target)
-                psi = U * psi
-            else:
-                gate, target = operation
-                U = self.apply_single_qubit_gate(gate, target)
-                psi = U * psi
+        for s in range(shots):
+            # Initialize state to |0...0>
+            psi = qt.basis([2] * self.num_qubits)
+    
+            # Apply gates and measurements
+            for operation in circuit:
+                if operation[0] == "measure":
+                    _, qubit, reg, bit = operation
+                    result, psi = self.measure_qubit(psi, qubit)
+                    self.measurements[reg][bit] = result
+                elif operation[0] in ["rx", "ry", "rz"]:
+                    gate, theta, qubit = operation
+                    U = self.apply_single_qubit_gate(gate, qubit, theta)
+                    psi = U * psi
+                elif operation[0] == "cx":
+                    _, control, target = operation
+                    U = self.apply_cnot(control, target)
+                    psi = U * psi
+                else:
+                    gate, target = operation
+                    U = self.apply_single_qubit_gate(gate, target)
+                    psi = U * psi
 
-        return self.measurements
+        return self.measurements['c']

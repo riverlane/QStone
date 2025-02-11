@@ -32,7 +32,6 @@ waiting = "*"
 jsonschema = "*"
 # Simulators
 qutip = {version = "~= 5.1.1" }
-cuquantum-python = {version = "*", optional = true}
 # Backends
 qcs-sdk-python = {version = "= 0.21.6", optional = true}
 pyquil = {version = "~= 4.15.0", optional = true}
@@ -64,6 +63,8 @@ nbsphinx = { version = "*", optional = true }
 sphinx-copybutton = { version = "*", optional = true }
 
 
+[tool.optional-dependencies]
+cuquantum-python = {version = "*", optional = true}
 
 [tool.poetry.extras]
 test = ["pytest", "pytest-cov", "pytest-depends", "pytest-manual-marker", "requests-mock", "types-protobuf", "grpcio-tools", "imageio", "nbmake", "ipython", "pytest-xdist", "pytest-mock"]
