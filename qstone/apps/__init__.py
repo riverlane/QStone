@@ -6,6 +6,7 @@ import os
 from qstone.apps.PyMatching import PyMatching
 from qstone.apps.RB import RB
 from qstone.apps.VQE import VQE
+from qstone.apps.QuantumVolume import QuantumVolume
 from qstone.connectors import connector
 
 # Mapping computation name to its class
@@ -13,6 +14,7 @@ _computation_registry = {
     "VQE": VQE,
     "RB": RB,
     "PyMatching": PyMatching,
+    "QuantumVolume": QuantumVolume,
 }
 
 ENV_VARS = {

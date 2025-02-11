@@ -162,16 +162,16 @@ class QuTiPSim(Simulation):
 
         return result, new_state
 
-    def run(self, qasm_str: str, shots: int) -> Dict:
+    def run(self, qasm_str: str, shots: int) -> List:
         """Translate QASM to QuTiP and return measurements"""
         circuit = self.qasm_to_qutip(qasm_str)
-    
-        measurements = [] 
+
+        measurements = []
 
         for s in range(shots):
             # Initialize state to |0...0>
             psi = qt.basis([2] * self.num_qubits)
-    
+
             # Apply gates and measurements
             for operation in circuit:
                 if operation[0] == "measure":
@@ -190,6 +190,6 @@ class QuTiPSim(Simulation):
                     gate, target = operation
                     U = self.apply_single_qubit_gate(gate, target)
                     psi = U * psi
-            measurements.append(self.measurements['c'])
+            measurements.append(self.measurements["c"])
 
         return measurements
