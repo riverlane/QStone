@@ -46,9 +46,10 @@ class QuTiPSim(Simulation):
 
         # Remove comments and empty lines
         lines = [line.split("//")[0].strip() for line in qasm_str.split("\n")]
-        lines = [line for line in lines if line]
+        lines = [line.lower() for line in lines if line]
 
         for line in lines:
+            print (line)
             if line.startswith("OPENQASM") or line.startswith("include"):
                 continue
 
@@ -167,7 +168,7 @@ class QuTiPSim(Simulation):
         circuit = self.qasm_to_qutip(qasm_str)
 
         measurements = []
-
+        print (f"run: {circuit=}")
         for s in range(shots):
             # Initialize state to |0...0>
             psi = qt.basis([2] * self.num_qubits)
