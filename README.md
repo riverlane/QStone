@@ -53,16 +53,16 @@ Run QStone using Command Line Interface
   "jobs": [
     {
       "type": "VQE",
-      "qubit_min": 2,
-      "qubit_max": 4,
+      "qubits": [4, 6],
+      "num_shots": [100, 200],
       "walltime" : 10,
       "nthreads" : 4,
       "lsf/jsrun_opt": "-nnodes=4 "
     },
     {
       "type": "RB",
-      "qubit_min": 2,
-      "qubit_max": 4,
+      "qubits": [2],
+      "num_shots": [100],
       "walltime" : 10,
       "nthreads" : 2,
       "slurm/schedmd_opt": "--cpus-per-task=4"
