@@ -50,9 +50,9 @@ class QuantumVolume(Computation):
     def _random_sampling(self, num_qubits) -> str:
         """Generate a circuit random sampling"""
         circuit = f"OPENQASM 2.0;\n"
-        circuit += 'include "qelib1.inc";'
+        circuit += 'include "qelib1.inc";\n'
         circuit += f"CREG C[{num_qubits}];\n"
-        circuit += f"QREG C[{num_qubits}];\n"
+        circuit += f"QREG Q[{num_qubits}];\n"
         for i in range(num_qubits):
             # Single qubit gate
             for i in range(num_qubits):
@@ -62,9 +62,9 @@ class QuantumVolume(Computation):
             nums = random.sample(range(num_qubits), num_qubits)
             q2_gates = list(zip(nums[: num_qubits // 2], nums[num_qubits // 2 :]))
             for q2s in q2_gates:
-                circuit += f"CX Q[{q2s[0]}, Q[{q2s[1]}];\n"
+                circuit += f"CX Q[{q2s[0]}], Q[{q2s[1]}];\n"
         for i in range(num_qubits):
-            circuit += f"MEASURE Q[{i}], C[{i}];\n"
+            circuit += f"MEASURE Q[{i}] -> C[{i}];\n"
         return circuit
 
     def _generate_circuit(self, num_qubits) -> str:
@@ -78,7 +78,7 @@ class QuantumVolume(Computation):
         return (circuit, hops)
 
     def _compute_hop(self, qasm) -> float:
-        print (f"_compute_hop - {qasm=}")
+        print(f"_compute_hop - {qasm=}")
         results = Sim().run(qasm, 10)
         print(f"{results=}")
         return 0.67

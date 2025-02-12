@@ -49,7 +49,6 @@ class QuTiPSim(Simulation):
         lines = [line.lower() for line in lines if line]
 
         for line in lines:
-            print (line)
             if line.startswith("OPENQASM") or line.startswith("include"):
                 continue
 
@@ -168,13 +167,14 @@ class QuTiPSim(Simulation):
         circuit = self.qasm_to_qutip(qasm_str)
 
         measurements = []
-        print (f"run: {circuit=}")
+        print(f"run: {circuit=}")
         for s in range(shots):
             # Initialize state to |0...0>
             psi = qt.basis([2] * self.num_qubits)
 
             # Apply gates and measurements
             for operation in circuit:
+                print(f" {operation=}")
                 if operation[0] == "measure":
                     _, qubit, reg, bit = operation
                     result, psi = self.measure_qubit(psi, qubit)
@@ -191,6 +191,7 @@ class QuTiPSim(Simulation):
                     gate, target = operation
                     U = self.apply_single_qubit_gate(gate, target)
                     psi = U * psi
+            print(f"run: {self.measurements['c']=}")
             measurements.append(self.measurements["c"])
 
         return measurements
