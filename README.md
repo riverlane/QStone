@@ -43,7 +43,7 @@ Run QStone using Command Line Interface
      "project_name": "proj_name",
      "connector": "NO_LINK",
      "qpu_ip_address": "0.0.0.0",
-     "qpu_port": "55",
+     "qpu_port": 55,
      "qpu_management": "LOCK",
      "timeouts" : {
          "http": 5,
