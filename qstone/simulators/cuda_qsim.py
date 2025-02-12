@@ -1,11 +1,14 @@
 import re
 from typing import List, Tuple, Dict
 import numpy as np
-import cupy as cp
 from cuquantum import custatevec as cusv
 import math
 
-
+try:
+    import cupy as cp
+except ImportError:
+    pass
+    
 class CudaSimulator:
     def __init__(self):
         # Standard gates and their matrix representations
