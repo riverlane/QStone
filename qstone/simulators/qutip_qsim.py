@@ -16,7 +16,6 @@ class QuTiPSim(Simulation):
             "s": qt.Qobj([[1, 0], [0, 1j]]),
             "t": qt.Qobj([[1, 0], [0, np.exp(1j * np.pi / 4)]]),
         }
-        self.measurements = {}  # Store measurement results
 
     def rx(self, theta: float) -> qt.Qobj:
         """Create Rx rotation gate"""
@@ -102,23 +101,24 @@ class QuTiPSim(Simulation):
 
         return result, new_state
 
-    def run(self, qasm_str: str, shots: int) -> List:
+    def run(self, qasm_str: str, shots: int) -> np.array:
         """Translate QASM to QuTiP and return measurements"""
         circuit = self.parse_qasm(qasm_str)
-
-        measurements = []
         print(f"run: {circuit=}")
+
+        # Initialise measurements
+        measurements = np.zeros((self.num_cregs, shots))
+
         for s in range(shots):
             # Initialize state to |0...0>
             psi = qt.basis([2] * self.num_qubits)
 
             # Apply gates and measurements
             for operation in circuit:
-                print(f" {operation=}")
                 if operation[0] == "measure":
                     _, qubit, reg, bit = operation
                     result, psi = self.measure_qubit(psi, qubit)
-                    self.measurements[reg][bit] = result
+                    measurements[bit][s] = result
                 elif operation[0] in ["rx", "ry", "rz"]:
                     gate, theta, qubit = operation
                     U = self.apply_single_qubit_gate(gate, qubit, theta)
@@ -131,7 +131,5 @@ class QuTiPSim(Simulation):
                     gate, target = operation
                     U = self.apply_single_qubit_gate(gate, target)
                     psi = U * psi
-            print(f"run: {self.measurements['c']=}")
-            measurements.append(self.measurements["c"])
 
         return measurements

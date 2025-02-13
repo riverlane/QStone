@@ -1,7 +1,7 @@
-"""Defines the two steps of PyMatching jobs"""
+"""Defines the Quantum Volume application"""
 
 import os
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import numpy as np
 from pandera import Check, Column, DataFrameSchema
@@ -19,7 +19,7 @@ except ImportError:
 
 class QuantumVolume(Computation):
     """
-    PyMatching computation class.
+    QuantumVolume computation class.
     """
 
     COMPUTATION_NAME = "QuantumVolume"
@@ -44,7 +44,6 @@ class QuantumVolume(Computation):
         self.repetitions: int
         self.num_shots = int(os.environ.get("NUM_SHOTS", self.repetitions))
         self.num_qubits = int(os.environ.get("NUM_QUBITS", 2))
-        print("QuantumVolume.__init__()")
         self.results = None
 
     def _random_sampling(self, num_qubits) -> str:
@@ -74,14 +73,18 @@ class QuantumVolume(Computation):
         while hops < 0.66:
             circuit = self._random_sampling(num_qubits)
             print(f"{circuit=}")
-            hops = self._compute_hop(circuit)
+            hops, results = self._compute_hop(circuit)
+
         return (circuit, hops)
 
-    def _compute_hop(self, qasm) -> float:
-        print(f"_compute_hop - {qasm=}")
-        results = Sim().run(qasm, 10)
+    def _compute_hop(self, qasm) -> tuple[float, List]:
+        results = Sim().run(qasm, 100)
         print(f"{results=}")
-        return 0.67
+        values = [sum(x) for x in zip(*results)]
+        print(f"{values=}")
+        assert results == 0
+
+        return (0.67, results)
 
     @trace(computation_type=COMPUTATION_NAME, computation_step=ComputationStep.PRE)
     def pre(self, datapath: str):

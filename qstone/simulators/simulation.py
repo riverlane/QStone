@@ -2,11 +2,16 @@
 
 from abc import ABC, abstractmethod
 import re
+import numpy as np
 from typing import List, Tuple
 
 
 class Simulation(ABC):
     """Simulation abstract class"""
+
+    def __init__(self):
+        self.num_qubits = None
+        self.num_cregs = None
 
     def parse_qasm(self, qasm_str: str) -> List[Tuple]:
         """Parse QASM string into list of operations"""
@@ -27,10 +32,9 @@ class Simulation(ABC):
                 continue
 
             if line.startswith("creg"):
-                match = re.search(r"creg\s+(\w+)\[(\d+)\]", line)
+                match = re.search(r"creg\s+\w+\[(\d+)\]", line)
                 if match:
-                    reg_name, size = match.groups()
-                    self.measurements[reg_name] = [None] * int(size)
+                    self.num_cregs = int(match.group(1))
                 continue
 
             # Parse measurements
@@ -69,6 +73,6 @@ class Simulation(ABC):
         return circuit
 
     @abstractmethod
-    def run(self, qasm: str) -> []:
+    def run(self, qasm: str) -> np.array:
         """Runs a quantum circuit"""
         raise NotImplementedError

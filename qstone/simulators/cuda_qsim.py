@@ -8,7 +8,8 @@ try:
     import cupy as cp
 except ImportError:
     pass
-    
+
+
 class CudaSimulator:
     def __init__(self):
         # Standard gates and their matrix representations
