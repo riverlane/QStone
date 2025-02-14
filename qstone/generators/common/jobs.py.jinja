@@ -56,9 +56,24 @@ def post(src: str, cfg: str):
 @click.option("--cfg", help="Computation cfg json.")
 def full(src: str, cfg: str):
     """Run all steps of computation"""
-    pre(src, cfg)
-    run(src, cfg)
-    post(src, cfg)
+    click.echo(f"full type {src}")
+
+    computation_src = get_computation_src(src)(json.loads(cfg))
+    computation_src.pre(ENV_VARS["OUTPUT_PATH"])
+
+    computation_src = get_computation_src(src)(json.loads(cfg))
+    computation_src.run(
+        ENV_VARS["OUTPUT_PATH"],
+        connector.Connector(
+            ENV_VARS["CONNECTOR_TYPE"],  # type: ignore [arg-type]
+            ENV_VARS["QPU_IP_ADDRESS"],  # type: ignore [arg-type]
+            ENV_VARS["QPU_PORT"],  # type: ignore [arg-type]
+            ENV_VARS["LOCKFILE"],  # type: ignore [arg-type]
+        ),
+    )
+
+    computation_src = get_computation_src(src)(json.loads(cfg))
+    computation_src.post(ENV_VARS["OUTPUT_PATH"])
 
 
 if __name__ == "__main__":
