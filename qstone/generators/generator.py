@@ -38,6 +38,16 @@ def _get_value(job_cfg: pa.DataFrame, key: str, default: str):
         val = default
     return str(val)
 
+def _find_files(search_paths: str):
+    all_files = [
+        os.path.join(search_path, s)
+        for search_path in search_paths
+        for s in os.listdir(search_path)
+        if s not in ["__pycache__", ".cache"] and not s.endswith(".pyc")
+    ]
+    jinja_files = [s for s in all_files if s.endswith("jinja")]
+    non_jinja_files = list(set(all_files) - set(jinja_files))
+    return (jinja_files, non_jinja_files) 
 
 def _render_templates(
     sched: str,
@@ -51,14 +61,7 @@ def _render_templates(
     search_paths = [sched_path, os.path.join(CURRENT_PATH, "common")]
 
     # Ignore folders and search in the search paths all the paths
-    all_files = [
-        os.path.join(search_path, s)
-        for search_path in search_paths
-        for s in os.listdir(search_path)
-        if s not in ["__pycache__", ".cache"] and not s.endswith(".pyc")
-    ]
-    jinja_files = [s for s in all_files if s.endswith("jinja")]
-    non_jinja_files = list(set(all_files) - set(jinja_files))
+    jinja_files, non_jinja_files = _find_files(search_paths)
     # Adding templated files
     for jinja_file in jinja_files:
         with open(jinja_file, encoding="utf-8") as fid:
