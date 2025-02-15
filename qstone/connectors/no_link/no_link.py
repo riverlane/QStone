@@ -3,7 +3,6 @@
 from qstone.connectors import connection
 from qstone.utils.utils import (
     ComputationStep,
-    QpuConfiguration,
     qasm_circuit_random_sample,
     trace,
 )

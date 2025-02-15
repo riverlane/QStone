@@ -60,8 +60,8 @@ def prof(args: Optional[Sequence[str]] = None) -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     logger.info("Extracting scheduler tar file")
     # Folder can be a list of folders
-    folder = [args.folder] if isinstance(args.folder, str) else args.folder  # type: ignore[union-attr]
-    profile.profile(args.cfg, folder, args.pickle)  # type: ignore[union-attr]
+    f = [args.folder] if isinstance(args.folder, str) else args.folder  # type: ignore[union-attr]
+    profile.profile(args.cfg, f, args.pickle)  # type: ignore[union-attr]
 
 
 def main(arg_strings: Optional[Sequence[str]] = None) -> None:
@@ -151,7 +151,8 @@ def main(arg_strings: Optional[Sequence[str]] = None) -> None:
         "--folder",
         type=str,
         action="append",
-        help="Folder that contains the runs. Multiple folders can be provided by repeating the argument",
+        help="""Folder that contains the runs. 
+        Multiple folders can be provided by repeating the argument""",
     )
     profiler.add_argument(
         "--pickle",

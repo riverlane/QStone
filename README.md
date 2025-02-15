@@ -66,6 +66,14 @@ Run QStone using Command Line Interface
       "walltime" : 10,
       "nthreads" : 2,
       "slurm/schedmd_opt": "--cpus-per-task=4"
+    },
+    {
+      "type": "QBC",
+      "qubits": [4],
+      "num_shots": [32],
+      "walltime": 20,
+      "nthreads" : 2
+      "slurm/schedmd_opt": "-N 2 -n 2 --ntasks-per-node=1"
     }
   ],
   "users": [

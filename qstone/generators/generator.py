@@ -149,11 +149,6 @@ def _randomise(vals, def_val):
     return value
 
 
-def Convert(lst):
-    res_dct = {lst[i]: lst[i + 1] for i in range(0, len(lst), 2)}
-    return res_dct
-
-
 def _generate_user_jobs(
     usr_cfg: "pa.Series[Any]",
     jobs_cfg: pa.DataFrame,
@@ -177,16 +172,16 @@ def _generate_user_jobs(
     num_qubits = []
     num_shots = []
 
-    DEF_QUBITS = 2
-    DEF_SHOTS = 100
+    def_qubits = 2
+    def_shots = 100
     for j in job_types:
         app_cfg = jobs_cfg[jobs_cfg["type"] == j]
         if app_cfg.empty:
-            num_qubits.append(DEF_QUBITS)
-            num_shots.append(DEF_SHOTS)
+            num_qubits.append(def_qubits)
+            num_shots.append(def_shots)
         else:
-            num_qubits.append(_randomise(app_cfg["qubits"], DEF_QUBITS))
-            num_shots.append(_randomise(app_cfg["num_shots"], DEF_SHOTS))
+            num_qubits.append(_randomise(app_cfg["qubits"], def_qubits))
+            num_shots.append(_randomise(app_cfg["num_shots"], def_shots))
 
     # Assign job id and pack
     job_ids = list(range(len(job_types)))
@@ -257,7 +252,7 @@ def generate_suite(
             "atomic": atomic,
             "sched_ext": SCHEDULER_EXTS[scheduler],
             "sched_cmd": SCHEDULER_CMDS[scheduler],
-            "sched_aware": True if env_cfg["qpu_management"] == "SCHEDULER" else False,
+            "sched_aware": env_cfg["qpu_management"] == "SCHEDULER",
         }
         # Pack project files
         filename = os.path.join(output_folder, f"{scheduler}_{user_name}.qstone.tar.gz")

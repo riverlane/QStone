@@ -7,7 +7,7 @@ import os
 import pandas as pd
 import pandera as pa
 
-from qstone.utils.utils import ComputationStep, load_json_profile, parse_json
+from qstone.utils.utils import ComputationStep, load_json_profile
 
 PROFILER_SCHEMA = pa.DataFrameSchema(
     {
@@ -89,9 +89,6 @@ def profile(config: str, folder: list[str], pickle: str):
     Profile the total execution across multiple users and store into
     a generalised pickled object.
     """
-    # Get system configuration
-
-    config_dict = parse_json(config)
     # Merging the results
     stats = pd.concat(
         [_get_stats_from_dir(f, PROFILER_SCHEMA) for f in folder], ignore_index=True
