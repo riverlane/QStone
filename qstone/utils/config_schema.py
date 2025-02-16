@@ -10,6 +10,7 @@ FULL_SCHEMA = {
                 "qpu_ip_address": {"type": "string", "format": "hostname"},
                 "qpu_port": {"type": "number"},
                 "qpu_management": {"enum": ["LOCK", "SCHEDULER", "POLLING", "NONE"]},
+                "job_count": {"type": "number"},
                 "lock_file": {"type": "string"},
                 "timeouts": {
                     "type": "object",
@@ -36,6 +37,7 @@ FULL_SCHEMA = {
                     "type": "object",
                     "properties": {
                         "user": {"type": "string"},
+                        "job_count": {"type": "number"},
                         "weight": {"type": "number"},
                         "computations": {"type": "object"},
                     },
