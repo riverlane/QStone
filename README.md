@@ -25,6 +25,10 @@ Tested on Python [3.9-3.12]
 
 `pip install QStone`
 
+To leverage MPI features:
+
+`pip install QStone[mpi]`
+
 ### Execution
 
 Run QStone using Command Line Interface
