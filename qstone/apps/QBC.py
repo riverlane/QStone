@@ -138,7 +138,7 @@ def loss(
 
         probs = {key: counts[key] / training_size / shots for key in counts.keys()}
         loss -= probs[str(labels[i])]
-    print(f"partial loss for rank {comm.Get_rank()}: {loss}", flush=True)
+    print(f"partial loss for rank {self.comm.Get_rank()}: {loss}", flush=True)
     temp = mpi_communication(loss, comm, bcast=False)
     loss = temp
     print(f"total loss: {loss}", flush=True)
@@ -186,8 +186,8 @@ class QBC(Computation):  # pylint:disable=invalid-name
         self.qpu_cfg.num_required_qubits = self.num_required_qubits
 
         self.comm = MPIHandler()
-        self.size = self.comm.Get_size()
-        self.rank = self.comm.Get_rank()
+        self.size = self.comm.Get_size()  # type: ignore [attr-defined]
+        self.rank = self.comm.Get_rank()  # type: ignore [attr-defined]
 
     @trace(
         computation_type=COMPUTATION_NAME,
@@ -211,7 +211,7 @@ class QBC(Computation):  # pylint:disable=invalid-name
 
             numpy.savez(run_file, data=data, labels=labels, allow_pickle=True)
 
-        self.comm.Barrier()
+        self.comm.Barrier()  # type: ignore [attr-defined]
 
     @trace(
         computation_type=COMPUTATION_NAME,
@@ -231,13 +231,13 @@ class QBC(Computation):  # pylint:disable=invalid-name
         leftover = self.training_size % self.size
         if self.rank > self.size - leftover - 1:
             jobs_per_rank += 1
-        jobsizes = self.comm.allgather(jobs_per_rank)
+        jobsizes = self.comm.allgather(jobs_per_rank)  # type: ignore [attr-defined]
         starts = list(sum(jobsizes[:i]) for i in range(len(jobsizes)))
         idxs = numpy.arange(starts[self.rank], starts[self.rank] + jobsizes[self.rank])
 
-        totqasms = []
-        totresults = []
-        totlosses = []
+        totqasms: list = []
+        totresults: list = []
+        totlosses: list = []
         if self.pqc_number in [2, 15]:
             totparameters = (
                 2 * numpy.pi * numpy.random.rand(2 * self.num_required_qubits)
@@ -285,4 +285,4 @@ class QBC(Computation):  # pylint:disable=invalid-name
             run_file = f"{datapath}/qbc_run_{os.environ['JOB_ID']}.npz"
             print(f"Training results at {run_file}\n")
 
-        self.comm.Barrier()
+        self.comm.Barrier()  # type: ignore [attr-defined]

@@ -26,4 +26,4 @@ class MPIHandler:
 
     def Barrier(self):  # pylint: disable=invalid-name
         """Barrier call - mocked"""
-        raise NotImplementedError("Requires MPI support")
+        pass

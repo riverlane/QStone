@@ -38,6 +38,7 @@ def _get_value(job_cfg: pa.DataFrame, key: str, default: str):
         val = default
     return str(val)
 
+
 def _find_files(sched_path: str):
     search_paths = [sched_path, os.path.join(CURRENT_PATH, "common")]
     all_files = [
@@ -49,6 +50,7 @@ def _find_files(sched_path: str):
     jinja_files = [s for s in all_files if s.endswith("jinja")]
     non_jinja_files = list(set(all_files) - set(jinja_files))
     return (jinja_files, non_jinja_files)
+
 
 def _render_templates(
     sched: str,
