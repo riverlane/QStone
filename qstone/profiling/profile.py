@@ -84,7 +84,9 @@ def _print_stats(stats: pd.DataFrame):
     print(f"Average connection time       [ms]:  {connection_total/tot_runs:>12.2f}")
 
 
-def profile(config: str, folder: list[str], pickle: str): #pylint: disable=unused-argument
+def profile(
+    config: str, folder: list[str], pickle: str
+):  # pylint: disable=unused-argument
     """
     Profile the total execution across multiple users and store into
     a generalised pickled object.
