@@ -3,6 +3,7 @@
 import os
 import shutil
 
+import glob
 import numpy as np
 import pytest
 import shutil
@@ -10,33 +11,8 @@ import shutil
 from qstone.connectors import connector
 from qstone.apps import get_computation_src
 
-from unittest.mock import MagicMock
-
-
-class MPICommMock:
-    def __init__(self, rank=0, size=4):
-        self.rank = rank
-        self.size = size
-
-    def Get_rank(self):
-        return self.rank
-
-    def Get_size(self):
-        return self.size
-
-    def scatter(self, data, root=0):
-        if self.rank == root and data is not None:
-            return data[self.rank]
-        else:
-            # Simulate receiving scattered data
-            return np.array([1, 2, 3])  # Example data
-
-    def gather(self, data, root=0):
-        if self.rank == root:
-            # Simulate gathering data from all ranks
-            return [data] * self.size
-        return None
-
+def _get_file(regex):
+    return glob.glob(regex)[0]
 
 @pytest.fixture()
 def env(tmp_path):
@@ -53,10 +29,9 @@ def env(tmp_path):
 def test_app_logs_failures(tmp_path, env):
     compute_src = get_computation_src("RB").from_json()
     # This should fail due to the lack of npz file
-    profile_file = os.path.join(tmp_path, "job_test_POST_RB.json")
+    profile_file = os.path.join(tmp_path, "job_test_POST_RB*.json")
     compute_src.post(tmp_path)
-    print(os.listdir(tmp_path))
-    with open(profile_file, "r") as fir:
+    with open(_get_file(profile_file), "r") as fir:
         assert '"success": false' in fir.read()
 
 
@@ -69,8 +44,8 @@ def test_pre_RB(tmp_path, env):
     vals = np.load(run_file)
     assert len(vals["qasms"]) == 40
     assert len(vals["exp"]) == 40
-    profile_file = os.path.join(tmp_path, "job_test_PRE_RB.json")
-    with open(profile_file, "r") as fir:
+    profile_file = os.path.join(tmp_path, "job_test_PRE_RB*.json")
+    with open(_get_file(profile_file), "r") as fir:
         assert '"success": true' in fir.read()
     assert compute_src.num_shots == 12, "Wrong number of shots"
 
