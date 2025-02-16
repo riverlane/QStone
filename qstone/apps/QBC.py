@@ -186,8 +186,8 @@ class QBC(Computation):  # pylint:disable=invalid-name
         self.qpu_cfg.num_required_qubits = self.num_required_qubits
 
         self.comm = MPIHandler()
-        self.size = self.comm.Get_size()  # type: ignore [attr-defined]
-        self.rank = self.comm.Get_rank()  # type: ignore [attr-defined]
+        self.size = self.comm.Get_size()
+        self.rank = self.comm.Get_rank()
 
     @trace(
         computation_type=COMPUTATION_NAME,
@@ -211,7 +211,7 @@ class QBC(Computation):  # pylint:disable=invalid-name
 
             numpy.savez(run_file, data=data, labels=labels, allow_pickle=True)
 
-        self.comm.Barrier()  # type: ignore [attr-defined]
+        self.comm.Barrier()
 
     @trace(
         computation_type=COMPUTATION_NAME,

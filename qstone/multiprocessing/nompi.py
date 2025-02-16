@@ -20,7 +20,7 @@ class MPIHandler:
         """allreduce call - mocked"""
         raise NotImplementedError("Requires MPI support")
 
-    def allgather(self, **kwargs):  # pylint: disable=invalid-name
+    def allgather(self, sendobj=None, recvobj=None):  # pylint: disable=[invalid-name, unused-argument]
         """allgather call - mocked"""
         return []
 

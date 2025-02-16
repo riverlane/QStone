@@ -15,10 +15,18 @@ class MPIHandler:
             return self.comm.Bcast([data, MPI.DOUBLE], root=0)
         return self.comm.allreduce(data, op=MPI.SUM)
 
-    def Get_size(self) -> int:
+    def Get_size(self) -> int: # pylint: disable=invalid-name
         """Redirects call to MPI Get_size"""
         return self.comm.Get_size()
 
-    def Get_rank(self) -> int:
+    def Get_rank(self) -> int: # pylint: disable=invalid-name
         """Redirects call to MPI Get_rank"""
         return self.comm.Get_rank()
+
+    def Barrier(self): # pylint: disable=invalid-name
+        """Redirects call to MPI Barrier"""
+        return self.comm.Barrier()
+
+    def allgather(self, sendobj=None, recvobj=None):  # pylint: disable=invalid-name
+        """Redirects call to MPI allgather"""
+        return self.comm.allgather(sendobj, recvobj)
