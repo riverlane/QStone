@@ -138,7 +138,7 @@ def loss(
 
         probs = {key: counts[key] / training_size / shots for key in counts.keys()}
         loss -= probs[str(labels[i])]
-    print(f"partial loss for rank {self.comm.Get_rank()}: {loss}", flush=True)
+    print(f"partial loss for rank {comm.Get_rank()}: {loss}", flush=True)
     temp = mpi_communication(loss, comm, bcast=False)
     loss = temp
     print(f"total loss: {loss}", flush=True)

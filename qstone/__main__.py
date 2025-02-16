@@ -151,8 +151,7 @@ def main(arg_strings: Optional[Sequence[str]] = None) -> None:
         "--folder",
         type=str,
         action="append",
-        help="""Folder that contains the runs. 
-        Multiple folders can be provided by repeating the argument""",
+        help="Folder that contains the runs, for multiple folders repeat the argument",
     )
     profiler.add_argument(
         "--pickle",

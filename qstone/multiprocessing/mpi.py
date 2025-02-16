@@ -14,3 +14,6 @@ class MPIHandler:
         if bcast:
             return self.comm.Bcast([data, MPI.DOUBLE], root=0)
         return self.comm.allreduce(data, op=MPI.SUM)
+
+    def Get_size(self):
+        return self.comm.Get_size()
