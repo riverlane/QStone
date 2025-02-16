@@ -71,6 +71,7 @@ lint = ["pylint", "mypy", "pycodestyle", "black", "isort"]
 security = ["ochrona", "safety", "bandit"]
 docs = ["sphinx", "sphinx-mdinclude", "sphinx_rtd_theme", "nbsphinx", "sphinx-copybutton"]
 mpi = ["mpi4py"]
+
 [tool.pylint.MASTER]
 ignore-paths = 'qstone/connectors/riverlane/grpc.*$'
 
