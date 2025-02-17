@@ -4,9 +4,9 @@ import importlib
 import os
 
 from qstone.apps.PyMatching import PyMatching
+from qstone.apps.QBC import QBC
 from qstone.apps.RB import RB
 from qstone.apps.VQE import VQE
-from qstone.apps.QBC import QBC
 from qstone.connectors import connector
 
 # Mapping computation name to its class

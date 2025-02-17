@@ -172,7 +172,7 @@ def trace(
                         computation_type,
                         label,
                         str(start),
-                        str(end)
+                        str(end),
                     ),
                 )
             )

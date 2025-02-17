@@ -3,14 +3,13 @@
 import os
 
 import numpy
-from scipy.optimize import minimize
 from pandera import Check, Column, DataFrameSchema
+from scipy.optimize import minimize
 
-from qstone.connectors import connector
 from qstone.apps.computation import Computation
-from qstone.utils.utils import ComputationStep, trace
-
+from qstone.connectors import connector
 from qstone.multiprocessing import MPIHandler
+from qstone.utils.utils import ComputationStep, trace
 
 
 @trace(
