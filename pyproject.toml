@@ -54,7 +54,7 @@ types-protobuf = { version = "*", optional = true }
 requests-mock = { version = "*", optional = true }
 flask = "*" 
 pandas-stubs = "*"
-pip-audit = { version = "*", optional = true }
+pip-audit = "*"
 
 sphinx-mdinclude = { version = "*", optional = true }
 sphinx = { version = "*", optional = true }

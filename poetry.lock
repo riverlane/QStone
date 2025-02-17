@@ -275,7 +275,7 @@ files = [
 name = "boolean-py"
 version = "4.0"
 description = "Define boolean algebras, create and parse boolean expressions and create custom boolean DSL."
-optional = true
+optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
@@ -287,7 +287,7 @@ files = [
 name = "cachecontrol"
 version = "0.14.2"
 description = "httplib2 caching for requests"
-optional = true
+optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
@@ -923,7 +923,7 @@ tests = ["pytest", "pytest-cov", "pytest-xdist"]
 name = "cyclonedx-python-lib"
 version = "8.8.0"
 description = "Python library for CycloneDX"
-optional = true
+optional = false
 python-versions = "<4.0,>=3.8"
 groups = ["main"]
 files = [
@@ -946,7 +946,7 @@ xml-validation = ["lxml (>=4,<6)"]
 name = "defusedxml"
 version = "0.7.1"
 description = "XML bomb protection for Python stdlib modules"
-optional = true
+optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 groups = ["main"]
 files = [
@@ -1060,7 +1060,7 @@ devel = ["colorama", "json-spec", "jsonschema", "pylint", "pytest", "pytest-benc
 name = "filelock"
 version = "3.16.1"
 description = "A platform independent file lock."
-optional = true
+optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
@@ -1973,7 +1973,7 @@ rapidfuzz = ">=3.9.0,<4.0.0"
 name = "license-expression"
 version = "30.4.1"
 description = "license-expression is a comprehensive utility library to parse, compare, simplify and normalize license expressions (such as SPDX license expressions) using boolean logic."
-optional = true
+optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
@@ -1992,7 +1992,7 @@ testing = ["black", "isort", "pytest (>=6,!=7.0.0)", "pytest-xdist (>=2)", "twin
 name = "markdown-it-py"
 version = "3.0.0"
 description = "Python port of markdown-it. Markdown parsing, done right!"
-optional = true
+optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
@@ -2283,7 +2283,7 @@ testing = ["coverage", "pytest", "pytest-cov", "pytest-regressions"]
 name = "mdurl"
 version = "0.1.2"
 description = "Markdown URL utilities"
-optional = true
+optional = false
 python-versions = ">=3.7"
 groups = ["main"]
 files = [
@@ -2779,7 +2779,7 @@ toml = ">=0.10.2"
 name = "packageurl-python"
 version = "0.16.0"
 description = "A purl aka. Package URL parser and builder"
-optional = true
+optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
@@ -3096,7 +3096,7 @@ xmp = ["defusedxml"]
 name = "pip"
 version = "25.0.1"
 description = "The PyPA recommended tool for installing Python packages."
-optional = true
+optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
@@ -3108,7 +3108,7 @@ files = [
 name = "pip-api"
 version = "0.0.34"
 description = "An unofficial, importable pip API"
-optional = true
+optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
@@ -3123,7 +3123,7 @@ pip = "*"
 name = "pip-audit"
 version = "2.8.0"
 description = "A tool for scanning Python environments for known vulnerabilities"
-optional = true
+optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
@@ -3152,7 +3152,7 @@ test = ["coverage[toml] (>=7.0,!=7.3.3,<8.0)", "pretend", "pytest", "pytest-cov"
 name = "pip-requirements-parser"
 version = "32.0.1"
 description = "pip requirements parser - a mostly correct pip requirements parsing library because it uses pip's own code."
-optional = true
+optional = false
 python-versions = ">=3.6.0"
 groups = ["main"]
 files = [
@@ -3172,7 +3172,7 @@ testing = ["aboutcode-toolkit (>=6.0.0)", "black", "pytest (>=6,!=7.0.0)", "pyte
 name = "platformdirs"
 version = "4.3.6"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
-optional = true
+optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
@@ -3278,7 +3278,7 @@ test = ["pytest", "pytest-xdist", "setuptools"]
 name = "py-serializable"
 version = "1.1.2"
 description = "Library for serializing and deserializing Python Objects to and from JSON and XML."
-optional = true
+optional = false
 python-versions = "<4.0,>=3.8"
 groups = ["main"]
 files = [
@@ -3432,7 +3432,7 @@ typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 name = "pygments"
 version = "2.19.1"
 description = "Pygments is a syntax highlighting package written in Python."
-optional = true
+optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
@@ -4393,7 +4393,7 @@ fixture = ["fixtures"]
 name = "rich"
 version = "13.9.4"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
-optional = true
+optional = false
 python-versions = ">=3.8.0"
 groups = ["main"]
 files = [
@@ -4867,7 +4867,7 @@ files = [
 name = "sortedcontainers"
 version = "2.4.0"
 description = "Sorted Containers -- Sorted List, Sorted Dict, Sorted Set"
-optional = true
+optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
@@ -5238,7 +5238,7 @@ test = ["pytest", "ruff"]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
-optional = true
+optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 groups = ["main"]
 files = [
@@ -5656,4 +5656,4 @@ test = ["grpcio-tools", "pytest", "pytest-cov", "pytest-depends", "pytest-manual
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9, <=3.13"
-content-hash = "4dc32b26900f0a3c21b5f1ca8d972a66877bce18870a02a167cb1a1ec4665012"
+content-hash = "5cb11a8ba77efe84bb0ff917147c8cc09d2839f94c7608f6cdcd9a9ba7a82eac"
