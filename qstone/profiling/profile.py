@@ -91,7 +91,7 @@ def profile(config: str, folder: list[str], pickle: str):
     """
     # Get system configuration
 
-    config_dict = parse_json(config)
+    config_dict = parse_json(config) # pylint: disable=unused-variable
     # Merging the results
     stats = pd.concat(
         [_get_stats_from_dir(f, PROFILER_SCHEMA) for f in folder], ignore_index=True
