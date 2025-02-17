@@ -25,7 +25,13 @@ Tested on Python [3.9-3.12]
 
 `pip install QStone`
 
-To leverage MPI features:
+To leverage MPI features, first install OpenMPI.
+
+`sudo apt install openmpi` [On Ubuntu]
+`sudo yum install openmpi` [On Debian Systems]
+`brew install openmpi` [On Mac]
+ 
+Followed by a full installation:
 
 `pip install QStone[mpi]`
 
