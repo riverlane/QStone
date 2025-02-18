@@ -83,8 +83,8 @@ def generate_vqc_qasm(pqc_number, num_qubits, datum, parameters):
 )
 def mpi_communication(data, comm, bcast=True):
     """MPI communication wrapper"""
-    comm.communicate(data, bcast)
-
+    return comm.communicate(data, bcast)
+ 
 
 @trace(
     computation_type="QBC",

@@ -27,6 +27,6 @@ class MPIHandler:
         """Redirects call to MPI Barrier"""
         return self.comm.Barrier()
 
-    def allgather(self, sendobj=None, recvobj=None):  # pylint: disable=invalid-name
+    def allgather(self, sendobj):  # pylint: disable=invalid-name
         """Redirects call to MPI allgather"""
-        return self.comm.allgather(sendobj, recvobj)
+        return self.comm.allgather(sendobj)
