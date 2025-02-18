@@ -34,8 +34,8 @@ requests = "*"
 click = "*"
 waiting = "*"
 jsonschema = "*"
-qcs-sdk-python = {version = "= 0.21.6", optional = true}
-pyquil = {version = "~= 4.15.0", optional = true}
+qcs-sdk-python = "= 0.21.6"
+pyquil = "~= 4.15.0"
 grpcio = {version = "*", optional = true, markers = "platform_machine == 'amd64'" }
 pytest = { version = "*", optional = true }
 pytest-cov = {version = "*", optional = true}
@@ -51,9 +51,9 @@ black = { version = "*", optional = true}
 grpcio-tools = { version = "*", optional = true }
 types-protobuf = { version = "*", optional = true }
 requests-mock = { version = "*", optional = true }
-flask = {version = "*", optional = true} 
+flask = "*" 
 pandas-stubs = "*"
-pip-audit = { version = "*", optional = true }
+pip-audit = "*"
 
 sphinx-mdinclude = { version = "*", optional = true }
 sphinx = { version = "*", optional = true }
@@ -69,6 +69,7 @@ test = ["pytest", "pytest-cov", "pytest-depends", "pytest-manual-marker", "reque
 lint = ["pylint", "mypy", "pycodestyle", "black", "isort"]
 security = ["ochrona", "safety", "bandit"]
 docs = ["sphinx", "sphinx-mdinclude", "sphinx_rtd_theme", "nbsphinx", "sphinx-copybutton"]
+
 [tool.pylint.MASTER]
 ignore-paths = 'qstone/connectors/riverlane/grpc.*$'
 
