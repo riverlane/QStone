@@ -93,8 +93,14 @@ class DCL_QPU(QPU):
         # Use self.qpu_cfg.num_required_qubits
         outcomes = {}
         value = (1 << self.qpu_cfg.num_required_qubits) - 1
-        for i in range(value):
-            outcomes[bin(i)[2:].zfill(self.qpu_cfg.num_required_qubits)] = 10
+        remaining = self.qpu_cfg.num_shots
+        for i in range(value - 1):
+            if remaining > 0:
+                outcomes[bin(i)[2:].zfill(self.qpu_cfg.num_required_qubits)] = numpy.random.randint(0, remaining)
+                remaining -= outcomes[bin(i)[2:].zfill(self.qpu_cfg.num_required_qubits)]
+            else:
+                outcomes[bin(i)[2:].zfill(self.qpu_cfg.num_required_qubits)] = 0
+        outcomes[bin(value-1)[2:].zfill(self.qpu_cfg.num_required_qubits)] = remaining
         return outcomes
 
     def exec(self, qasm: str, shots: int) -> dict:
