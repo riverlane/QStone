@@ -3,12 +3,16 @@
 import os
 import shutil
 
+import glob
 import numpy as np
 import pytest
+import shutil
 
 from qstone.connectors import connector
 from qstone.apps import get_computation_src
 
+def _get_file(regex):
+    return glob.glob(regex)[0]
 
 @pytest.fixture()
 def env(tmp_path):
@@ -25,10 +29,9 @@ def env(tmp_path):
 def test_app_logs_failures(tmp_path, env):
     compute_src = get_computation_src("RB").from_json()
     # This should fail due to the lack of npz file
-    profile_file = os.path.join(tmp_path, "job_test_POST_RB.json")
+    profile_file = os.path.join(tmp_path, "job_test_POST_RB*.json")
     compute_src.post(tmp_path)
-    print(os.listdir(tmp_path))
-    with open(profile_file, "r") as fir:
+    with open(_get_file(profile_file), "r") as fir:
         assert '"success": false' in fir.read()
 
 
@@ -41,8 +44,8 @@ def test_pre_RB(tmp_path, env):
     vals = np.load(run_file)
     assert len(vals["qasms"]) == 40
     assert len(vals["exp"]) == 40
-    profile_file = os.path.join(tmp_path, "job_test_PRE_RB.json")
-    with open(profile_file, "r") as fir:
+    profile_file = os.path.join(tmp_path, "job_test_PRE_RB*.json")
+    with open(_get_file(profile_file), "r") as fir:
         assert '"success": true' in fir.read()
     assert compute_src.num_shots == 12, "Wrong number of shots"
 
@@ -113,6 +116,44 @@ def test_call_post_PyMatching(tmp_path, env):
         tmp_path, connector.Connector(connector.ConnectorType.NO_LINK, "0", "0", None)
     )
     compute_src.post(tmp_path)
+
+
+def test_call_pre_QBC(tmp_path, env):
+    """Test execution of pre step of QBC computation"""
+    compute_src = get_computation_src("QBC").from_json()
+    # Initialise
+    compute_src.rank = 0
+    compute_src.pre(tmp_path)
+    data_path = os.path.join(tmp_path, f"qbc_run_{os.environ['JOB_ID']}.npz")
+    assert os.path.exists(data_path)
+
+
+@pytest.mark.depends(on=["test_call_pre_QBC"])
+def test_call_run_QBC(tmp_path, env):
+    """Test execution of run step of QBC computation"""
+    compute_src = get_computation_src("QBC").from_json()
+    # Initialise
+    compute_src.rank = 0
+    data_path = os.path.join(tmp_path, f"qbc_run_{os.environ['JOB_ID']}.npz")
+    shutil.copyfile("tests/data/apps/qbc_run_test.npz", data_path)
+    compute_src.run(
+        tmp_path, connector.Connector(connector.ConnectorType.NO_LINK, "0", "0", None)
+    )
+    model = np.load(data_path, allow_pickle=True)
+    print(model)
+    assert os.path.exists(data_path)
+
+
+@pytest.mark.depends(on=["test_call_run_QBC"])
+def test_call_post_QBC(tmp_path, env):
+    """Test execution of post step of QBC computation"""
+    compute_src = get_computation_src("QBC").from_json()
+    # Initialise
+    compute_src.rank = 0
+    data_path = os.path.join(tmp_path, f"qbc_run_{os.environ['JOB_ID']}.npz")
+    shutil.copyfile("tests/data/apps/qbc_run_test.npz", data_path)
+    compute_src.post(tmp_path)
+    assert os.path.exists(data_path)
 
 
 def test_pre_custom_app(tmp_path, env):

@@ -85,6 +85,7 @@ jobs:
       POETRY_HOME: /opt/poetry
     steps:
       - uses: actions/checkout@v4
+      - run: sudo apt-get install openmpi-bin openmpi-doc libopenmpi-dev 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:

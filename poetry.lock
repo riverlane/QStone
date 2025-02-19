@@ -2308,6 +2308,30 @@ files = [
 typing-extensions = {version = "*", markers = "python_version < \"3.11\""}
 
 [[package]]
+name = "mpi4py"
+version = "4.0.3"
+description = "Python bindings for MPI"
+optional = true
+python-versions = ">=3.6"
+groups = ["main"]
+markers = "extra == \"mpi\""
+files = [
+    {file = "mpi4py-4.0.3-cp310-cp310-win_amd64.whl", hash = "sha256:4dfffeb117802c9b22f4fa18e73323d7fa610d6eca7292efc4807ce0321919a1"},
+    {file = "mpi4py-4.0.3-cp311-cp311-win_amd64.whl", hash = "sha256:26d9e70081f3c69c74c81306b6ad33918b710980bd1732ab577702909b2db3e8"},
+    {file = "mpi4py-4.0.3-cp312-cp312-win_amd64.whl", hash = "sha256:b709c410ab5f3f3f12f44514a18fb392e49b9e3185acb11e0dd8557a4ad1fe40"},
+    {file = "mpi4py-4.0.3-cp313-cp313-win_amd64.whl", hash = "sha256:7b026914b498dd40a28eb1d78494f266446f22894c0e91500f5f035daefb3fda"},
+    {file = "mpi4py-4.0.3-cp36-cp36m-win_amd64.whl", hash = "sha256:2423782320a014593dfe56e56fdee9852caed4496775d60464f06c3ea66e1f67"},
+    {file = "mpi4py-4.0.3-cp37-cp37m-win_amd64.whl", hash = "sha256:08a37a4b673772cc1c5979b59c37437e7c0c9fe6aed9d1914f2e23f8413a02ba"},
+    {file = "mpi4py-4.0.3-cp38-cp38-win_amd64.whl", hash = "sha256:567a332cfee0cdb3dfe8446550a0d874e490b0b297cfe20c4e7b240fd0eee289"},
+    {file = "mpi4py-4.0.3-cp39-cp39-win_amd64.whl", hash = "sha256:a756e7e787a51c28773ae51f4b65f9aa78334ae020457965da9a48221cc125e9"},
+    {file = "mpi4py-4.0.3-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:62ce21885fd94a7f9615a17d6d036098ca883178c4d7621c8f84a7a23d7d35b7"},
+    {file = "mpi4py-4.0.3-pp37-pypy37_pp73-win_amd64.whl", hash = "sha256:7b9f6e86bfdf230c1887d1be2ab0924c76526573d89b9ccc5bc4d33d6a1f7aeb"},
+    {file = "mpi4py-4.0.3-pp38-pypy38_pp73-win_amd64.whl", hash = "sha256:4b9ede2eccc3866ce85eaec6a4682a594b2143a9c030ceee0d80d2e3dd064eaf"},
+    {file = "mpi4py-4.0.3-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:324bc2a8b013b05d7ac7c96077f5bbcc78527446b07fad772a93adb0c74e4fbb"},
+    {file = "mpi4py-4.0.3.tar.gz", hash = "sha256:de2710d73e25e115865a3ab63d34a54b2d8608b724f761c567b6ad58dd475609"},
+]
+
+[[package]]
 name = "msgpack"
 version = "1.1.0"
 description = "MessagePack serializer"
@@ -5627,6 +5651,7 @@ type = ["pytest-mypy"]
 [extras]
 docs = ["nbsphinx", "sphinx", "sphinx-copybutton", "sphinx-mdinclude", "sphinx_rtd_theme"]
 lint = ["black", "mypy", "pylint"]
+mpi = ["mpi4py"]
 security = ["bandit", "ochrona", "safety"]
 test = ["grpcio-tools", "pytest", "pytest-cov", "pytest-depends", "pytest-manual-marker", "pytest-mock", "requests-mock", "types-protobuf"]
 

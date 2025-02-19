@@ -7,7 +7,7 @@ import os
 import pandas as pd
 import pandera as pa
 
-from qstone.utils.utils import ComputationStep, load_json_profile, parse_json
+from qstone.utils.utils import ComputationStep, load_json_profile
 
 PROFILER_SCHEMA = pa.DataFrameSchema(
     {
@@ -84,7 +84,9 @@ def _print_stats(stats: pd.DataFrame):
     print(f"Average connection time       [ms]:  {connection_total/tot_runs:>12.2f}")
 
 
-def profile(config: str, folder: list[str], pickle: str):
+def profile(
+    config: str, folder: list[str], pickle: str
+):  # pylint: disable=unused-argument
     """
     Profile the total execution across multiple users and store into
     a generalised pickled object.

@@ -7,7 +7,6 @@ import sys
 from time import sleep
 
 import requests
-import waiting
 
 from qstone.connectors import connection
 from qstone.utils.utils import ComputationStep, QpuConfiguration, trace
