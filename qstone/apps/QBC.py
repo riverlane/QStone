@@ -120,23 +120,14 @@ def loss(
         with open(path, "w", encoding="utf-8") as fid:
             fid.write(qasm)
         response = connection.run(qasm=path, reps=shots)
-        meas_bits = list(
-            "0".join("" for j in range(1 - len(bin(k)[2:]) + 1)) + bin(k)[2:]
-            for k in range(pow(2, 1))
-        )
-        counts = {}
-        num_keys = len(meas_bits)
-        remaining = shots
-        for j in range(num_keys - 1):
-            if remaining > 0:
-                counts[meas_bits[j]] = numpy.random.randint(0, remaining)
-                remaining -= counts[meas_bits[j]]
-            else:
-                counts[meas_bits[j]] = 0
-        counts[meas_bits[-1]] = remaining
-
-        probs = {key: counts[key] / training_size / shots for key in counts.keys()}
-        loss -= probs[str(labels[i])]
+        if 'counts' in response.keys():
+            counts = response['counts']
+        else:
+            print('ERROR: counts not found in qpu response.')
+            quit()
+            counts = response
+        probs = {key: counts[key] / shots for key in counts.keys()}
+        loss -= probs[str(labels[i])] / training_size
     print(f"partial loss for rank {comm.Get_rank()}: {loss}", flush=True)
     temp = mpi_communication(loss, comm, bcast=False)
     loss = temp

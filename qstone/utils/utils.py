@@ -91,26 +91,28 @@ def qasm_circuit_random_sample(qasm: str, repetitions: int) -> Dict:
         repetitions: number of readouts to simulate
     Returns frequency of each classical bit string sampled
     """
-    # Extract size of classical registers
+    # Extract number classical registers
     creg_defs = re.findall(r"creg [a-zA-Z]\w*\[\d+\]", qasm)
+    num_cregs = int(re.findall(r"\d+", creg_defs[0])[0])
 
-    cregs = {}
+    # Extract the mapping between quantum and classical registers
+    mapping = []
+    qreg_meas = re.findall(r"[a-zA-Z]\w*\[\d+\] -> ", qasm)
+    for qreg in qreg_meas:
+        trimmed = qreg[len("q[")]
+        mapping.append(int(re.findall(r"\d+", trimmed)[0]))
 
-    for creg in creg_defs:
-        trimmed = creg[len("creg ") :]
-        regname = re.findall(r"\w*", trimmed)[0]
-        regsize = re.findall(r"\d+", trimmed)[0]
-        cregs[regname] = int(regsize)
+    # Generate a random readout per shot
+    measurements = []
+    counts = {}
+    for i in range(repetitions):
+        meas = list(list(random.randint(0,1) for _ in range(num_cregs)))
+        key = ''.join(str(bit) for bit in meas)
+        measurements.append(meas)
+        if key not in counts.keys(): counts[key] = 1
+        else: counts[key] += 1
 
-    # For each classical register generate a random readout
-    readouts = {}
-    for regname, regsize in cregs.items():
-        outcomes: Dict = defaultdict(int)
-        for _ in range(repetitions):
-            outcome = "".join([random.choice("01") for _ in range(regsize)])
-            outcomes[outcome] += 1
-        readouts[regname] = outcomes
-    return readouts
+    return {'mapping': mapping, 'measurements': measurements, 'counts': counts, 'mode': 'random source'}
 
 
 def _get_job_id():
