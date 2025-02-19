@@ -171,6 +171,8 @@ def trace(
                         computation_step.value,
                         computation_type,
                         label,
+                        str(start),
+                        str(end),
                     ),
                 )
             )

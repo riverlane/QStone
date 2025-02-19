@@ -25,6 +25,18 @@ Tested on Python [3.9-3.12]
 
 `pip install QStone`
 
+#### mpi4py installation
+
+`pip install mpi4py`
+
+#### mpi4py installation on Frontier
+
+```
+module load PrgEnv-gnu/8.5.0
+module load cray-hdf5-parallel/1.12.2.9
+MPICC="cc -shared" pip install --no-cache-dir --no-binary=mpi4py mpi4py
+```
+
 ### Execution
 
 Run QStone using Command Line Interface
@@ -57,7 +69,7 @@ Run QStone using Command Line Interface
       "num_shots": [100, 200],
       "walltime" : 10,
       "nthreads" : 4,
-      "lsf/jsrun_opt": "-nnodes=4 "
+      "lsf/jsrun_opt": "-nnodes=4"
     },
     {
       "type": "RB",
@@ -66,6 +78,14 @@ Run QStone using Command Line Interface
       "walltime" : 10,
       "nthreads" : 2,
       "slurm/schedmd_opt": "--cpus-per-task=4"
+    },
+    {
+      "type": "QBC",
+      "qubits": [4],
+      "num_shots": [32],
+      "walltime": 20,
+      "nthreads" : 2
+      "slurm/schedmd_opt": "-N 2 -n 2 --ntasks-per-node=1"
     }
   ],
   "users": [
