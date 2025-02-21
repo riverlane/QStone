@@ -106,13 +106,20 @@ def qasm_circuit_random_sample(qasm: str, repetitions: int) -> Dict:
     measurements = []
     counts = {}
     for i in range(repetitions):
-        meas = list(list(random.randint(0,1) for _ in range(num_cregs)))
-        key = ''.join(str(bit) for bit in meas)
+        meas = list(list(random.randint(0, 1) for _ in range(num_cregs)))
+        key = "".join(str(bit) for bit in meas)
         measurements.append(meas)
-        if key not in counts.keys(): counts[key] = 1
-        else: counts[key] += 1
+        if key not in counts.keys():
+            counts[key] = 1
+        else:
+            counts[key] += 1
 
-    return {'mapping': mapping, 'measurements': measurements, 'counts': counts, 'mode': 'random source'}
+    return {
+        "mapping": mapping,
+        "measurements": measurements,
+        "counts": counts,
+        "mode": "random source",
+    }
 
 
 def _get_job_id():

@@ -84,7 +84,7 @@ def generate_vqc_qasm(pqc_number, num_qubits, datum, parameters):
 def mpi_communication(data, comm, bcast=True):
     """MPI communication wrapper"""
     return comm.communicate(data, bcast)
- 
+
 
 @trace(
     computation_type="QBC",
@@ -120,10 +120,10 @@ def loss(
         with open(path, "w", encoding="utf-8") as fid:
             fid.write(qasm)
         response = connection.run(qasm=path, reps=shots)
-        if 'counts' in response.keys():
-            counts = response['counts']
+        if "counts" in response.keys():
+            counts = response["counts"]
         else:
-            print('ERROR: counts not found in qpu response.')
+            print("ERROR: counts not found in qpu response.")
             quit()
             counts = response
         probs = {key: counts[key] / shots for key in counts.keys()}

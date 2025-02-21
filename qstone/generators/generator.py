@@ -255,7 +255,9 @@ def generate_suite(
             "atomic": atomic,
             "sched_ext": SCHEDULER_EXTS[scheduler],
             "sched_cmd": SCHEDULER_CMDS[scheduler],
-            "sched_aware": env_cfg["qpu_management"] == "SCHEDULER",
+            "sched_aware": (
+                "--gres=qpu:1" if env_cfg["qpu_management"] == "SCHEDULER" else ""
+            ),
         }
         # Pack project files
         filename = os.path.join(output_folder, f"{scheduler}_{user_name}.qstone.tar.gz")
