@@ -104,7 +104,7 @@ def qasm_circuit_random_sample(qasm: str, repetitions: int) -> Dict:
 
     # Generate a random readout per shot
     measurements = []
-    counts = {}
+    counts : dict = {}
     for i in range(repetitions):
         meas = list(list(random.randint(0, 1) for _ in range(num_cregs)))
         key = "".join(str(bit) for bit in meas)
