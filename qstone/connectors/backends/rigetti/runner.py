@@ -3,12 +3,11 @@
 import calendar
 import time
 
-import numpy
 import waiting
 from pyquil import Program, get_qc
 
 from qstone.connectors import connection
-from qstone.utils.utils import ComputationStep, QpuConfiguration, trace
+from qstone.utils.utils import ComputationStep, trace
 
 
 class RigettiConnection(connection.Connection):

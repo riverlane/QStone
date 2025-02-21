@@ -25,6 +25,16 @@ Tested on Python [3.9-3.12]
 
 `pip install QStone`
 
+To leverage MPI features, first install OpenMPI.
+
+`sudo apt install openmpi` [On Ubuntu]
+`sudo yum install openmpi` [On Debian Systems]
+`brew install openmpi` [On Mac]
+ 
+Followed by a full installation:
+
+`pip install QStone[mpi]`
+
 ### Execution
 
 Run QStone using Command Line Interface
@@ -66,6 +76,14 @@ Run QStone using Command Line Interface
       "walltime" : 10,
       "nthreads" : 2,
       "slurm/schedmd_opt": "--cpus-per-task=4"
+    },
+    {
+      "type": "QBC",
+      "qubits": [4],
+      "num_shots": [32],
+      "walltime": 20,
+      "nthreads" : 2
+      "slurm/schedmd_opt": "-N 2 -n 2 --ntasks-per-node=1"
     }
   ],
   "users": [

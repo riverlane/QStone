@@ -1,4 +1,4 @@
-""" RB computations steps. """
+"""RB computations steps."""
 
 import os
 
