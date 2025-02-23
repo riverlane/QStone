@@ -143,7 +143,7 @@ def _write_trace(
     profile_path: str,
     times: tuple[int, int],
     computation_type: str,
-    computation_step: str,
+    computation_step: ComputationStep,
     label: str,
     success: bool,
 ):
