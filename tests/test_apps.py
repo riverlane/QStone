@@ -23,13 +23,14 @@ def env(tmp_path):
 
 
 def test_app_logs_failures(tmp_path, env):
-    compute_src = get_computation_src("RB").from_json()
-    # This should fail due to the lack of npz file
-    profile_file = os.path.join(tmp_path, "job_test_POST_RB.json")
-    compute_src.post(tmp_path)
-    print(os.listdir(tmp_path))
-    with open(profile_file, "r") as fir:
-        assert '"success": false' in fir.read()
+    with pytest.raises(Exception) as e_info:
+        compute_src = get_computation_src("RB").from_json()
+        # This should fail due to the lack of npz file
+        profile_file = os.path.join(tmp_path, "job_test_POST_RB.json")
+        compute_src.post(tmp_path)
+        print(os.listdir(tmp_path))
+        with open(profile_file, "r") as fir:
+            assert '"success": false' in fir.read()
 
 
 def test_pre_RB(tmp_path, env):
@@ -37,15 +38,15 @@ def test_pre_RB(tmp_path, env):
     run_file = tmp_path / "RB_run_test.npz"
     compute_src = get_computation_src("RB").from_json()
     compute_src.pre(tmp_path)
-    # Check generated file
-    vals = np.load(run_file)
-    assert len(vals["qasms"]) == 40
-    assert len(vals["exp"]) == 40
+    # Check profile file
     profile_file = os.path.join(tmp_path, "job_test_PRE_RB.json")
     with open(profile_file, "r") as fir:
         assert '"success": true' in fir.read()
     assert compute_src.num_shots == 12, "Wrong number of shots"
-
+    # Check generated file
+    vals = np.load(run_file)
+    assert len(vals["qasms"]) == 40
+    assert len(vals["exp"]) == 40
 
 def test_post_RB(tmp_path, env):
     shutil.copyfile("tests/data/apps/RB_run_test.npz", tmp_path / "RB_run_test.npz")
