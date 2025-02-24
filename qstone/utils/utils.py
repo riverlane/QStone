@@ -175,6 +175,7 @@ def trace(
         @wraps(func)
         def wrapper_func(*args, **kwargs):
 
+            start = time.perf_counter_ns()
             profile_name = "_".join(
                 filter(
                     None,
@@ -185,7 +186,6 @@ def trace(
                         computation_type,
                         label,
                         str(start),
-                        str(end),
                     ),
                 )
             )
@@ -193,7 +193,6 @@ def trace(
                 os.environ["PROFILE_PATH"], f"{profile_name}.json"
             )
             # Values to store
-            start = time.perf_counter_ns()
             try:
                 result = func(*args, **kwargs)
             except Exception as e:  # pylint: disable=broad-except
