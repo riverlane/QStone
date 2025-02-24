@@ -4,6 +4,7 @@ import importlib
 import os
 
 from qstone.apps.PyMatching import PyMatching
+from qstone.apps.QBC import QBC
 from qstone.apps.RB import RB
 from qstone.apps.VQE import VQE
 from qstone.connectors import connector
@@ -13,6 +14,7 @@ _computation_registry = {
     "VQE": VQE,
     "RB": RB,
     "PyMatching": PyMatching,
+    "QBC": QBC,
 }
 
 ENV_VARS = {

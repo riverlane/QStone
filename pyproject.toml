@@ -34,6 +34,7 @@ requests = "*"
 click = "*"
 waiting = "*"
 jsonschema = "*"
+mpi4py = "*"
 qcs-sdk-python = "= 0.21.6"
 pyquil = "~= 4.15.0"
 grpcio = {version = "*", optional = true, markers = "platform_machine == 'amd64'" }

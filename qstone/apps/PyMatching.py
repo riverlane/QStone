@@ -13,7 +13,7 @@ from qstone.connectors import connector
 from qstone.utils.utils import ComputationStep, trace
 
 
-class PyMatching(Computation):
+class PyMatching(Computation):  # pylint:disable=invalid-name
     """
     PyMatching computation class.
     """

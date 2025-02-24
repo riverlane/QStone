@@ -39,18 +39,8 @@ def _get_value(job_cfg: pa.DataFrame, key: str, default: str):
     return str(val)
 
 
-def _render_templates(
-    sched: str,
-    sched_path: str,
-    subs: dict,
-    job_types: List[str],
-    jobs_cfg: pa.DataFrame,
-):
-    """Convert all templates and add all the files that are in the scheduler folder"""
-    # Add common folder here
+def _find_files(sched_path: str):
     search_paths = [sched_path, os.path.join(CURRENT_PATH, "common")]
-
-    # Ignore folders and search in the search paths all the paths
     all_files = [
         os.path.join(search_path, s)
         for search_path in search_paths
@@ -59,6 +49,19 @@ def _render_templates(
     ]
     jinja_files = [s for s in all_files if s.endswith("jinja")]
     non_jinja_files = list(set(all_files) - set(jinja_files))
+    return (jinja_files, non_jinja_files)
+
+
+def _render_templates(
+    sched: str,
+    sched_path: str,
+    subs: dict,
+    job_types: List[str],
+    jobs_cfg: pa.DataFrame,
+):
+    """Convert all templates and add all the files that are in the scheduler folder"""
+    # Ignore folders and search in the search paths all the paths
+    jinja_files, non_jinja_files = _find_files(sched_path)
     # Adding templated files
     for jinja_file in jinja_files:
         with open(jinja_file, encoding="utf-8") as fid:
@@ -172,16 +175,16 @@ def _generate_user_jobs(
     num_qubits = []
     num_shots = []
 
-    DEF_QUBITS = 2
-    DEF_SHOTS = 100
+    def_qubits = 2
+    def_shots = 100
     for j in job_types:
         app_cfg = jobs_cfg[jobs_cfg["type"] == j]
         if app_cfg.empty:
-            num_qubits.append(DEF_QUBITS)
-            num_shots.append(DEF_SHOTS)
+            num_qubits.append(def_qubits)
+            num_shots.append(def_shots)
         else:
-            num_qubits.append(_randomise(app_cfg["qubits"], DEF_QUBITS))
-            num_shots.append(_randomise(app_cfg["num_shots"], DEF_SHOTS))
+            num_qubits.append(_randomise(app_cfg["qubits"], def_qubits))
+            num_shots.append(_randomise(app_cfg["num_shots"], def_shots))
 
     # Assign job id and pack
     job_ids = list(range(len(job_types)))
@@ -252,7 +255,9 @@ def generate_suite(
             "atomic": atomic,
             "sched_ext": SCHEDULER_EXTS[scheduler],
             "sched_cmd": SCHEDULER_CMDS[scheduler],
-            "sched_aware": env_cfg["qpu_management"] == "SCHEDULER",
+            "sched_aware": (
+                "--gres=qpu:1" if env_cfg["qpu_management"] == "SCHEDULER" else ""
+            ),
         }
         # Pack project files
         filename = os.path.join(output_folder, f"{scheduler}_{user_name}.qstone.tar.gz")

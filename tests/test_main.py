@@ -1,4 +1,4 @@
-""" Tests for qstone cli"""
+"""Tests for qstone cli"""
 
 from unittest.mock import patch
 
