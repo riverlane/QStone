@@ -14,22 +14,24 @@ jobs:
         python-version: ['3.9', '3.10', '3.11', '3.12']
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
-    permissions: write-all      
+    permissions: write-all
     steps:
       - uses: actions/checkout@v4
       - name: Setting up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install MPI dependencies
-      - if: matrix.os == 'ubuntu-latest'
-        run: sudo apt-get install openmpi-bin openmpi-doc libopenmpi-dev
+      - name: Install OpenMPI dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openmpi-bin openmpi-doc libopenmpi-dev
       - name: Installing dependencies
         run: pip install -U tox
       - name: Testing
-        run: tox -r -e pytest-all 
-
-  pylint:
+        run: tox -r -e pytest-all
+      
+   pylint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
