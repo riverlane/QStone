@@ -39,6 +39,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+      - name: Install OpenMPI dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openmpi-bin openmpi-doc libopenmpi-dev
       - name: Installing dependencies
         run: pip install -U tox
       - name: Running pylint
@@ -52,6 +56,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+      - name: Install OpenMPI dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openmpi-bin openmpi-doc libopenmpi-dev
       - name: Installing dependencies
         run: pip install -U tox
       - name: Running mypy
@@ -65,6 +73,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+      - name: Install OpenMPI dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openmpi-bin openmpi-doc libopenmpi-dev
       - name: Installing dependencies
         run: pip install -U tox
       - name: Running black
