@@ -119,8 +119,7 @@ def _get_job_id():
 
 
 def _get_content(
-    start_time: int,
-    end_time: int,
+    times: tuple[int, int],
     computation_type: str,
     computation_step: ComputationStep,
     label: Optional[str],
@@ -134,10 +133,26 @@ def _get_content(
     content["job_type"] = computation_type
     content["job_step"] = computation_step.value
     content["label"] = label  # type: ignore[assignment]
-    content["start"] = start_time  # type: ignore[assignment]
-    content["end"] = end_time  # type: ignore[assignment]
+    content["start"] = times[0]  # type: ignore[assignment]
+    content["end"] = times[1]  # type: ignore[assignment]
     content["success"] = success  # type: ignore[assignment]
     return content
+
+
+def _write_trace(
+    profile_path: str,
+    times: tuple[int, int],
+    computation_type: str,
+    computation_step: ComputationStep,
+    label: str,
+    success: bool,
+):
+    """Handler for trace writing"""
+    trace_content = _get_content(
+        times, computation_type, computation_step, label, success
+    )
+    with open(profile_path, "w", encoding="utf-8") as fid:
+        json.dump(trace_content, fid, ensure_ascii=False, indent=4)
 
 
 def trace(
@@ -151,17 +166,6 @@ def trace(
         @wraps(func)
         def wrapper_func(*args, **kwargs):
 
-            success = True
-            start = time.perf_counter_ns()
-            try:
-                result = func(*args, **kwargs)
-            except Exception:  # pylint: disable=broad-except
-                result = None
-                success = False
-            end = time.perf_counter_ns()
-            trace_content = _get_content(
-                start, end, computation_type, computation_step, label, success
-            )
             profile_name = "_".join(
                 filter(
                     None,
@@ -177,8 +181,30 @@ def trace(
             profile_path = os.path.join(
                 os.environ["PROFILE_PATH"], f"{profile_name}.json"
             )
-            with open(profile_path, "w", encoding="utf-8") as fid:
-                json.dump(trace_content, fid, ensure_ascii=False, indent=4)
+            # Values to store
+            start = time.perf_counter_ns()
+            try:
+                result = func(*args, **kwargs)
+            except Exception as e:  # pylint: disable=broad-except
+                result = None
+                _write_trace(
+                    profile_path,
+                    (start, 0),
+                    computation_type,
+                    computation_step,
+                    label,
+                    False,
+                )
+                raise e
+            end = time.perf_counter_ns()
+            _write_trace(
+                profile_path,
+                (start, end),
+                computation_type,
+                computation_step,
+                label,
+                True,
+            )
             return result
 
         return wrapper_func

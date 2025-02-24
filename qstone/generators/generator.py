@@ -149,11 +149,6 @@ def _randomise(vals, def_val):
     return value
 
 
-def Convert(lst):
-    res_dct = {lst[i]: lst[i + 1] for i in range(0, len(lst), 2)}
-    return res_dct
-
-
 def _generate_user_jobs(
     usr_cfg: "pa.Series[Any]",
     jobs_cfg: pa.DataFrame,
@@ -257,7 +252,7 @@ def generate_suite(
             "atomic": atomic,
             "sched_ext": SCHEDULER_EXTS[scheduler],
             "sched_cmd": SCHEDULER_CMDS[scheduler],
-            "sched_aware": True if env_cfg["qpu_management"] == "SCHEDULER" else False,
+            "sched_aware": env_cfg["qpu_management"] == "SCHEDULER",
         }
         # Pack project files
         filename = os.path.join(output_folder, f"{scheduler}_{user_name}.qstone.tar.gz")
