@@ -8,7 +8,7 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
-  pytest_ubuntu:
+  pytest_multiplatform:
     strategy:
       matrix:
         python-version: ['3.9', '3.10', '3.11', '3.12']
@@ -21,7 +21,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - run: sudo apt-get install openmpi-bin openmpi-doc libopenmpi-dev
+      - name: Install MPI dependencies
+      - if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install openmpi-bin openmpi-doc libopenmpi-dev
       - name: Installing dependencies
         run: pip install -U tox
       - name: Testing
