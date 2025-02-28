@@ -44,7 +44,7 @@ def test_pre_RB(tmp_path, env):
     compute_src.pre(tmp_path)
 
     # Check profile file
-    profile_file = os.path.join(tmp_path, "job_test_PRE_RB.json")
+    profile_file = os.path.join(tmp_path, "job_test_PRE_RB*.json")
     with open(_get_file(profile_file), "r") as fir:
         assert '"success": true' in fir.read()
     assert compute_src.num_shots == 12, "Wrong number of shots"

@@ -93,7 +93,9 @@ def qasm_circuit_random_sample(qasm: str, repetitions: int) -> Dict:
     """
     # Extract number classical registers
     creg_defs = re.findall(r"creg [a-zA-Z]\w*\[\d+\]", qasm)
-    num_cregs = int(re.findall(r"\d+", creg_defs[0])[0])
+    num_cregs = 0
+    for c in creg_defs:
+        num_cregs += int(re.findall(r"\d+", c)[0])
 
     # Extract the mapping between quantum and classical registers
     mapping = []
@@ -101,6 +103,7 @@ def qasm_circuit_random_sample(qasm: str, repetitions: int) -> Dict:
     for qreg in qreg_meas:
         trimmed = qreg[len("q[")]
         mapping.append(int(re.findall(r"\d+", trimmed)[0]))
+        print(qreg)
 
     # Generate a random readout per shot
     measurements = []
