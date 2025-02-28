@@ -17,6 +17,7 @@
       "qubits": [2],
       "walltime": 3,
       "nthreads": 2,
+      "bare_metal_opt": "",
       "lsf/jsrun_opt": "-special_setting=True"
     },
     { 
