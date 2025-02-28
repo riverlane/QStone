@@ -103,7 +103,6 @@ def qasm_circuit_random_sample(qasm: str, repetitions: int) -> Dict:
     for qreg in qreg_meas:
         trimmed = qreg[len("q[")]
         mapping.append(int(re.findall(r"\d+", trimmed)[0]))
-        print(qreg)
 
     # Generate a random readout per shot
     measurements = []
