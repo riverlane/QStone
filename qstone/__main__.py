@@ -109,7 +109,6 @@ def main(arg_strings: Optional[Sequence[str]] = None) -> None:
         default=False,
         required=False,
         action="store_true",
-        type=bool,
     )
 
     gen_cmd.add_argument(
