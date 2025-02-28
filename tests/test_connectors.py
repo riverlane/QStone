@@ -48,10 +48,9 @@ def test_no_link_run(tmp_path, env):
     reps = 100
     connection = no_link.NoLinkConnection()
     result = connection.run(mock_circuit, reps, "localhost", 0, None)
-    readout_count = sum(result.values())
 
     # Assert number of readout results is equal to the number of repetitions
-    assert readout_count == reps
+    assert len(result["measurements"]) == reps
     # Check that profile file exists
     output_path = os.path.join(tmp_path, "job_test_POST_CONNECTION*.json")
     assert os.path.isfile(_get_file(output_path))
