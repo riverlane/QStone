@@ -108,6 +108,7 @@ def main(arg_strings: Optional[Sequence[str]] = None) -> None:
         help="Generate a single job per application, default is three [pre,run,post]",
         default=False,
         required=False,
+        action="store_true",
         type=bool,
     )
 
