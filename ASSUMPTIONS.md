@@ -14,9 +14,10 @@ All the connectors return measurements to the different routines. To allow smoot
    {
     "mapping": [], # A list of indexes to map qubit number into measurement number. 
     "measurements" : [[],[],[]], # A list of lists with each inner list representing the classical register value associated to each qubit readout mapped as per "mapping" field. The number of lists should match the required number of shots.
+    "counts": {}, # A dictionary containing the number of times a bitstring was measured.
     "mode": "simulated", # Three options, simulated, real, random source
-    "timestamp" : UTC, # The timestamp of the measurement at the connector point. 
-    "origin": "machine_name" # The name of the machine/system that has generated the data 
+    "timestamp" : UTC, # The timestamp of the measurement at the connector point. Not returned yet.
+    "origin": "machine_name" # The name of the machine/system that has generated the data. Not returned yet.
    }
 ```
 The `measurements` field for a three qubits measurement operations with qubit 0 and qubit 1 swapped would look like this:

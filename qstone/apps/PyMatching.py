@@ -13,7 +13,7 @@ from qstone.connectors import connector
 from qstone.utils.utils import ComputationStep, trace
 
 
-class PyMatching(Computation):
+class PyMatching(Computation):  # pylint:disable=invalid-name
     """
     PyMatching computation class.
     """
@@ -92,7 +92,6 @@ class PyMatching(Computation):
         ).without_noise()
 
         qasm_circuit = self._convert_stim_circuit(stim_circuit)
-        print(f"datapath: {datapath}")
         circuit_path = os.path.join(datapath, f"PyMatching_{os.environ['JOB_ID']}")
 
         # Write qasm circuit
@@ -105,23 +104,57 @@ class PyMatching(Computation):
 
         return circuit_path
 
-    def _bitstring_to_boolarray(self, readouts: Dict[str, int]) -> List[List[bool]]:
-        """Converts bitstring to array of booleans
+    def get_creg_indexes(self, qasm_content: str):
+        """
+        Parse a QASM file content to determine the indexes of classical registers (cregs)
+        assuming first-come-first-serve allocation.
 
         Args:
-            readouts: bitstring : frequency key-value pair e.g. {'11':1, '10': 3}
+            qasm_content (str): Content of the QASM file as a string
 
-        Returns the readouts converted into boolean arrays for the total number of readouts
-        e.g.[[True, True],
-            [True, False],
-            [True, False],
-            [True, False]]
+        Returns:
+            dict: Dictionary mapping creg names to their bit ranges as tuples (start_index, end_index)
         """
-        data = []
-        for measurement, freq in readouts.items():
-            ro_bool = [[c == "1" for c in measurement] for _ in range(freq)]
-            data.extend(ro_bool)
-        return data
+        # Initialize variables
+        creg_info = {}
+        current_index = 0
+
+        # Split the content into lines
+        lines = qasm_content.strip().split("\n")
+
+        # Process each line
+        for line in lines:
+            # Remove comments if any
+            if "//" in line:
+                line = line[: line.index("//")]
+
+            line = line.strip()
+
+            # Look for creg declarations
+            if line.startswith("creg "):
+                # Extract the creg name and size
+                # Format is typically: creg name[size];
+                parts = line.replace("creg ", "").replace(";", "").strip().split("[")
+                if len(parts) == 2:
+                    creg_name = parts[0].strip()
+                    size_part = parts[1].split("]")[0].strip()
+
+                    try:
+                        size = int(size_part)
+                        # Calculate the index range for this creg
+                        start_index = current_index
+                        end_index = current_index + size - 1
+
+                        # Store the information
+                        creg_info[creg_name] = (start_index, end_index)
+
+                        # Update the current index for the next creg
+                        current_index += size
+                    except ValueError:
+                        # Skip if size is not a valid integer
+                        continue
+
+        return creg_info
 
     @trace(computation_type=COMPUTATION_NAME, computation_step=ComputationStep.RUN)
     def run(self, datapath: str, connection: connector.Connector):
@@ -140,9 +173,16 @@ class PyMatching(Computation):
         # Send circuit to connector
         results = connection.run(qasm=f"{circuit_path}.qasm", reps=self.num_shots)
 
+        # Get det and obs indexes
+        with open(f"{circuit_path}.qasm", "r") as fid:
+            creg_ranges = self.get_creg_indexes(fid.read())
+
         # Convert syndromes to np array and write to path
-        syndrome = np.array(self._bitstring_to_boolarray(results["dets"]), dtype=bool)
-        obs = np.array(self._bitstring_to_boolarray(results["obs"]), dtype=bool)
+        meas = results["measurements"]
+        dets_idx = creg_ranges["dets"]
+        obs_idx = creg_ranges["obs"]
+        syndrome = np.array(meas[dets_idx[0] : dets_idx[1]], dtype=bool)
+        obs = np.array(meas[obs_idx[0] : obs_idx[1]], dtype=bool)
 
         syndrome_path = os.path.join(
             datapath, f"PyMatching_{os.environ['JOB_ID']}_syndromes.npz"

@@ -2,6 +2,7 @@ import json
 import os
 import threading
 
+import glob
 import pytest
 from pathlib import Path
 
@@ -19,6 +20,8 @@ from qstone.connectors.no_link import no_link
 # For Rigetti connectors
 from qstone.connectors.backends.rigetti import runner as rigetti
 
+def _get_file(regex):
+    return glob.glob(regex)[0]
 
 @pytest.fixture()
 def env(tmp_path):
@@ -41,17 +44,16 @@ def test_no_link_run(tmp_path, env):
             'OPENQASM 2.0;\ninclude "qelib1.inc";\nqreg q[1];\ncreg c[1];\nrx(1.57) q[0];\nmeasure q[0] -> c[0];'
         )
     # Initialise the mock server
-    print("Starting server")
 
     reps = 100
     connection = no_link.NoLinkConnection()
     result = connection.run(mock_circuit, reps, "localhost", 0, None)
-    readout_count = sum(result["c"].values())
 
     # Assert number of readout results is equal to the number of repetitions
-    assert readout_count == reps
+    assert len(result["measurements"]) == reps
     # Check that profile file exists
-    assert os.path.isfile(os.path.join(tmp_path, "job_test_POST_CONNECTION.json"))
+    output_path = os.path.join(tmp_path, "job_test_POST_CONNECTION*.json")
+    assert os.path.isfile(_get_file(output_path))
 
 
 def test_grpc_run(tmp_path, env):
@@ -130,11 +132,11 @@ def test_http(tmp_path, env, capsys, mocker, http, retcode, lock, locked, expect
             assert result["11"] == expected
         # Check that profile file exists and contains the custom label
         profile_trace = os.path.join(
-            tmp_path, "job_test_RUN_CONNECTION__request_and_process.json"
+            tmp_path, "job_test_RUN_CONNECTION__request_and_process_*.json"
         )
-        assert os.path.isfile(profile_trace)
+        assert os.path.isfile(_get_file(profile_trace))
         if not locked:
-            with open(profile_trace, "r", encoding="utf-8") as fid:
+            with open(_get_file(profile_trace), "r", encoding="utf-8") as fid:
                 content = fid.read()
                 assert '"label": "_request_and_process"' in content
 
@@ -158,5 +160,4 @@ def test_rigetti_run(tmp_path, env, mocker):
     print("Test")
     connection = rigetti.RigettiConnection()
     result = connection.run(mock_circuit, 10, "8q-qvm", None, None)
-    print(f"result - {result} - {type(result)}")
     assert result["measurements"][0] == [1, 1]

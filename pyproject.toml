@@ -34,6 +34,7 @@ requests = "*"
 click = "*"
 waiting = "*"
 jsonschema = "*"
+mpi4py = {version="*", optional = true}
 qcs-sdk-python = "= 0.21.6"
 pyquil = "~= 4.15.0"
 grpcio = {version = "*", optional = true, markers = "platform_machine == 'amd64'" }
@@ -69,6 +70,7 @@ test = ["pytest", "pytest-cov", "pytest-depends", "pytest-manual-marker", "reque
 lint = ["pylint", "mypy", "pycodestyle", "black", "isort"]
 security = ["ochrona", "safety", "bandit"]
 docs = ["sphinx", "sphinx-mdinclude", "sphinx_rtd_theme", "nbsphinx", "sphinx-copybutton"]
+mpi = ["mpi4py"]
 
 [tool.pylint.MASTER]
 ignore-paths = 'qstone/connectors/riverlane/grpc.*$'

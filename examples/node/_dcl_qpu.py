@@ -1,6 +1,10 @@
 """Example for Riverlane Deltaflow Control based control systems."""
 
 from typing import Any
+import numpy as np
+import time
+import re
+import random
 
 try:
     from dcl.device import Device
@@ -44,7 +48,8 @@ class DCL_QPU(QPU):
 
         # Initialisation
         dev = Device()
-        dev.connect("172.16.100.118")
+        # dev.connect("172.16.100.118")
+        dev.connect("192.168.1.202")
         # Channels
         dds1 = dev.base.rf_out[1]
         dds2 = dev.base.rf_out[2]
@@ -86,19 +91,59 @@ class DCL_QPU(QPU):
         batch.advance_cursor(window.length)
         batch.advance_cursor(window.length)
         _batch_result = dev.run_batch(batch)
+        time.sleep(0.05)
         dev.disconnect()
 
-    def _get_results(self):
+    def _get_results(self, num_measured_qubits, shots):
         """This function should run the programme"""
         # Use self.qpu_cfg.num_required_qubits
         outcomes = {}
-        value = (1 << self.qpu_cfg.num_required_qubits) - 1
-        for i in range(value):
-            outcomes[bin(i)[2:].zfill(self.qpu_cfg.num_required_qubits)] = 10
+        value = (1 << num_measured_qubits)
+        remaining = int(shots)
+        for i in range(value - 1):
+            if remaining > 0:
+                outcomes[bin(i)[2:].zfill(num_measured_qubits)] = np.random.randint(0, remaining)
+                remaining -= outcomes[bin(i)[2:].zfill(num_measured_qubits)]
+            else:
+                outcomes[bin(i)[2:].zfill(num_measured_qubits)] = 0
+        outcomes[bin(value - 1)[2:].zfill(num_measured_qubits)] = remaining
         return outcomes
+
+
+    def _get_qasm_circuit_random_sample(self, qasm, shots):
+        """Mocks simulation of qasm circuit by giving random readouts for classical registers
+
+        Args:
+            qasm: string representation of qasm circuit
+            shots: number of readouts to simulate
+        Returns frequency of each classical bit string sampled
+        """
+        # Extract number classical registers
+        creg_defs = re.findall(r"creg [a-zA-Z]\w*\[\d+\]", qasm)
+        num_cregs = int(re.findall(r"\d+", creg_defs[0])[0])
+
+        # Extract the mapping between quantum and classical registers
+        mapping = []
+        qreg_meas = re.findall(r"[a-zA-Z]\w*\[\d+\] -> ", qasm)
+        for qreg in qreg_meas:
+            trimmed = qreg[len("q[")]
+            mapping.append(int(re.findall(r"\d+", trimmed)[0]))
+
+        # Generate a random readout per shot
+        measurements = []
+        counts = {}
+        for i in range(shots):
+            meas = list(list(random.randint(0,1) for _ in range(num_cregs)))
+            key = ''.join(str(bit) for bit in meas)
+            measurements.append(meas)
+            if key not in counts.keys(): counts[key] = 1
+            else: counts[key] += 1
+
+        return {'mapping': mapping, 'measurements': measurements, 'counts': counts, 'mode': 'random source'}
+
 
     def exec(self, qasm: str, shots: int) -> dict:
         """Model running time of circuit"""
         transpiled = self._qasm_to_internal(qasm)
         self._run(transpiled, shots, blocking=True)
-        return self._get_results()
+        return self._get_qasm_circuit_random_sample(qasm, shots)
