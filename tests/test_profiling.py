@@ -9,7 +9,6 @@ from qstone.profiling import profile
 @pytest.fixture()
 def sample_traced(tmp_path):
     """Fixture of sample trace information"""
-    print(f"***********************")
     pickle = tmp_path / f"result.pkl"
     tmp_path.mkdir(exist_ok=True)
     profile.profile(

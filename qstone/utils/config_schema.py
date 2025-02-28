@@ -19,6 +19,7 @@ FULL_SCHEMA = {
                     },
                 },
             },
+            "required": ["qpu_management"],
             "jobs": {
                 "type": "array",
                 "items": {
@@ -36,11 +37,54 @@ FULL_SCHEMA = {
                     "type": "object",
                     "properties": {
                         "user": {"type": "string"},
-                        "weight": {"type": "number"},
+                        "weight": {"type": "number", "minimum": 0, "maximum": 1},
                         "computations": {"type": "object"},
                     },
+                    "required": ["user", "weight"],
                 },
+                "allOf": [
+                    {
+                        "$comment": "Validate that the sum of all user weights equals 1",
+                        "allOf": [
+                            {
+                                "if": {"minItems": 1},
+                                "then": {"$template": "totalWeightValidator"},
+                            }
+                        ],
+                    }
+                ],
             },
         },
     },
+    "required": ["environment", "jobs", "users"],
 }
+
+# Implementation of the custom validator using JSON Schema extensions
+# This would typically be implemented in your validation framework
+
+
+def validate_total_weight(instance):
+    """
+    Custom validator to ensure the sum of all user weights equals 1.
+
+    Args:
+        instance: The "users" array to validate
+
+    Returns:
+        (bool, str): A tuple containing (is_valid, error_message)
+    """
+    if not instance or not isinstance(instance, list):
+        return False, "Users must be a non-empty array"
+
+    total_weight = sum(user.get("weight", 0) for user in instance)
+
+    # Allow for small floating-point errors
+    if abs(total_weight - 1.0) > 1e-10:
+        return False, f"Sum of user weights must equal 1.0, but got {total_weight}"
+
+    return True, ""
+
+
+# When using a JSON Schema library like jsonschema in Python, you would register
+# this custom validator with the library and map it to the "$template": "totalWeightValidator"
+# in the schema definition.

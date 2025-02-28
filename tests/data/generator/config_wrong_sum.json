@@ -17,7 +17,6 @@
       "qubits": [2],
       "walltime": 3,
       "nthreads": 2,
-      "bare_metal_opt": "",
       "lsf/jsrun_opt": "-special_setting=True"
     },
     { 
@@ -32,12 +31,23 @@
   "users": [
     {
       "user": "user0",
-      "weight": 1,
+      "weight": 0.9,
+      "computations": {
+        "VQE": 0.55,
+        "RB": 0.44,
+        "PyMatching": 0.01
+      }
+    },
+    {
+      "user": "user1",
+      "weight": 0.6,
       "computations": {
         "VQE": 0.55,
         "RB": 0.44,
         "PyMatching": 0.01
       }
     }
+
+
   ]
 }
