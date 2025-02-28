@@ -26,10 +26,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y openmpi-bin openmpi-doc libopenmpi-dev
+      - name: Install OpenMPI dependencies (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew update
+          brew install open-mpi
       - name: Installing dependencies
         run: pip install -U tox
       - name: Testing
-        run: tox -r -e pytest-all
+        run: tox -r -e pytest-all-mpi
       
   pylint:
     runs-on: ubuntu-latest
