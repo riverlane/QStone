@@ -20,6 +20,18 @@ from qstone.utils.utils import JobReturnCode, QpuConfiguration
 SCHED_EXT = {"slurm": "sbatch", "jsrun": "bsub", "bare_metal": None}
 
 
+@pytest.mark.parametrize("test_input", ["config_wrong_sum.json"])
+def test_config_checks(tmp_path, test_input):
+    with pytest.raises(Exception) as e_info:
+        generator.generate_suite(
+            config=f"tests/data/generator/{test_input}",
+            num_calls=10000,
+            output_folder=output_folder,
+            atomic=atomic,
+            scheduler=scheduler,
+        )
+
+
 @pytest.mark.parametrize(
     "test_input,expected,atomic,scheduler,use_gres",
     [
