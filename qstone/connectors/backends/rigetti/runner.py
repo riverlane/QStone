@@ -8,6 +8,7 @@ from pyquil import Program, get_qc
 
 from qstone.connectors import connection
 from qstone.utils.utils import ComputationStep, trace
+from typing import Literal
 
 
 class RigettiConnection(connection.Connection):
@@ -21,10 +22,25 @@ class RigettiConnection(connection.Connection):
         self.mode = None
         self.origin = None
 
-    def _get_qc(self, hostpath: str):
-        self.mode = "simulated" if "qvm" in hostpath else "real"
-        self.origin = hostpath
-        return get_qc(hostpath)
+    def _get_qc(self, mode: str, hostname: str, server_port: int, target: str):
+        self.mode = mode
+        self.origin = hostname
+        quilc_client = None
+        qvm_client = None
+        as_qvm = True
+        if self.mode == "REAL":
+            # compiler (non-standard port)
+            # note: this a way to run a docker version of the compiler:  docker run --rm -it -p 5556:5556 rigetti/quilc -P -S -p 5556
+            quilc_client = QuilcClient.new_rpcq("tcp://127.0.0.1:5556")
+            as_qvm = False
+        elif self.mode == "EMULATED":
+            # qvm (non-standart port)
+            # note, could run a docker version like this: docker run --rm -it -p 5001:5001 rigetti/qvm -S  -p 5001
+            qvm_client = qvm.QVMClient.new_http("http://127.0.0.1:5001")
+
+        return get_qc(
+            target, as_qvm=as_qvm, quilc_client=quilc_client, qvm_client=qvm_client
+        )
 
     def _run(self, program: Program):
         return self.qc.run(program)
@@ -89,17 +105,20 @@ class RigettiConnection(connection.Connection):
         computation_step=ComputationStep.RUN,
     )
     def run(
-        self, qasm_ptr: str, reps: int, host: str, server_port: int, lockfile: str
+        self,
+        qasm_ptr: str,
+        reps: int,
+        mode: str,
+        hostname: str,
+        server_port: int,
+        target: str,
+        lockfile: str,
     ) -> dict:
         """Run the connection to the server"""
-        if server_port:
-            hostpath = f"{host}:{server_port}"
-        else:
-            hostpath = host
-        self.qc = self._get_qc(hostpath)
+        self.qc = self._get_qc(mode, hostname, server_port, target)
         try:
             waiting.wait(
-                lambda: self._request_and_process(qasm_ptr, reps, hostpath, lockfile),
+                lambda: self._request_and_process(qasm_ptr, reps, hostname, lockfile),
                 timeout_seconds=20,
             )
         except waiting.TimeoutExpired:

@@ -7,7 +7,7 @@
   		"mode": "RANDOM",
         	"qpu_ip_address": "0.0.0.0",
   		"qpu_port": 55
-        }
+        },
   	"lock_file": "my_lock.lock",
   	"timeouts": {
   	  "http": 5,

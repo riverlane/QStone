@@ -90,6 +90,11 @@ disable = """
 [tool.poetry.scripts]
 qstone = "qstone.__main__:main"
 
+[tool.coverage.run]
+omit = [
+    "qstone/utils/config_schema.py",
+]
+
 [tool.mypy]
 exclude = "(qstone/connectors/riverlane/grpc.*$)|(qstone/generators/slurm/schedmd)|(tests)|(my_venv)"
 

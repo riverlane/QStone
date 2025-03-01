@@ -44,7 +44,14 @@ class NoLinkConnection(connection.Connection):
         computation_step=ComputationStep.POST,
     )
     def run(
-        self, qasm_ptr: str, reps: int, host: str, server_port: int, lockfile: str
+        self,
+        qasm_ptr: str,
+        reps: int,
+        mode: str,
+        hostname: str,
+        server_port: int,
+        target: str,
+        lockfile: str,
     ) -> dict:
         """Local simulated run of circuit"""
         qasm_circuit = self.preprocess(qasm_ptr)

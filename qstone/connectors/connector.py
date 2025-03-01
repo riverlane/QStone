@@ -30,14 +30,18 @@ class Connector:
     def __init__(
         self,
         conn_type: ConnectorType,
+        mode: str,
         host: str,
         server_port: int,
+        target: str,
         lockfile: Optional[str],
     ):
         """Initialise the connector object"""
         self._protocol = conn_type
+        self._mode = mode
         self._host = host
         self._server_port = server_port
+        self._target = target
         self._connection: connection.Connection
         self._lockfile: Optional[str] = None if lockfile == "NONE" else lockfile
 
@@ -54,6 +58,11 @@ class Connector:
     def protocol(self):
         """Returns the protocol information"""
         return self._protocol
+
+    @property
+    def mode(self):
+        """Returns the mode in use (EMULATION, REAL, RANDOM)"""
+        return self._mode
 
     @property
     def host(self):
@@ -76,6 +85,11 @@ class Connector:
         return f"{self.host}::{self.server_port}"
 
     @property
+    def target(self):
+        """Returns the target name"""
+        return self._target
+
+    @property
     def lockfile(self):
         """Returns the lockfile information"""
         return self._lockfile
@@ -83,5 +97,11 @@ class Connector:
     def run(self, qasm: str, reps: int):
         """Runs the provided QASM circuit"""
         return self.connection.run(
-            qasm, reps, self.host, self.server_port, self.lockfile
+            qasm,
+            reps,
+            self.mode,
+            self.host,
+            self.server_port,
+            self.target,
+            self.lockfile,
         )

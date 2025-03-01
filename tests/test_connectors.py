@@ -34,7 +34,8 @@ def env(tmp_path):
     os.environ["PROFILE_PATH"] = str(tmp_path)
     os.environ["TIMEOUTS_LOCK"] = "1"
     os.environ["TIMEOUTS_HTTP"] = "1"
-
+    os.environ["TARGET"] = "QPU0"
+    os.environ["MODE"] = "RANDOM"
 
 def test_no_link_run(tmp_path, env):
     """Test that no link connection runs without error code"""
@@ -47,7 +48,7 @@ def test_no_link_run(tmp_path, env):
 
     reps = 100
     connection = no_link.NoLinkConnection()
-    result = connection.run(mock_circuit, reps, "localhost", 0, None)
+    result = connection.run(mock_circuit, reps, "RANDOM", "localhost", 0, "QPU0", None)
 
     # Assert number of readout results is equal to the number of repetitions
     assert len(result["measurements"]) == reps
@@ -70,7 +71,7 @@ def test_grpc_run(tmp_path, env):
     server.start()
     reps = 100
     connection = grpc_client.GRPCConnecction()
-    result = connection.run(mock_circuit, reps, "localhost", 50051, None)
+    result = connection.run(mock_circuit, reps, "RANDOM", "localhost", 50051, "QPU0", None)
     server.stop()
     assert result["11"] == 10
 
@@ -116,7 +117,7 @@ def test_http(tmp_path, env, capsys, mocker, http, retcode, lock, locked, expect
         # Run the circuit
         reps = 100
         connection = http_client.HttpConnection()
-        result = connection.run(mock_circuit, reps, http, None, lock)
+        result = connection.run(mock_circuit, reps, "RANDOM", http, None, "QPU0", lock)
 
     # Remove the file
     if locked:
@@ -159,5 +160,5 @@ def test_rigetti_run(tmp_path, env, mocker):
     )
     print("Test")
     connection = rigetti.RigettiConnection()
-    result = connection.run(mock_circuit, 10, "8q-qvm", None, None)
+    result = connection.run(mock_circuit, 10, "RANDOM", "8q-qvm", 50051, "8q-qvm", None)
     assert result["measurements"][0] == [1, 1]

@@ -91,7 +91,3 @@ def validate_total_weight(instance):
 
     return True, ""
 
-
-# When using a JSON Schema library like jsonschema in Python, you would register
-# this custom validator with the library and map it to the "$template": "totalWeightValidator"
-# in the schema definition.
