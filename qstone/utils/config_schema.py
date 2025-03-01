@@ -7,10 +7,16 @@ FULL_SCHEMA = {
             "type": "object",
             "properties": {
                 "project_name": {"type": "string"},
-                "qpu_ip_address": {"type": "string", "format": "hostname"},
-                "qpu_port": {"type": "number"},
-                "qpu_management": {"enum": ["LOCK", "SCHEDULER", "POLLING", "NONE"]},
+                "scheduling_mode": {"enum": ["LOCK", "SCHEDULER", "POLLING", "NONE"]},
                 "lock_file": {"type": "string"},
+                "connectivity": {
+                    "type": "object",
+                    "properties": {
+                        "qpu_ip_address": {"type": "string", "format": "hostname"},
+                        "qpu_port": {"type": "number"},
+                        "mode": {"enum": ["REAL", "EMULATED", "RANDOM"]},
+                    },
+                },
                 "timeouts": {
                     "type": "object",
                     "properties": {
@@ -19,7 +25,7 @@ FULL_SCHEMA = {
                     },
                 },
             },
-            "required": ["qpu_management"],
+            "required": ["scheduling_mode"],
             "jobs": {
                 "type": "array",
                 "items": {

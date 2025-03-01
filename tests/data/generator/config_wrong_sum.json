@@ -4,7 +4,7 @@
   	"connector": "NO_LINK",
   	"qpu_ip_address": "0.0.0.0",
   	"qpu_port": 55,
-  	"qpu_management": "LOCK",
+  	"scheduling_mode": "LOCK",
   	"lock_file": "my_lock.lock",
   	"timeouts": {
   	  "http": 5,

@@ -256,7 +256,7 @@ def generate_suite(
             "sched_ext": SCHEDULER_EXTS[scheduler],
             "sched_cmd": SCHEDULER_CMDS[scheduler],
             "sched_aware": (
-                "--gres=qpu:1" if env_cfg["qpu_management"] == "SCHEDULER" else ""
+                "--gres=qpu:1" if env_cfg["scheduling_mode"] == "SCHEDULER" else ""
             ),
         }
         # Pack project files

@@ -1,6 +1,6 @@
 {
     "environment": {
-        "qpu_management": "NONE"
+        "scheduling_mode": "NONE"
     },
     "jobs": [
         {
