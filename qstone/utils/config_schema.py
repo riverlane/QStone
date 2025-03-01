@@ -12,10 +12,11 @@ FULL_SCHEMA = {
                 "connectivity": {
                     "type": "object",
                     "properties": {
+                        "mode": {"enum": ["REAL", "EMULATED", "RANDOM"]},
                         "qpu_ip_address": {"type": "string", "format": "hostname"},
                         "qpu_port": {"type": "number"},
-                        "mode": {"enum": ["REAL", "EMULATED", "RANDOM"]},
                     },
+                    "required": ["mode"],
                 },
                 "timeouts": {
                     "type": "object",
@@ -25,7 +26,7 @@ FULL_SCHEMA = {
                     },
                 },
             },
-            "required": ["scheduling_mode"],
+            "required": ["scheduling_mode", "connectivity"],
             "jobs": {
                 "type": "array",
                 "items": {

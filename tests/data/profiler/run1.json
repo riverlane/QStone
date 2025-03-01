@@ -1,6 +1,10 @@
 {
     "environment": {
-        "scheduling_mode": "NONE"
+        "scheduling_mode": "NONE",
+        "connectivity" :
+        {
+           "mode" : "RANDOM"
+	}
     },
     "jobs": [
         {
