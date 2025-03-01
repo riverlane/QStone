@@ -12,10 +12,11 @@ FULL_SCHEMA = {
                 "connectivity": {
                     "type": "object",
                     "properties": {
-  	                "connector": {"enum": ["NO_LINK", "HTTPS", "RIGETTI", "GRPC"]},
-                        "mode": {"enum": ["REAL", "EMULATED", "RANDOM"]},
+  	                "mode": {"enum": ["NO_LINK", "HTTPS", "RIGETTI", "GRPC"]},
+                        "qpu_mode": {"enum": ["REAL", "EMULATED", "RANDOM"]},
                         "qpu_ip_address": {"type": "string", "format": "hostname"},
                         "qpu_port": {"type": "number"},
+                        "target: {"type": "string"},
                     },
                     "required": ["mode"],
                 },

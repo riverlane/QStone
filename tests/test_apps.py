@@ -31,8 +31,8 @@ def env(tmp_path):
     os.environ["OUTPUT_PATH"] = str(tmp_path.absolute())
     os.environ["NUM_QUBITS"] = "2"
     os.environ["NUM_SHOTS"] = "12"
-    os.environ["MODE"] = "RANDOM"
-    os.environ["TARGET"] = "QPU0"
+    os.environ["CONNECTIVITY_QPU_MODE"] = "RANDOM"
+    os.environ["CONNECTIVITY_TARGET"] = "QPU0"
 
 def skip_if_package_missing(package_name):
     """
