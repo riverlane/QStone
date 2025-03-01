@@ -6,13 +6,17 @@ import shutil
 import glob
 import numpy as np
 import pytest
-import shutil
+import importlib
+import functools
+
 
 from qstone.connectors import connector
 from qstone.apps import get_computation_src
 
+
 def _get_file(regex):
     return glob.glob(regex)[0]
+
 
 @pytest.fixture()
 def env(tmp_path):
@@ -24,6 +28,38 @@ def env(tmp_path):
     os.environ["OUTPUT_PATH"] = str(tmp_path.absolute())
     os.environ["NUM_QUBITS"] = "2"
     os.environ["NUM_SHOTS"] = "12"
+
+
+def skip_if_package_missing(package_name):
+    """
+    Decorator factory to skip tests if a specific package is not installed.
+
+    Args:
+        package_name (str): Name of the package to check for
+
+    Returns:
+        Decorator function that will skip the test if the package is missing
+
+    Usage:
+        @skip_if_package_missing('mpi4py')
+        def test_mpi_functionality():
+            # Test that requires mpi4py
+            ...
+
+    """
+
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            # Check if the package is installed
+            has_package = importlib.util.find_spec(package_name) is not None
+            if not has_package:
+                pytest.skip(f"Test requires {package_name} which is not installed")
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
 
 
 def test_app_logs_failures(tmp_path, env):
@@ -43,7 +79,7 @@ def test_pre_RB(tmp_path, env):
     compute_src = get_computation_src("RB").from_json()
     compute_src.pre(tmp_path)
 
-    # Check profile file
+    # Check profile file
     profile_file = os.path.join(tmp_path, "job_test_PRE_RB*.json")
     with open(_get_file(profile_file), "r") as fir:
         assert '"success": true' in fir.read()
@@ -52,6 +88,7 @@ def test_pre_RB(tmp_path, env):
     vals = np.load(run_file)
     assert len(vals["qasms"]) == 40
     assert len(vals["exp"]) == 40
+
 
 def test_post_RB(tmp_path, env):
     shutil.copyfile("tests/data/apps/RB_run_test.npz", tmp_path / "RB_run_test.npz")
@@ -121,6 +158,7 @@ def test_call_post_PyMatching(tmp_path, env):
     compute_src.post(tmp_path)
 
 
+@skip_if_package_missing("mpi4py")
 def test_call_pre_QBC(tmp_path, env):
     """Test execution of pre step of QBC computation"""
     compute_src = get_computation_src("QBC").from_json()
