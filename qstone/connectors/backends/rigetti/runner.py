@@ -5,8 +5,8 @@ import time
 
 import waiting
 from pyquil import Program, get_qc
-from qcs_sdk.compiler.quilc import QuilcClient
-from qcs_sdk.qvm import QVMClient
+from qcs_sdk.compiler.quilc import QuilcClient # pylint: disable=import-error,no-name-in-module
+from qcs_sdk.qvm import QVMClient # pylint: disable=import-error,no-name-in-module
 
 from qstone.connectors import connection
 from qstone.utils.utils import ComputationStep, trace
@@ -31,13 +31,13 @@ class RigettiConnection(connection.Connection):
         as_qvm = True
         if self.mode == "REAL":
             # compiler (non-standard port)
-            # note: this a way to run a docker version of the compiler:  
+            # note: this a way to run a docker version of the compiler:
             # docker run --rm -it -p 5556:5556 rigetti/quilc -P -S -p 5556
             quilc_client = QuilcClient.new_rpcq(f"{hostname}:{server_port}")
             as_qvm = False
         elif self.mode == "EMULATED":
             # qvm (non-standart port)
-            # note, could run a docker version like this: 
+            # note, could run a docker version like this:
             # docker run --rm -it -p 5001:5001 rigetti/qvm -S  -p 5001
             qvm_client = QVMClient.new_http(f"{hostname}:{server_port}")
 
