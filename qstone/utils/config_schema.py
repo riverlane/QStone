@@ -12,14 +12,14 @@ FULL_SCHEMA = {
                 "qpu": {
                     "type": "object",
                     "properties": {
-                        "mode": {"enum": ["REAL", "EMULATED", "RANDOM"]},   
-		    },
-		    "required": ["mode"],
-		},
+                        "mode": {"enum": ["REAL", "EMULATED", "RANDOM"]},
+                    },
+                    "required": ["mode"],
+                },
                 "connectivity": {
                     "type": "object",
                     "properties": {
-  	                "mode": {"enum": ["NO_LINK", "HTTPS", "RIGETTI", "GRPC"]},
+                        "mode": {"enum": ["NO_LINK", "HTTPS", "RIGETTI", "GRPC"]},
                         "ip_address": {"type": "string", "format": "hostname"},
                         "port": {"type": "number"},
                         "target": {"type": "string"},
@@ -98,4 +98,3 @@ def validate_total_weight(instance):
         return False, f"Sum of user weights must equal 1.0, but got {total_weight}"
 
     return True, ""
-
