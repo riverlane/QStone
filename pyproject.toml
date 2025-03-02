@@ -36,8 +36,8 @@ click = "*"
 waiting = "*"
 jsonschema = "*"
 mpi4py = {version="*", optional = true}
-qcs-sdk-python = "= 0.21.6"
-pyquil = "~= 4.15.0"
+pyquil = "*"
+qcs-sdk-python = ">=0.21.12"
 grpcio = {version = "*", optional = true, markers = "platform_machine == 'amd64'" }
 pytest = { version = "*", optional = true }
 pytest-cov = {version = "*", optional = true}
@@ -89,6 +89,11 @@ disable = """
 
 [tool.poetry.scripts]
 qstone = "qstone.__main__:main"
+
+[tool.coverage.run]
+omit = [
+    "qstone/utils/config_schema.py",
+]
 
 [tool.mypy]
 exclude = "(qstone/connectors/riverlane/grpc.*$)|(qstone/generators/slurm/schedmd)|(tests)|(my_venv)"

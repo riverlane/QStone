@@ -38,12 +38,19 @@ class GRPCConnecction(connection.Connection):
         computation_step=ComputationStep.RUN,
     )
     def run(
-        self, qasm_ptr: str, reps: int, host: str, server_port: int, lockfile: str
+        self,
+        qasm_ptr: str,
+        reps: int,
+        mode: str,
+        hostname: str,
+        server_port: int,
+        target: str,
+        lockfile: str,
     ) -> dict:
         compression = None  # grpc.Compression.None
         # instantiate a channel
         channel = grpc.insecure_channel(
-            f"{host}:{server_port}", compression=compression
+            f"{hostname}:{server_port}", compression=compression
         )
         stub = pb2_grpc.QPUStub(channel)
         pkt_id = secrets.randbelow(2**31)
