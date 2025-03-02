@@ -5,8 +5,10 @@ import time
 
 import waiting
 from pyquil import Program, get_qc
-from qcs_sdk.compiler.quilc import QuilcClient # pylint: disable=import-error,no-name-in-module
-from qcs_sdk.qvm import QVMClient # pylint: disable=import-error,no-name-in-module
+from qcs_sdk.compiler.quilc import (
+    QuilcClient,  # pylint: disable=import-error,no-name-in-module
+)
+from qcs_sdk.qvm import QVMClient  # pylint: disable=import-error,no-name-in-module
 
 from qstone.connectors import connection
 from qstone.utils.utils import ComputationStep, trace
