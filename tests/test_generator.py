@@ -23,10 +23,10 @@ SCHED_EXT = {"slurm": "sbatch", "jsrun": "bsub", "bare_metal": None}
 DEFAULT_CFG = {
     "PROJECT_NAME": "test", 
     "SCHEDULING_MODE": "LOCK", 
+    "QPU_MODE": "RANDOM",
     "CONNECTIVITY_MODE": "NO_LINK",
-    "CONNECTIVITY_QPU_MODE": "RANDOM",
-    "CONNECTIVITY_QPU_IP_ADDRESS": "0.0.0.0",
-    "CONNECTIVITY_QPU_PORT": "55",
+    "CONNECTIVITY_IP_ADDRESS": "0.0.0.0",
+    "CONNECTIVITY_PORT": "55",
 }
 
 

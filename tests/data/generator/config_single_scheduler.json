@@ -2,11 +2,13 @@
   "environment": {
   	"project_name": "test",
   	"scheduling_mode": "SCHEDULER",
-  	"connectivity": {
+  	"qpu": {	
+  		"mode": "RANDOM"
+	},
+	"connectivity": {
   		"mode": "NO_LINK",
-  		"qpu_mode": "RANDOM",
-        	"qpu_ip_address": "0.0.0.0",
-  		"qpu_port": 55
+        	"ip_address": "0.0.0.0",
+  		"port": 55
         },
   	"lock_file": "my_lock.lock",
   	"timeouts": {

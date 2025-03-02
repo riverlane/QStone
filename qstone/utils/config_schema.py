@@ -9,13 +9,19 @@ FULL_SCHEMA = {
                 "project_name": {"type": "string"},
                 "scheduling_mode": {"enum": ["LOCK", "SCHEDULER", "POLLING", "NONE"]},
                 "lock_file": {"type": "string"},
+                "qpu": {
+                    "type": "object",
+                    "properties": {
+                        "mode": {"enum": ["REAL", "EMULATED", "RANDOM"]},   
+		    },
+		    "required": ["mode"],
+		},
                 "connectivity": {
                     "type": "object",
                     "properties": {
   	                "mode": {"enum": ["NO_LINK", "HTTPS", "RIGETTI", "GRPC"]},
-                        "qpu_mode": {"enum": ["REAL", "EMULATED", "RANDOM"]},
-                        "qpu_ip_address": {"type": "string", "format": "hostname"},
-                        "qpu_port": {"type": "number"},
+                        "ip_address": {"type": "string", "format": "hostname"},
+                        "port": {"type": "number"},
                         "target": {"type": "string"},
                     },
                     "required": ["mode"],

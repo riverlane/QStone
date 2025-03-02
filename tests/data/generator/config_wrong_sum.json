@@ -1,11 +1,13 @@
 {
   "environment": {
   	"project_name": "test",
+        "qpu": {
+  		"mode": "RANDOM"
+        },
         "connectivity": {
   		"mode": "NO_LINK",
-  		"qpu_mode": "RANDOM",
-  		"qpu_ip_address": "0.0.0.0",
-  		"qpu_port": 55,
+  		"ip_address": "0.0.0.0",
+  		"port": 55,
         },
   	"scheduling_mode": "LOCK",
   	"lock_file": "my_lock.lock",
