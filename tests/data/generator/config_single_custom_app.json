@@ -2,9 +2,9 @@
   "environment": 
   {
    "project_name": "test",
-   "connector": "NO_LINK",
    "connectivity": {
-  		"mode": "RANDOM",
+   		"mode": "NO_LINK",
+  		"qpu_mode": "RANDOM",
   		"qpu_ip_address": "0.0.0.0",
   		"qpu_port": 55
    },  	

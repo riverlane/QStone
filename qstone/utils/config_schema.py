@@ -16,7 +16,7 @@ FULL_SCHEMA = {
                         "qpu_mode": {"enum": ["REAL", "EMULATED", "RANDOM"]},
                         "qpu_ip_address": {"type": "string", "format": "hostname"},
                         "qpu_port": {"type": "number"},
-                        "target: {"type": "string"},
+                        "target": {"type": "string"},
                     },
                     "required": ["mode"],
                 },

@@ -3,7 +3,7 @@
         "scheduling_mode": "NONE",
         "connectivity" :
         {
-           "mode" : "RANDOM"
+           "mode" : "NO_LINK"
 	}
     },
     "jobs": [
