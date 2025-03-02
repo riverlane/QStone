@@ -36,7 +36,7 @@ click = "*"
 waiting = "*"
 jsonschema = "*"
 mpi4py = {version="*", optional = true}
-qcs-sdk-python = "*"
+qcs-sdk-python = ">=0.21.12"
 pyquil = "*"
 grpcio = {version = "*", optional = true, markers = "platform_machine == 'amd64'" }
 pytest = { version = "*", optional = true }
