@@ -5,7 +5,6 @@ import os
 import random
 import re
 import time
-from collections import defaultdict
 from enum import Enum
 from functools import wraps
 from typing import Callable, Dict, Optional
@@ -107,7 +106,7 @@ def qasm_circuit_random_sample(qasm: str, repetitions: int) -> Dict:
     # Generate a random readout per shot
     measurements = []
     counts: dict = {}
-    for i in range(repetitions):
+    for _ in range(repetitions):
         meas = list(list(random.randint(0, 1) for _ in range(num_cregs)))
         key = "".join(str(bit) for bit in meas)
         measurements.append(meas)

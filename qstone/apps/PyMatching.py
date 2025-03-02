@@ -113,7 +113,7 @@ class PyMatching(Computation):  # pylint:disable=invalid-name
             qasm_content (str): Content of the QASM file as a string
 
         Returns:
-            dict: Dictionary mapping creg names to their bit ranges as tuples (start_index, end_index)
+            dict: Dictionary mapping creg names to their bit ranges as tuples (start, end)
         """
         # Initialize variables
         creg_info = {}
