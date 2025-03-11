@@ -21,7 +21,20 @@ FULL_SCHEMA = {
                     "properties": {
                         "mode": {"enum": ["NO_LINK", "HTTPS", "RIGETTI", "GRPC"]},
                         "ip_address": {"type": "string", "format": "hostname"},
-                        "port": {"type": "number"},
+                        "qpu": {
+                            "type": "object",
+                            "properties": {
+                                "port": {"type": "number"},
+                                "ip_address": {"type": "string", "format": "hostname"},
+                            },
+                        },
+                        "compiler": {
+                            "type": "object",
+                            "properties": {
+                                "port": {"type": "number"},
+                                "ip_address": {"type": "string", "format": "hostname"},
+                            },
+                        },
                         "target": {"type": "string"},
                     },
                     "required": ["mode"],

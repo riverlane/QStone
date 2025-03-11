@@ -42,15 +42,17 @@ class GRPCConnecction(connection.Connection):
         qasm_ptr: str,
         reps: int,
         mode: str,
-        hostname: str,
-        server_port: int,
+        qpu_host: str,
+        qpu_port: int,
+        compiler_host: str,
+        compiler_port: int,
         target: str,
         lockfile: str,
     ) -> dict:
         compression = None  # grpc.Compression.None
         # instantiate a channel
         channel = grpc.insecure_channel(
-            f"{hostname}:{server_port}", compression=compression
+            f"{qpu_host}:{qpu_port}", compression=compression
         )
         stub = pb2_grpc.QPUStub(channel)
         pkt_id = secrets.randbelow(2**31)

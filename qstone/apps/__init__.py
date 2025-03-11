@@ -18,8 +18,16 @@ _computation_registry = {
 }
 
 ENV_VARS = {
-    "CONNECTIVITY_IP_ADDRESS": os.environ.get("CONNECTIVITY_IP_ADDRESS", "127.0.0.1"),
-    "CONNECTIVITY_PORT": int(os.environ.get("CONNECTIVITY_PORT", "0")),
+    "CONNECTIVITY_QPU_IP_ADDRESS": os.environ.get(
+        "CONNECTIVITY_QPU_IP_ADDRESS", "127.0.0.1"
+    ),
+    "CONNECTIVITY_QPU_PORT": int(os.environ.get("CONNECTIVITY_QPU_PORT", "0")),
+    "CONNECTIVITY_COMPILER_IP_ADDRESS": os.environ.get(
+        "CONNECTIVITY_COMPILER_IP_ADDRESS", "127.0.0.1"
+    ),
+    "CONNECTIVITY_COMPILER_PORT": int(
+        os.environ.get("CONNECTIVITY_COMPILER_PORT", "0")
+    ),
     "CONNECTIVITY_MODE": connector.ConnectorType[
         os.environ.get("CONNECTIVITY_MODE", "NO_LINK")
     ],

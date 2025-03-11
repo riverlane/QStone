@@ -68,8 +68,8 @@ class QpuConfiguration:
 
     def load_configuration(self, config: dict) -> None:
         """Loads QPU configuration data"""
-        self.qpu_ip_address = config["connectivity"]["ip_address"]
-        self.qpu_port = config["connectivity"]["port"]
+        self.qpu_ip_address = config["connectivity"]["qpu"]["ip_address"]
+        self.qpu_port = config["connectivity"]["qpu"]["port"]
 
     def write_configuration(self, output_path: str) -> None:
         """Writes QPU configuration as json

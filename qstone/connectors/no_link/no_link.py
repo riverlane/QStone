@@ -48,8 +48,10 @@ class NoLinkConnection(connection.Connection):
         qasm_ptr: str,
         reps: int,
         mode: str,
-        hostname: str,
-        server_port: int,
+        qpu_host: str,
+        qpu_port: int,
+        compiler_host: str,
+        compiler_server: int,
         target: str,
         lockfile: str,
     ) -> dict:

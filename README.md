@@ -57,8 +57,10 @@ Run QStone using Command Line Interface
      },
      "connectivity": {
      	"mode": "NO_LINK",
-     	"ip_address": "0.0.0.0",
-     	"port": 55
+     	"qpu": {
+           "ip_address": "0.0.0.0",
+     	   "port": 55
+        }
      },
      "timeouts" : {
          "http": 5,

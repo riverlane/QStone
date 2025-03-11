@@ -31,16 +31,20 @@ class Connector:
         self,
         conn_type: ConnectorType,
         mode: str,
-        host: str,
-        server_port: int,
+        qpu_host: str,
+        qpu_port: int,
+        compiler_host: str,
+        compiler_port: int,
         target: str,
         lockfile: Optional[str],
     ):
         """Initialise the connector object"""
         self._protocol = conn_type
         self._mode = mode
-        self._host = host
-        self._server_port = server_port
+        self._qpu_host = qpu_host
+        self._qpu_port = qpu_port
+        self._compiler_host = compiler_host
+        self._compiler_port = compiler_port
         self._target = target
         self._connection: connection.Connection
         self._lockfile: Optional[str] = None if lockfile == "NONE" else lockfile
@@ -65,14 +69,24 @@ class Connector:
         return self._mode
 
     @property
-    def host(self):
-        """Returns the host name"""
-        return self._host
+    def qpu_host(self):
+        """Returns the qpu host name"""
+        return self._qpu_host
 
     @property
-    def server_port(self):
-        """Returns the server_port"""
-        return self._server_port
+    def qpu_port(self):
+        """Returns the qpu port"""
+        return self._qpu_port
+
+    @property
+    def compiler_host(self):
+        """Returns the compiler host name"""
+        return self._compiler_host
+
+    @property
+    def compiler_port(self):
+        """Returns the compiler_port"""
+        return self._compiler_port
 
     @property
     def connection(self):
@@ -100,8 +114,10 @@ class Connector:
             qasm,
             reps,
             self.mode,
-            self.host,
-            self.server_port,
+            self.qpu_host,
+            self.qpu_port,
+            self.compiler_host,
+            self.compiler_port,
             self.target,
             self.lockfile,
         )

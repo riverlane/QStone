@@ -15,7 +15,7 @@ from qstone.apps import get_computation_src
 
 
 
-DEFAULT_CONNECTOR=connector.Connector(connector.ConnectorType.NO_LINK, "RANDOM", "0", "0", "QPU0", None)
+DEFAULT_CONNECTOR=connector.Connector(connector.ConnectorType.NO_LINK, "RANDOM", "0", "0", "0", "0", "QPU0", None)
 
 def _get_file(regex):
     return glob.glob(regex)[0]

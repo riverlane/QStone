@@ -35,8 +35,10 @@ def run(src: str, cfg: str):
         connector.Connector(
             ENV_VARS["CONNECTIVITY_MODE"],  # type: ignore [arg-type]
             ENV_VARS["QPU_MODE"], # type: ignore [arg-type]
-            ENV_VARS["CONNECTIVITY_IP_ADDRESS"],  # type: ignore [arg-type]
-            ENV_VARS["CONNECTIVITY_PORT"],  # type: ignore [arg-type]
+            ENV_VARS["CONNECTIVITY_QPU_IP_ADDRESS"],  # type: ignore [arg-type]
+            ENV_VARS["CONNECTIVITY_QPU_PORT"],  # type: ignore [arg-type]
+            ENV_VARS["CONNECTIVITY_COMPILER_IP_ADDRESS"],  # type: ignore [arg-type]
+            ENV_VARS["CONNECTIVITY_COMPILER_PORT"],  # type: ignore [arg-type]
             ENV_VARS["CONNECTIVITY_TARGET"],    # type: ignore [arg-type]
             ENV_VARS["LOCKFILE"],  # type: ignore [arg-type]
         ),

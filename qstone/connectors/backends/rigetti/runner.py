@@ -28,18 +28,26 @@ class RigettiConnection(connection.Connection):
         self.mode = None
         self.origin = None
 
-    def _get_qc(self, mode: str, hostname: str, server_port: int, target: str):
+    def _get_qc(
+        self,
+        mode: str,
+        qpu_host: str,
+        qpu_port: int,
+        compiler_host: str,
+        compiler_port: int,
+        target: str,
+    ):
         self.mode = mode
-        self.origin = hostname
-        as_qvm = True if self.mode == "REAL" else False
+        self.origin = qpu_host
+        as_qvm = self.mode == "REAL"
         # compiler (non-standard port)
         # note: this a way to run a docker version of the compiler:
         # docker run --rm -it -p 5556:5556 rigetti/quilc -P -S -p 5556
-        quilc_client = QuilcClient.new_rpcq(f"{hostname}:{server_port}")
+        quilc_client = QuilcClient.new_rpcq(f"{compiler_host}:{compiler_port}")
         # qvm (non-standart port)
         # note, could run a docker version like this:
         # docker run --rm -it -p 5001:5001 rigetti/qvm -S  -p 5001
-        qvm_client = QVMClient.new_http(f"{hostname}:{server_port}")
+        qvm_client = QVMClient.new_http(f"{qpu_host}:{qpu_port}")
         return get_qc(
             target, as_qvm=as_qvm, quilc_client=quilc_client, qvm_client=qvm_client
         )
@@ -111,16 +119,20 @@ class RigettiConnection(connection.Connection):
         qasm_ptr: str,
         reps: int,
         mode: str,
-        hostname: str,
-        server_port: int,
+        qpu_host: str,
+        qpu_port: int,
+        compiler_host: str,
+        compiler_port: int,
         target: str,
         lockfile: str,
     ) -> dict:
         """Run the connection to the server"""
-        self.qc = self._get_qc(mode, hostname, server_port, target)
+        self.qc = self._get_qc(
+            mode, qpu_host, qpu_port, compiler_host, compiler_port, target
+        )
         try:
             waiting.wait(
-                lambda: self._request_and_process(qasm_ptr, reps, hostname, lockfile),
+                lambda: self._request_and_process(qasm_ptr, reps, qpu_host, lockfile),
                 timeout_seconds=20,
             )
         except waiting.TimeoutExpired:

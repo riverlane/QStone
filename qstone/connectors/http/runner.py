@@ -78,15 +78,21 @@ class HttpConnection(connection.Connection):
         qasm_ptr: str,
         reps: int,
         mode: str,
-        hostname: str,
-        server_port: int,
+        qpu_host: str,
+        qpu_port: int,
+        compiler_host: str,
+        compiler_port: int,
         target: str,
         lockfile: str,
     ) -> dict:
         """Run the connection to the server"""
-        hostpath = f"{hostname}:{server_port}" if server_port else hostname
+        qpu_hostpath = f"{qpu_host}:{qpu_port}" if qpu_port else qpu_host
         # Prepending the HTTP specifier if not provided.
-        hostpath = hostpath if hostpath.startswith("http://") else f"http://{hostpath}"
+        qpu_hostpath = (
+            qpu_hostpath
+            if qpu_hostpath.startswith("http://")
+            else f"http://{qpu_hostpath}"
+        )
 
         # Active wait on lock
         if lockfile is not None:
@@ -101,7 +107,7 @@ class HttpConnection(connection.Connection):
                 sys.stderr.write("QSTONE::ERR - timeout waiting for lock")
                 return {}
 
-        self._request_and_process(qasm_ptr, reps, hostpath)
+        self._request_and_process(qasm_ptr, reps, qpu_hostpath)
 
         # releasing lock takes care of None case as well.
         if lockfile is not None:
