@@ -58,7 +58,7 @@ Run QStone using Command Line Interface
      "connectivity": {
      	"mode": "NO_LINK",
      	"ip_address": "0.0.0.0",
-     	"port": 55,
+     	"port": 55
      },
      "timeouts" : {
          "http": 5,
@@ -71,14 +71,14 @@ Run QStone using Command Line Interface
       "qubits": [4, 6],
       "num_shots": [100, 200],
       "walltime" : 10,
-      "nthreads" : 4,
+      "nthreads" : 4
     },
     {
       "type": "RB",
       "qubits": [2],
       "num_shots": [100],
       "walltime" : 10,
-      "nthreads" : 2,
+      "nthreads" : 2
     },
     {
       "type": "QBC",
