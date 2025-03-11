@@ -20,9 +20,11 @@ _computation_registry = {
 ENV_VARS = {
     "CONNECTIVITY_IP_ADDRESS": os.environ.get("CONNECTIVITY_IP_ADDRESS", "127.0.0.1"),
     "CONNECTIVITY_PORT": int(os.environ.get("CONNECTIVITY_PORT", "0")),
-    "CONNECTIVITY_MODE": connector.ConnectorType[os.environ.get("CONNECTIVITY_MODE", "NO_LINK")],
-    "QPU_MODE" : os.environ.get("QPU_MODE", "RANDOM"),
-    "CONNECTIVITY_TARGET" : os.environ.get("CONNECTIVITY_TARGET", ""),
+    "CONNECTIVITY_MODE": connector.ConnectorType[
+        os.environ.get("CONNECTIVITY_MODE", "NO_LINK")
+    ],
+    "QPU_MODE": os.environ.get("QPU_MODE", "RANDOM"),
+    "CONNECTIVITY_TARGET": os.environ.get("CONNECTIVITY_TARGET", ""),
     "LOCKFILE": (
         os.environ.get("LOCK_FILE", "qstone.lock")
         if os.environ.get("SCHEDULING_MODE", "NONE") == "LOCK"

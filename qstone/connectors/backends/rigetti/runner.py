@@ -31,21 +31,15 @@ class RigettiConnection(connection.Connection):
     def _get_qc(self, mode: str, hostname: str, server_port: int, target: str):
         self.mode = mode
         self.origin = hostname
-        quilc_client = None
-        qvm_client = None
-        as_qvm = True
-        if self.mode == "REAL":
-            # compiler (non-standard port)
-            # note: this a way to run a docker version of the compiler:
-            # docker run --rm -it -p 5556:5556 rigetti/quilc -P -S -p 5556
-            quilc_client = QuilcClient.new_rpcq(f"{hostname}:{server_port}")
-            as_qvm = False
-        elif self.mode == "EMULATED":
-            # qvm (non-standart port)
-            # note, could run a docker version like this:
-            # docker run --rm -it -p 5001:5001 rigetti/qvm -S  -p 5001
-            qvm_client = QVMClient.new_http(f"{hostname}:{server_port}")
-
+        as_qvm = True if self.mode == "REAL" else False
+        # compiler (non-standard port)
+        # note: this a way to run a docker version of the compiler:
+        # docker run --rm -it -p 5556:5556 rigetti/quilc -P -S -p 5556
+        quilc_client = QuilcClient.new_rpcq(f"{hostname}:{server_port}")
+        # qvm (non-standart port)
+        # note, could run a docker version like this:
+        # docker run --rm -it -p 5001:5001 rigetti/qvm -S  -p 5001
+        qvm_client = QVMClient.new_http(f"{hostname}:{server_port}")
         return get_qc(
             target, as_qvm=as_qvm, quilc_client=quilc_client, qvm_client=qvm_client
         )
