@@ -65,7 +65,7 @@ class GRPCConnecction(connection.Connection):
         computation_type="CONNECTION",
         computation_step=ComputationStep.QUERY,
     )
-    def query_qpu_config(self, host: str, server_port: int) -> QpuConfiguration:
+    def query_qpu_config(self, qpu_host: str, qpu_port: int) -> QpuConfiguration:
         """Query the Qpu configuraiton of the target"""
-        print("implement me!")
+        print(f"{qpu_host}:{qpu_port} pure printout - implemented!")
         return QpuConfiguration()

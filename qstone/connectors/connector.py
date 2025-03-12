@@ -96,7 +96,7 @@ class Connector:
     @property
     def address(self):
         """Returns the address of the Quantum bridge device"""
-        return f"{self.host}::{self.server_port}"
+        return f"{self.qpu_host}::{self.qpu_port}"
 
     @property
     def target(self):

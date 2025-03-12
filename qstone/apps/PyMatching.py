@@ -1,7 +1,6 @@
 """Defines the two steps of PyMatching jobs"""
 
 import os
-from typing import Dict, List
 
 import numpy as np
 import pymatching

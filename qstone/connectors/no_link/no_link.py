@@ -51,7 +51,7 @@ class NoLinkConnection(connection.Connection):
         qpu_host: str,
         qpu_port: int,
         compiler_host: str,
-        compiler_server: int,
+        compiler_port: int,
         target: str,
         lockfile: str,
     ) -> dict:
