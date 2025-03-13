@@ -39,7 +39,7 @@ class RigettiConnection(connection.Connection):
     ):
         self.mode = mode
         self.origin = qpu_host
-        as_qvm = self.mode == "REAL"
+        as_qvm = self.mode != "REAL"
         # compiler (non-standard port)
         # note: this a way to run a docker version of the compiler:
         # docker run --rm -it -p 5556:5556 rigetti/quilc -P -S -p 5556
