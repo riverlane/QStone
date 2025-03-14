@@ -13,12 +13,29 @@ from pytest_mock import mocker
 import tests.mocks.lsf_jsrun.scheduler as jsrun_scheduler
 from qstone.connectors.connector import ConnectorType
 from qstone.generators import generator
+from qstone.utils.utils import parse_json
 from qstone.apps import PyMatching
 from qstone.utils.utils import JobReturnCode, QpuConfiguration
 
 
 SCHED_EXT = {"slurm": "sbatch", "jsrun": "bsub", "bare_metal": None}
 
+DEFAULT_CFG = {
+    "PROJECT_NAME": "test", 
+    "SCHEDULING_MODE": "LOCK", 
+    "QPU_MODE": "RANDOM",
+    "CONNECTIVITY_MODE": "NO_LINK",
+    "CONNECTIVITY_QPU_IP_ADDRESS": "0.0.0.0",
+    "CONNECTIVITY_QPU_PORT": "55",
+}
+
+
+@pytest.mark.parametrize("test_input", ["config_single.json"])
+def test_generate_correct_env(tmp_path, test_input):
+    cfg = parse_json(f"tests/data/generator/{test_input}")
+    env_vars = generator._environment_variables_exports(cfg["environment"])
+    for key in DEFAULT_CFG:
+        assert any(key in env_var for env_var in env_vars), f"Missing key in env_vars: {key}"
 
 @pytest.mark.parametrize("test_input", ["config_wrong_sum.json"])
 def test_config_checks(tmp_path, test_input):

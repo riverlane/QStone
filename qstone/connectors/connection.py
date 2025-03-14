@@ -45,6 +45,15 @@ class Connection(ABC):
 
     @abstractmethod
     def run(
-        self, qasm_ptr: str, reps: int, host: str, server_port: int, lockfile: str
+        self,
+        qasm_ptr: str,
+        reps: int,
+        mode: str,
+        qpu_host: str,
+        qpu_port: int,
+        compiler_host: str,
+        compiler_port: int,
+        target: str,
+        lockfile: str,
     ) -> dict:
         """Run the connection to the server"""

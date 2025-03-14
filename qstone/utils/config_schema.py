@@ -7,10 +7,38 @@ FULL_SCHEMA = {
             "type": "object",
             "properties": {
                 "project_name": {"type": "string"},
-                "qpu_ip_address": {"type": "string", "format": "hostname"},
-                "qpu_port": {"type": "number"},
-                "qpu_management": {"enum": ["LOCK", "SCHEDULER", "POLLING", "NONE"]},
+                "scheduling_mode": {"enum": ["LOCK", "SCHEDULER", "POLLING", "NONE"]},
                 "lock_file": {"type": "string"},
+                "qpu": {
+                    "type": "object",
+                    "properties": {
+                        "mode": {"enum": ["REAL", "EMULATED", "RANDOM"]},
+                    },
+                    "required": ["mode"],
+                },
+                "connectivity": {
+                    "type": "object",
+                    "properties": {
+                        "mode": {"enum": ["NO_LINK", "HTTPS", "RIGETTI", "GRPC"]},
+                        "ip_address": {"type": "string", "format": "hostname"},
+                        "qpu": {
+                            "type": "object",
+                            "properties": {
+                                "port": {"type": "number"},
+                                "ip_address": {"type": "string", "format": "hostname"},
+                            },
+                        },
+                        "compiler": {
+                            "type": "object",
+                            "properties": {
+                                "port": {"type": "number"},
+                                "ip_address": {"type": "string", "format": "hostname"},
+                            },
+                        },
+                        "target": {"type": "string"},
+                    },
+                    "required": ["mode"],
+                },
                 "timeouts": {
                     "type": "object",
                     "properties": {
@@ -19,7 +47,7 @@ FULL_SCHEMA = {
                     },
                 },
             },
-            "required": ["qpu_management"],
+            "required": ["scheduling_mode", "connectivity"],
             "jobs": {
                 "type": "array",
                 "items": {
@@ -83,8 +111,3 @@ def validate_total_weight(instance):
         return False, f"Sum of user weights must equal 1.0, but got {total_weight}"
 
     return True, ""
-
-
-# When using a JSON Schema library like jsonschema in Python, you would register
-# this custom validator with the library and map it to the "$template": "totalWeightValidator"
-# in the schema definition.

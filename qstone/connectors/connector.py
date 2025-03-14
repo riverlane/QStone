@@ -30,14 +30,22 @@ class Connector:
     def __init__(
         self,
         conn_type: ConnectorType,
-        host: str,
-        server_port: int,
+        mode: str,
+        qpu_host: str,
+        qpu_port: int,
+        compiler_host: str,
+        compiler_port: int,
+        target: str,
         lockfile: Optional[str],
     ):
         """Initialise the connector object"""
         self._protocol = conn_type
-        self._host = host
-        self._server_port = server_port
+        self._mode = mode
+        self._qpu_host = qpu_host
+        self._qpu_port = qpu_port
+        self._compiler_host = compiler_host
+        self._compiler_port = compiler_port
+        self._target = target
         self._connection: connection.Connection
         self._lockfile: Optional[str] = None if lockfile == "NONE" else lockfile
 
@@ -56,14 +64,29 @@ class Connector:
         return self._protocol
 
     @property
-    def host(self):
-        """Returns the host name"""
-        return self._host
+    def mode(self):
+        """Returns the mode in use (EMULATION, REAL, RANDOM)"""
+        return self._mode
 
     @property
-    def server_port(self):
-        """Returns the server_port"""
-        return self._server_port
+    def qpu_host(self):
+        """Returns the qpu host name"""
+        return self._qpu_host
+
+    @property
+    def qpu_port(self):
+        """Returns the qpu port"""
+        return self._qpu_port
+
+    @property
+    def compiler_host(self):
+        """Returns the compiler host name"""
+        return self._compiler_host
+
+    @property
+    def compiler_port(self):
+        """Returns the compiler_port"""
+        return self._compiler_port
 
     @property
     def connection(self):
@@ -73,7 +96,12 @@ class Connector:
     @property
     def address(self):
         """Returns the address of the Quantum bridge device"""
-        return f"{self.host}::{self.server_port}"
+        return f"{self.qpu_host}::{self.qpu_port}"
+
+    @property
+    def target(self):
+        """Returns the target name"""
+        return self._target
 
     @property
     def lockfile(self):
@@ -83,5 +111,13 @@ class Connector:
     def run(self, qasm: str, reps: int):
         """Runs the provided QASM circuit"""
         return self.connection.run(
-            qasm, reps, self.host, self.server_port, self.lockfile
+            qasm,
+            reps,
+            self.mode,
+            self.qpu_host,
+            self.qpu_port,
+            self.compiler_host,
+            self.compiler_port,
+            self.target,
+            self.lockfile,
         )

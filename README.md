@@ -51,10 +51,17 @@ Run QStone using Command Line Interface
 {
   "environment": { 
      "project_name": "proj_name",
-     "connector": "NO_LINK",
-     "qpu_ip_address": "0.0.0.0",
-     "qpu_port": 55,
-     "qpu_management": "LOCK",
+     "scheduling_mode" : "LOCK",
+     "qpu" : {
+        "mode" : "RANDOM"
+     },
+     "connectivity": {
+     	"mode": "NO_LINK",
+     	"qpu": {
+           "ip_address": "0.0.0.0",
+     	   "port": 55
+        }
+     },
      "timeouts" : {
          "http": 5,
          "lock": 4
@@ -66,16 +73,14 @@ Run QStone using Command Line Interface
       "qubits": [4, 6],
       "num_shots": [100, 200],
       "walltime" : 10,
-      "nthreads" : 4,
-      "lsf/jsrun_opt": "-nnodes=4 "
+      "nthreads" : 4
     },
     {
       "type": "RB",
       "qubits": [2],
       "num_shots": [100],
       "walltime" : 10,
-      "nthreads" : 2,
-      "slurm/schedmd_opt": "--cpus-per-task=4"
+      "nthreads" : 2
     },
     {
       "type": "QBC",
@@ -83,7 +88,6 @@ Run QStone using Command Line Interface
       "num_shots": [32],
       "walltime": 20,
       "nthreads" : 2
-      "slurm/schedmd_opt": "-N 2 -n 2 --ntasks-per-node=1"
     }
   ],
   "users": [

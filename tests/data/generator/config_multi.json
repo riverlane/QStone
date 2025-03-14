@@ -1,11 +1,18 @@
 {
   "environment": {
   	"project_name": "test",
-  	"connector": "NO_LINK",
-  	"qpu_ip_address": "0.0.0.0",
-  	"qpu_port": 55,
-  	"qpu_management": "LOCK",
-  	"timeouts": {
+  	"scheduling_mode": "LOCK",
+        "qpu": {
+  		"mode": "RANDOM"
+	},
+  	"connectivity": {
+  		"mode": "NO_LINK",
+  		"qpu": {
+			"ip_address": "0.0.0.0",
+  			"port": 55
+		}
+	},
+        "timeouts": {
   	  "http": 5,
   	  "lock": 4
   	}

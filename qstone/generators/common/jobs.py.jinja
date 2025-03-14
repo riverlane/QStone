@@ -33,9 +33,13 @@ def run(src: str, cfg: str):
     computation_src.run(
         ENV_VARS["OUTPUT_PATH"],
         connector.Connector(
-            ENV_VARS["CONNECTOR_TYPE"],  # type: ignore [arg-type]
-            ENV_VARS["QPU_IP_ADDRESS"],  # type: ignore [arg-type]
-            ENV_VARS["QPU_PORT"],  # type: ignore [arg-type]
+            ENV_VARS["CONNECTIVITY_MODE"],  # type: ignore [arg-type]
+            ENV_VARS["QPU_MODE"], # type: ignore [arg-type]
+            ENV_VARS["CONNECTIVITY_QPU_IP_ADDRESS"],  # type: ignore [arg-type]
+            ENV_VARS["CONNECTIVITY_QPU_PORT"],  # type: ignore [arg-type]
+            ENV_VARS["CONNECTIVITY_COMPILER_IP_ADDRESS"],  # type: ignore [arg-type]
+            ENV_VARS["CONNECTIVITY_COMPILER_PORT"],  # type: ignore [arg-type]
+            ENV_VARS["CONNECTIVITY_TARGET"],    # type: ignore [arg-type]
             ENV_VARS["LOCKFILE"],  # type: ignore [arg-type]
         ),
     )

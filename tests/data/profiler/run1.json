@@ -1,6 +1,10 @@
 {
     "environment": {
-        "qpu_management": "NONE"
+        "scheduling_mode": "NONE",
+        "connectivity" :
+        {
+           "mode" : "NO_LINK"
+	}
     },
     "jobs": [
         {

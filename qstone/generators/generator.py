@@ -197,12 +197,39 @@ def _generate_user_jobs(
 
 def _environment_variables_exports(env_vars: dict) -> List[str]:
     """
-    Generates export statements for environment variables.
-    """
-    exports_list = [
-        f'export {k.upper().replace(".","_")}="{v}"' for k, v in env_vars.items()
-    ]
+    Generates export statements for environment variables, handling nested dictionaries.
 
+    For nested dictionaries like {"a": {"b": x, "c": y}}, generates symbols:
+    A_B = x, A_C = y
+
+    Args:
+        env_vars: Dictionary of environment variables, potentially nested
+
+    Returns:
+        List of export statements for all environment variables
+    """
+    exports_list = []
+
+    def process_dict(current_dict, prefix=""):
+        for key, value in current_dict.items():
+            # Convert the current key to uppercase
+            upper_key = key.upper().replace(".", "_")
+
+            # If there's a prefix, we're in a nested structure
+            if prefix:
+                current_prefix = f"{prefix}_{upper_key}"
+            else:
+                current_prefix = upper_key
+
+            # If value is a dictionary, process it recursively
+            if isinstance(value, dict):
+                process_dict(value, current_prefix)
+            else:
+                # Create export statement for leaf values
+                exports_list.append(f'export {current_prefix}="{value}"')
+
+    # Start processing from the root dictionary
+    process_dict(env_vars)
     return exports_list
 
 
@@ -256,7 +283,7 @@ def generate_suite(
             "sched_ext": SCHEDULER_EXTS[scheduler],
             "sched_cmd": SCHEDULER_CMDS[scheduler],
             "sched_aware": (
-                "--gres=qpu:1" if env_cfg["qpu_management"] == "SCHEDULER" else ""
+                "--gres=qpu:1" if env_cfg["scheduling_mode"] == "SCHEDULER" else ""
             ),
         }
         # Pack project files

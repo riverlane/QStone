@@ -14,6 +14,9 @@ from qstone.connectors import connector
 from qstone.apps import get_computation_src
 
 
+
+DEFAULT_CONNECTOR=connector.Connector(connector.ConnectorType.NO_LINK, "RANDOM", "0", "0", "0", "0", "QPU0", None)
+
 def _get_file(regex):
     return glob.glob(regex)[0]
 
@@ -28,7 +31,8 @@ def env(tmp_path):
     os.environ["OUTPUT_PATH"] = str(tmp_path.absolute())
     os.environ["NUM_QUBITS"] = "2"
     os.environ["NUM_SHOTS"] = "12"
-
+    os.environ["CONNECTIVITY_QPU_MODE"] = "RANDOM"
+    os.environ["CONNECTIVITY_TARGET"] = "QPU0"
 
 def skip_if_package_missing(package_name):
     """
@@ -127,7 +131,7 @@ def test_call_run_PyMatching(tmp_path, env):
     compute_src = get_computation_src("PyMatching").from_json()
     compute_src.pre(tmp_path)
     compute_src.run(
-        tmp_path, connector.Connector(connector.ConnectorType.NO_LINK, "0", "0", None)
+        tmp_path, DEFAULT_CONNECTOR 
     )
     assert compute_src.num_shots == 12, "Wrong number of shots"
 
@@ -140,7 +144,7 @@ def test_PyMatching_writes_syndromes(tmp_path, env):
         tmp_path, f"PyMatching_{os.environ['JOB_ID']}_syndromes.npz"
     )
     compute_src.run(
-        tmp_path, connector.Connector(connector.ConnectorType.NO_LINK, "0", "0", None)
+        tmp_path, DEFAULT_CONNECTOR
     )
     compute_src.post(tmp_path)
     print(os.listdir(tmp_path))
@@ -153,7 +157,7 @@ def test_call_post_PyMatching(tmp_path, env):
     compute_src = get_computation_src("PyMatching").from_json()
     compute_src.pre(tmp_path)
     compute_src.run(
-        tmp_path, connector.Connector(connector.ConnectorType.NO_LINK, "0", "0", None)
+        tmp_path, DEFAULT_CONNECTOR
     )
     compute_src.post(tmp_path)
 
@@ -178,7 +182,7 @@ def test_call_run_QBC(tmp_path, env):
     data_path = os.path.join(tmp_path, f"qbc_run_{os.environ['JOB_ID']}.npz")
     shutil.copyfile("tests/data/apps/qbc_run_test.npz", data_path)
     compute_src.run(
-        tmp_path, connector.Connector(connector.ConnectorType.NO_LINK, "0", "0", None)
+        tmp_path, DEFAULT_CONNECTOR
     )
     model = np.load(data_path, allow_pickle=True)
     print(model)

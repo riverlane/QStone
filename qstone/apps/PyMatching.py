@@ -1,7 +1,6 @@
 """Defines the two steps of PyMatching jobs"""
 
 import os
-from typing import Dict, List
 
 import numpy as np
 import pymatching
@@ -113,7 +112,7 @@ class PyMatching(Computation):  # pylint:disable=invalid-name
             qasm_content (str): Content of the QASM file as a string
 
         Returns:
-            dict: Dictionary mapping creg names to their bit ranges as tuples (start_index, end_index)
+            dict: Dictionary mapping creg names to their bit ranges as tuples (start, end)
         """
         # Initialize variables
         creg_info = {}
@@ -174,7 +173,7 @@ class PyMatching(Computation):  # pylint:disable=invalid-name
         results = connection.run(qasm=f"{circuit_path}.qasm", reps=self.num_shots)
 
         # Get det and obs indexes
-        with open(f"{circuit_path}.qasm", "r") as fid:
+        with open(f"{circuit_path}.qasm", "r", encoding="utf-8") as fid:
             creg_ranges = self.get_creg_indexes(fid.read())
 
         # Convert syndromes to np array and write to path

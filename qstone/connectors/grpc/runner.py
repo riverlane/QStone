@@ -38,12 +38,21 @@ class GRPCConnecction(connection.Connection):
         computation_step=ComputationStep.RUN,
     )
     def run(
-        self, qasm_ptr: str, reps: int, host: str, server_port: int, lockfile: str
+        self,
+        qasm_ptr: str,
+        reps: int,
+        mode: str,
+        qpu_host: str,
+        qpu_port: int,
+        compiler_host: str,
+        compiler_port: int,
+        target: str,
+        lockfile: str,
     ) -> dict:
         compression = None  # grpc.Compression.None
         # instantiate a channel
         channel = grpc.insecure_channel(
-            f"{host}:{server_port}", compression=compression
+            f"{qpu_host}:{qpu_port}", compression=compression
         )
         stub = pb2_grpc.QPUStub(channel)
         pkt_id = secrets.randbelow(2**31)
@@ -56,7 +65,7 @@ class GRPCConnecction(connection.Connection):
         computation_type="CONNECTION",
         computation_step=ComputationStep.QUERY,
     )
-    def query_qpu_config(self, host: str, server_port: int) -> QpuConfiguration:
+    def query_qpu_config(self, qpu_host: str, qpu_port: int) -> QpuConfiguration:
         """Query the Qpu configuraiton of the target"""
-        print("implement me!")
+        print(f"{qpu_host}:{qpu_port} pure printout - implemented!")
         return QpuConfiguration()
