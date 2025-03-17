@@ -6,7 +6,7 @@ import numpy
 from pandera import Check, Column, DataFrameSchema
 
 from qstone.connectors import connector
-from qstone.steps.computation import Computation
+from qstone.apps.computation import Computation
 from qstone.utils.utils import ComputationStep, trace
 
 
