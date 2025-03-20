@@ -8,6 +8,7 @@ import shutil
 import tarfile
 from typing import Any, List
 
+import math
 import numpy
 import pandas as pa
 from jinja2 import Template
@@ -31,10 +32,12 @@ GEN_PATH = "qstone_suite"
 def _get_value(job_cfg: pa.DataFrame, key: str, default: str):
     val = default
     try:
-        val = job_cfg[key].values[0]
+        v = job_cfg[key]
+        val = v if isinstance(v, float) else v.values[0]
     except (KeyError, IndexError):
         pass
-    if val is numpy.nan:
+    # Check for both numpy.nan and Python's float nan
+    if isinstance(val, float) and (numpy.isnan(val) or math.isnan(val)):
         val = default
     return str(val)
 
@@ -263,8 +266,10 @@ def generate_suite(
     output_paths = []
     for prog_id, user_cfg in users_cfg.iterrows():
         pdf = _compute_job_pdf(user_cfg)
+        # Get the job count either from global or user configuration.
+        job_count = float(_get_value(user_cfg, "job_count", env_cfg["job_count"]))
         jobs, job_types = _generate_user_jobs(
-            user_cfg, jobs_cfg, pdf, int(user_cfg["weight"] * num_calls)
+            user_cfg, jobs_cfg, pdf, int(job_count)
         )
 
         # generate substitutions for Jinja templates

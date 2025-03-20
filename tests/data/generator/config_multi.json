@@ -2,6 +2,7 @@
   "environment": {
   	"project_name": "test",
   	"scheduling_mode": "LOCK",
+        "job_count": 5,
         "qpu": {
   		"mode": "RANDOM"
 	},
@@ -39,7 +40,6 @@
   "users": [
     {
       "user": "user0",
-      "weight": 0.2,
       "computations": {
         "VQE": 0.25,
         "RB": 0.74,
@@ -48,7 +48,6 @@
     },
     {
       "user": "user1",
-      "weight": 0.3,
       "computations": {
         "VQE": 0.3,
         "RB": 0.65,
@@ -57,7 +56,7 @@
     },
     {
       "user": "user2",
-      "weight": 0.5,
+      "job_count": 10,
       "computations": {
         "VQE": 0.3,
         "RB": 0.5,
