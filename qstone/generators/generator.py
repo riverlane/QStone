@@ -3,12 +3,12 @@ Generation of the testbench.
 """
 
 import argparse
+import math
 import os
 import shutil
 import tarfile
 from typing import Any, List
 
-import math
 import numpy
 import pandas as pa
 from jinja2 import Template
@@ -267,10 +267,8 @@ def generate_suite(
     for prog_id, user_cfg in users_cfg.iterrows():
         pdf = _compute_job_pdf(user_cfg)
         # Get the job count either from global or user configuration.
-        job_count = float(_get_value(user_cfg, "job_count", env_cfg["job_count"]))
-        jobs, job_types = _generate_user_jobs(
-            user_cfg, jobs_cfg, pdf, int(job_count)
-        )
+        job_count = float(_get_value(users_cfg, "job_count", env_cfg["job_count"]))
+        jobs, job_types = _generate_user_jobs(user_cfg, jobs_cfg, pdf, int(job_count))
 
         # generate substitutions for Jinja templates
         formatted_jobs = [" ".join(map(str, job)) for job in jobs]
