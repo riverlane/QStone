@@ -1,7 +1,7 @@
 {
   "environment": {
   	"project_name": "test",
-  	"job_count" : 5,
+  	"job_count" : 10,
         "scheduling_mode": "LOCK",
         "qpu": {
   		"mode": "RANDOM"

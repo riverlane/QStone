@@ -2,7 +2,7 @@
   "environment": {
   	"project_name": "test",
   	"scheduling_mode": "SCHEDULER",
-        "job_count": 100,
+        "job_count": 10,
   	"qpu": {	
   		"mode": "RANDOM"
 	},
