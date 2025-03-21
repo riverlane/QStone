@@ -46,8 +46,8 @@
     {
       "user": "user0",
       "computations": {
-        "VQE": 0.05,
-        "RB": 0.44,
+        "VQE": 0.45,
+        "RB": 0.04,
         "PyMatching": 0.01,
         "custom1.Custom1": 0.50
       }
