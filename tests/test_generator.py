@@ -42,7 +42,7 @@ def test_config_checks(tmp_path, test_input):
     with pytest.raises(Exception) as e_info:
         generator.generate_suite(
             config=f"tests/data/generator/{test_input}",
-            num_calls=10000,
+            job_count=10000,
             output_folder=output_folder,
             atomic=atomic,
             scheduler=scheduler,
@@ -64,7 +64,7 @@ def test_packaging(tmp_path, test_input, expected, atomic, scheduler, use_gres):
     tmp_path.mkdir(exist_ok=True)
     generator.generate_suite(
         config=f"tests/data/generator/{test_input}",
-        num_calls=10000,
+        job_count=10000,
         output_folder=output_folder,
         atomic=atomic,
         scheduler=scheduler,
@@ -120,7 +120,7 @@ def test_bare_metal_run(tmp_path, test_input, usrs):
     tmp_path.mkdir(exist_ok=True)
     generator.generate_suite(
         config=f"tests/data/generator/{test_input}",
-        num_calls=5,
+        job_count=5,
         output_folder=output_folder,
         atomic=False,
         scheduler="bare_metal",
@@ -154,7 +154,7 @@ def test_jsrun_batch_valid(tmp_path, test_input, usrs):
     tmp_path.mkdir(exist_ok=True)
     generator.generate_suite(
         config=f"tests/data/generator/{test_input}",
-        num_calls=20,
+        job_count=20,
         output_folder=output_folder,
         atomic=False,
         scheduler="jsrun",
