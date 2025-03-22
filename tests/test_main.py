@@ -20,14 +20,14 @@ def test_cmd_generate():
     """Test that arguments are provided to qstone generate correctly."""
     input_path = "path/to/input_path"
     output = "path/to/output"
-    num_calls = 0
+    job_count = 0
 
     # Check generate command
     with patch("qstone.generators.generator.generate_suite") as generate_qstone:
         main(["generate", "-i", input_path, "-n", num_calls, "-o", output])
         generate_qstone.assert_called_once_with(
             config=input_path,
-            num_calls=num_calls,
+            job_count=job_count,
             output_folder=output,
             atomic=False,
             scheduler="bare_metal",
