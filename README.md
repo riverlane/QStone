@@ -115,7 +115,7 @@ from qstone.generators import generator
 
 def main():
     generator.generate_suite(config="config.json",
-        num_calls=100,output_folder=".",atomic=False, scheduler="bare_metal")
+        job_count=100, output_folder=".", atomic=False, scheduler="bare_metal")
 
 if __name__ == "__main__":
      main()
