@@ -3,6 +3,7 @@ Generation of the testbench.
 """
 
 import argparse
+import math
 import os
 import shutil
 import tarfile
@@ -31,10 +32,12 @@ GEN_PATH = "qstone_suite"
 def _get_value(job_cfg: pa.DataFrame, key: str, default: str):
     val = default
     try:
-        val = job_cfg[key].values[0]
+        v = job_cfg[key]
+        val = v if isinstance(v, float) else v.values[0]
     except (KeyError, IndexError):
         pass
-    if val is numpy.nan:
+    # Check for both numpy.nan and Python's float nan
+    if isinstance(val, float) and (numpy.isnan(val) or math.isnan(val)):
         val = default
     return str(val)
 
@@ -156,7 +159,7 @@ def _generate_user_jobs(
     usr_cfg: "pa.Series[Any]",
     jobs_cfg: pa.DataFrame,
     job_pdf: List[float],
-    num_calls: int,
+    job_count: int,
 ):
     """
     Generates the different user jobs provided given the configuration and the number of
@@ -164,7 +167,7 @@ def _generate_user_jobs(
     """
     runner = 'python "$EXEC_PATH"/type_exec.py'
     job_types = numpy.random.choice(
-        list(usr_cfg["computations"].keys()), p=job_pdf, size=(num_calls)
+        list(usr_cfg["computations"].keys()), p=job_pdf, size=(job_count)
     )
     # Check that we have generated a not empty
     assert (
@@ -234,14 +237,14 @@ def _environment_variables_exports(env_vars: dict) -> List[str]:
 
 
 def generate_suite(
-    config: str, num_calls: int, output_folder: str, atomic: bool, scheduler: str
+    config: str, job_count: int, output_folder: str, atomic: bool, scheduler: str
 ) -> List[str]:
     """
     Generates the suites of jobs for the required users.
 
     Args:
         config: Input configuration for generate, defines QPU configuration and user jobs
-        num_calls: Number of jobs to generate per user
+        job_count: Number of jobs to generate per user
         output_folder: Scheduler tar file output location
         atomic: optional flag to create a single job out of the three phase
         scheduler: target HPC scheduler
@@ -259,12 +262,17 @@ def generate_suite(
     qpu_config = QpuConfiguration()
     qpu_config.load_configuration(env_cfg)
 
+    if not job_count:
+        job_count = env_cfg["job_count"]
+
     # Generating list of jobs
     output_paths = []
     for prog_id, user_cfg in users_cfg.iterrows():
         pdf = _compute_job_pdf(user_cfg)
+        # Get the job count either from global or user configuration.
+        job_count_user = float(_get_value(users_cfg, "job_count", str(job_count)))
         jobs, job_types = _generate_user_jobs(
-            user_cfg, jobs_cfg, pdf, int(user_cfg["weight"] * num_calls)
+            user_cfg, jobs_cfg, pdf, int(job_count_user)
         )
 
         # generate substitutions for Jinja templates
@@ -300,13 +308,13 @@ def main():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("config", type=str)
-    parser.add_argument("num_calls", type=int)
+    parser.add_argument("job_count", type=int)
     parser.add_argument("output_folder", type=str)
     parser.add_argument("scheduler", type=str, choices=SCHEDULERS)
     parser.add_argument("atomic", type=bool, action="store_true")
     args = parser.parse_args()
     generate_suite(
-        args.config, args.num_calls, args.output_folder, args.atomic, args.scheduler
+        args.config, args.job_count, args.output_folder, args.atomic, args.scheduler
     )
 
 

@@ -18,7 +18,7 @@ def generate(args: Optional[Sequence[str]] = None) -> None:
 
     generated_files = generator.generate_suite(
         config=args.src,  # type: ignore[union-attr]
-        num_calls=int(args.calls),  # type: ignore[union-attr]
+        job_count=int(args.job_count),  # type: ignore[union-attr]
         output_folder=args.dst,  # type: ignore[union-attr]
         atomic=args.atomic,  # type: ignore[union-attr]
         scheduler=args.scheduler,  # type: ignore[union-attr]
@@ -95,7 +95,7 @@ def main(arg_strings: Optional[Sequence[str]] = None) -> None:
 
     gen_cmd.add_argument(
         "-n",
-        "--calls",
+        "--job_count",
         help="Number of jobs to generate",
         default=100,
         required=False,
