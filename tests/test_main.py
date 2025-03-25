@@ -24,7 +24,7 @@ def test_cmd_generate():
 
     # Check generate command
     with patch("qstone.generators.generator.generate_suite") as generate_qstone:
-        main(["generate", "-i", input_path, "-n", num_calls, "-o", output])
+        main(["generate", "-i", input_path, "-n", job_count, "-o", output])
         generate_qstone.assert_called_once_with(
             config=input_path,
             job_count=job_count,
