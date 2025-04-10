@@ -16,8 +16,8 @@ def generate(args: Optional[Sequence[str]] = None) -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     logger.info("Generating benchmark tarballs")
 
-    # Adjusting job count   
-    job_count_s = args.job_count
+    # Adjusting job count
+    job_count_s = args.job_count # type: ignore[union-attr]
     if job_count_s is not None:
         job_count = int(job_count_s)
     else:
@@ -25,7 +25,7 @@ def generate(args: Optional[Sequence[str]] = None) -> None:
 
     generated_files = generator.generate_suite(
         config=args.src,  # type: ignore[union-attr]
-        job_count=job_count,  # type: ignore[union-attr]
+        job_count=job_count,
         output_folder=args.dst,  # type: ignore[union-attr]
         atomic=args.atomic,  # type: ignore[union-attr]
         scheduler=args.scheduler,  # type: ignore[union-attr]
