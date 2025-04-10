@@ -25,7 +25,7 @@ def generate(args: Optional[Sequence[str]] = None) -> None:
 
     generated_files = generator.generate_suite(
         config=args.src,  # type: ignore[union-attr]
-        job_count=job_count, # type: ignore[arg-type]
+        job_count=job_count,  # type: ignore[arg-type]
         output_folder=args.dst,  # type: ignore[union-attr]
         atomic=args.atomic,  # type: ignore[union-attr]
         scheduler=args.scheduler,  # type: ignore[union-attr]
