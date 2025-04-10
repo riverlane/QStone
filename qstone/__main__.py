@@ -17,7 +17,7 @@ def generate(args: Optional[Sequence[str]] = None) -> None:
     logger.info("Generating benchmark tarballs")
 
     # Adjusting job count
-    job_count_s = args.job_count # type: ignore[union-attr]
+    job_count_s = args.job_count  # type: ignore[union-attr]
     if job_count_s is not None:
         job_count = int(job_count_s)
     else:
