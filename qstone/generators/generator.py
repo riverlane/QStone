@@ -233,6 +233,24 @@ def _environment_variables_exports(env_vars: dict) -> List[str]:
     return exports_list
 
 
+def _job_variables_exports(jobs_cfg) -> List[str]:
+    '''
+    Generates a list with export statements for the individual applications
+
+    Args:
+        jobs_cfg: pa.DataFrame
+    '''
+    jobs_exports = []
+    jobs_dict = jobs_cfg.to_dict()
+    
+    for key, values in jobs_dict.items():
+        if key != "type":
+            for label, value in jobs_dict[key].items():
+                jobs_exports.append('export {}_{}="{}"'.format(jobs_dict["type"][label], key.upper(), value))
+
+    return jobs_exports
+
+
 def generate_suite(
     config: str, num_calls: int, output_folder: str, atomic: bool, scheduler: str
 ) -> List[str]:
@@ -255,6 +273,7 @@ def generate_suite(
     jobs_cfg = pa.DataFrame(config_dict["jobs"])
 
     env_exports = _environment_variables_exports(env_cfg)
+    jobs_exports = _job_variables_exports(jobs_cfg)
 
     qpu_config = QpuConfiguration()
     qpu_config.load_configuration(env_cfg)
@@ -276,7 +295,7 @@ def generate_suite(
             f'export QS_USER="{user_name}"',
         ]
         subs = {
-            "exports": "\n".join(env_exports + usr_env_exports),
+            "exports": "\n".join(env_exports + usr_env_exports + jobs_exports),
             "jobs": "\n".join(formatted_jobs),
             "project_name": env_cfg["project_name"],
             "atomic": atomic,
