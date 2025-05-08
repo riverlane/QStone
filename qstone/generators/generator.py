@@ -29,7 +29,7 @@ CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 GEN_PATH = "qstone_suite"
 
 
-def _get_value(job_cfg: Union[pd.DataFrame, pd.Series[Any]], key: str, default: str):
+def _get_value(job_cfg: Union[pa.DataFrame, pa.Series[Any]], key: str, default: str):
     val = default
     try:
         v = job_cfg[key]
