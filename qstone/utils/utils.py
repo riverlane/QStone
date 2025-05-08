@@ -46,12 +46,16 @@ CFG_ENVIRONMENT_VARIABLES = {
     "timeouts.lock",
 }
 
+
 def validate_computation_weights(config: Dict):
-    users = config["users"] #
+    users = config["users"]  #
     for user in users:
         weights_sum = sum(user["computations"].values())
         if abs(weights_sum - 1.0) > 1e-6:  # Using epsilon for float comparison
-            raise ValueError(f"Sum of computation weights for user {user['user']} is {weights_sum}, not 1.0")
+            raise ValueError(
+                f"Sum of computation weights for user {user['user']} is {weights_sum}, not 1.0"
+            )
+
 
 def parse_json(config: str) -> Dict:
     """
