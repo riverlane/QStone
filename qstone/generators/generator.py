@@ -30,15 +30,15 @@ GEN_PATH = "qstone_suite"
 
 
 def _get_value(job_cfg: Union[pa.DataFrame, pa.Series[Any]], key: str, default: str):
-    val = default
+    val = float(default)
     try:
         v = job_cfg[key]
-        val = v if isinstance(v, float) else v.values[0]
+        val = v if isinstance(v, float) else float(v.values[0])
     except (KeyError, IndexError):
         pass
     # Check for both numpy.nan and Python's float nan
     if isinstance(val, float) and (numpy.isnan(val) or math.isnan(val)):
-        val = default
+        val = float(default)
     return str(val)
 
 
