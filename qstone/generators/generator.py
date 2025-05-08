@@ -7,7 +7,7 @@ import math
 import os
 import shutil
 import tarfile
-from typing import Any, List
+from typing import Any, List, Union
 
 import numpy
 import pandas as pa
@@ -29,7 +29,7 @@ CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 GEN_PATH = "qstone_suite"
 
 
-def _get_value(job_cfg: pa.DataFrame, key: str, default: str):
+def _get_value(job_cfg: Union[pd.DataFrame, pd.Series[Any]], key: str, default: str):
     val = default
     try:
         v = job_cfg[key]
