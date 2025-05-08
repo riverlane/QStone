@@ -29,16 +29,16 @@ CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 GEN_PATH = "qstone_suite"
 
 
-def _get_value(job_cfg: Union[pa.DataFrame, pa.Series[Any]], key: str, default: str):
-    val = float(default)
+def _get_value(job_cfg: pa.DataFrame, key: str, default: str):
+    val = default
     try:
         v = job_cfg[key]
-        val = v if isinstance(v, float) else float(v.values[0])
+        val = v if isinstance(v, float) else v.values[0]
     except (KeyError, IndexError):
         pass
     # Check for both numpy.nan and Python's float nan
     if isinstance(val, float) and (numpy.isnan(val) or math.isnan(val)):
-        val = float(default)
+        val = default
     return str(val)
 
 
@@ -270,7 +270,7 @@ def generate_suite(
     for prog_id, user_cfg in users_cfg.iterrows():
         pdf = _compute_job_pdf(user_cfg)
         # Get the job count either from global or user configuration.
-        job_count_user = float(_get_value(user_cfg, "job_count", str(job_count)))
+        job_count_user = float(_get_value(user_cfg.to_frame(), "job_count", str(job_count)))
         jobs, job_types = _generate_user_jobs(
             user_cfg, jobs_cfg, pdf, int(job_count_user)
         )
