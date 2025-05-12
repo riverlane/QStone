@@ -7,7 +7,7 @@ import math
 import os
 import shutil
 import tarfile
-from typing import Any, List
+from typing import Any, List, Union
 
 import numpy
 import pandas as pa
@@ -270,7 +270,9 @@ def generate_suite(
     for prog_id, user_cfg in users_cfg.iterrows():
         pdf = _compute_job_pdf(user_cfg)
         # Get the job count either from global or user configuration.
-        job_count_user = float(_get_value(users_cfg, "job_count", str(job_count)))
+        job_count_user = float(
+            _get_value(user_cfg.to_frame(), "job_count", str(job_count))
+        )
         jobs, job_types = _generate_user_jobs(
             user_cfg, jobs_cfg, pdf, int(job_count_user)
         )
