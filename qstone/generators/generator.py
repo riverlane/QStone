@@ -5,6 +5,7 @@ Generation of the testbench.
 import argparse
 import math
 import os
+import shlex
 import shutil
 import tarfile
 from typing import Any, List, Union
@@ -29,6 +30,10 @@ CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 GEN_PATH = "qstone_suite"
 
 
+def _check_nan(val):
+    return isinstance(val, float) and (numpy.isnan(val) or math.isnan(val))
+
+
 def _get_value(job_cfg: pa.DataFrame, key: str, default: str):
     val = default
     try:
@@ -37,7 +42,7 @@ def _get_value(job_cfg: pa.DataFrame, key: str, default: str):
     except (KeyError, IndexError):
         pass
     # Check for both numpy.nan and Python's float nan
-    if isinstance(val, float) and (numpy.isnan(val) or math.isnan(val)):
+    if _check_nan(val):
         val = default
     return str(val)
 
@@ -177,6 +182,7 @@ def _generate_user_jobs(
     # Randomise number of qubits
     num_qubits = []
     num_shots = []
+    app_args = []
 
     def_qubits = 2
     def_shots = 100
@@ -185,15 +191,32 @@ def _generate_user_jobs(
         if app_cfg.empty:
             num_qubits.append(def_qubits)
             num_shots.append(def_shots)
+            app_args.append("")
         else:
             num_qubits.append(_randomise(app_cfg["qubits"], def_qubits))
             num_shots.append(_randomise(app_cfg["num_shots"], def_shots))
-
+            if "app_args" in app_cfg.columns:
+                t = app_cfg["app_args"].tolist()[0]
+                if not _check_nan(t):
+                    app_args.append(
+                        ",".join(
+                            [f"'{k}':'{shlex.quote(str(v))}'" for k, v in t.items()]
+                        )
+                    )
     # Assign job id and pack
     job_ids = list(range(len(job_types)))
-
+    print(app_args)
+    app_args_d = ['"{' + f"{arg}" + '}"' for arg in app_args]
     return (
-        list(zip([f"{runner} {s}" for s in job_types], num_qubits, job_ids, num_shots)),
+        list(
+            zip(
+                [f"{runner} {s}" for s in job_types],
+                num_qubits,
+                job_ids,
+                num_shots,
+                app_args_d,
+            )
+        ),
         set(job_types),
     )
 

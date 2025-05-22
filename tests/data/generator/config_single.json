@@ -34,7 +34,10 @@
       "num_shots": [2, 4],
       "walltime": 1,
       "nthreads": 1,
-      "slurm/schedmd_opt": "--special_setting=4"
+      "slurm/schedmd_opt": "--special_setting=4",
+      "app_args": {
+        "special_param" : 5
+      }
     }
   ],
   "users": [

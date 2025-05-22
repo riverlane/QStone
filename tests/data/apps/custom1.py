@@ -31,7 +31,7 @@ class Custom1(Computation):
     @trace(computation_type=COMPUTATION_NAME, computation_step=ComputationStep.PRE)
     def pre(self, datapath: str):
         with open(os.path.join(datapath, "pre.txt"), "w", encoding="utf-8") as fid:
-            fid.write(f"Test")
+            fid.write(self._app_args["content"])
 
     @trace(computation_type=COMPUTATION_NAME, computation_step=ComputationStep.RUN)
     def run(self, datapath: str, connection: connector.Connector):

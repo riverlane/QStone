@@ -17,7 +17,7 @@ LOCKFILE: str = os.environ.get("LOCKFILE", "qstone.lock")
 SCHED_EXT : str = "{{ sched_ext }}"
 SCHED_CMD : str = "{{ sched_cmd }}"
 
-def execute(compute_name: str, num_qubits: int, job_id: str, num_shots: int):
+def execute(compute_name: str, num_qubits: int, job_id: str, num_shots: int, app_args: str):
     """Execute the computation steps via separate  calls
 
     Args:
@@ -25,6 +25,7 @@ def execute(compute_name: str, num_qubits: int, job_id: str, num_shots: int):
         job_id : id of the job to run
         num_qubits: the number of qubits to use in this run
         num_shots: number of repetitions of the same circuit
+        app_args: additional args
 
     Returns the return code of query and step subprocess execution
     """
@@ -33,6 +34,7 @@ def execute(compute_name: str, num_qubits: int, job_id: str, num_shots: int):
     os.environ["JOB_ID"] = job_id
     os.environ["NUM_QUBITS"] = str(num_qubits)
     os.environ["NUM_SHOTS"] = str(num_shots)
+    os.environ["APP_ARGS"] = app_args
     
     cmp_src = os.path.join(os.environ["EXEC_PATH"], f"type_exec_{compute_name}.{SCHED_EXT}")
 
@@ -53,8 +55,8 @@ def execute(compute_name: str, num_qubits: int, job_id: str, num_shots: int):
 
 def main():
     """Main wrapper"""
-    execute(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
 
+    execute(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
 
 if __name__ == "__main__":
     main()
