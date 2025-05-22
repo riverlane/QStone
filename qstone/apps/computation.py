@@ -12,9 +12,11 @@ from pandera import DataFrameSchema
 from qstone.connectors import connector
 from qstone.utils.utils import QpuConfiguration
 
+
 def string_to_dict(s: str) -> Dict:
-   """converts a json formatted string into a dictionary"""
-   return ast.literal_eval(s)
+    """converts a json formatted string into a dictionary"""
+    return ast.literal_eval(s)
+
 
 class Computation(ABC):
     """

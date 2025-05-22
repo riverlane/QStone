@@ -29,6 +29,7 @@ SCHEDULER_ARGS = {"walltime": "3", "nthreads": "1"}
 CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
 GEN_PATH = "qstone_suite"
 
+
 def _check_nan(val):
     return isinstance(val, float) and (numpy.isnan(val) or math.isnan(val))
 
@@ -39,11 +40,12 @@ def _get_value(job_cfg: pa.DataFrame, key: str, default: str):
         v = job_cfg[key]
         val = v if isinstance(v, float) else v.values[0]
     except (KeyError, IndexError):
-       pass
+        pass
     # Check for both numpy.nan and Python's float nan
     if _check_nan(val):
         val = default
     return str(val)
+
 
 def _find_files(sched_path: str):
     search_paths = [sched_path, os.path.join(CURRENT_PATH, "common")]
@@ -196,14 +198,26 @@ def _generate_user_jobs(
             if "app_args" in app_cfg.columns:
                 t = app_cfg["app_args"].tolist()[0]
                 if not _check_nan(t):
-                	app_args.append(",".join([f"'{k}':'{shlex.quote(str(v))}'" for k, v in t.items()]))
+                    app_args.append(
+                        ",".join(
+                            [f"'{k}':'{shlex.quote(str(v))}'" for k, v in t.items()]
+                        )
+                    )
     # Assign job id and pack
     job_ids = list(range(len(job_types)))
-    print (app_args)
+    print(app_args)
     app_args_d = ['"{' + f"{arg}" + '}"' for arg in app_args]
     return (
-        list(zip([f'{runner} {s}' for s in job_types], num_qubits, job_ids, num_shots, app_args_d)), 
-        set(job_types)
+        list(
+            zip(
+                [f"{runner} {s}" for s in job_types],
+                num_qubits,
+                job_ids,
+                num_shots,
+                app_args_d,
+            )
+        ),
+        set(job_types),
     )
 
 
