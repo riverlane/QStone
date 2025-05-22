@@ -41,7 +41,7 @@
       "nthreads": 2,
       "slurm/schedmd_opt": "--cpus-per-task=4",
       "app_args": {
-         "extra_arg": "5"
+         "content": "Test"
       }
     }
   ],
