@@ -3,6 +3,7 @@ Generation of the testbench.
 """
 
 import argparse
+import shlex
 import math
 import os
 import shutil
@@ -40,7 +41,6 @@ def _get_value(job_cfg: pa.DataFrame, key: str, default: str):
     if isinstance(val, float) and (numpy.isnan(val) or math.isnan(val)):
         val = default
     return str(val)
-
 
 def _find_files(sched_path: str):
     search_paths = [sched_path, os.path.join(CURRENT_PATH, "common")]
@@ -177,6 +177,7 @@ def _generate_user_jobs(
     # Randomise number of qubits
     num_qubits = []
     num_shots = []
+    app_args = []
 
     def_qubits = 2
     def_shots = 100
@@ -185,16 +186,19 @@ def _generate_user_jobs(
         if app_cfg.empty:
             num_qubits.append(def_qubits)
             num_shots.append(def_shots)
+            app_args.append("")
         else:
             num_qubits.append(_randomise(app_cfg["qubits"], def_qubits))
             num_shots.append(_randomise(app_cfg["num_shots"], def_shots))
-
+            t = app_cfg["app_args"].tolist()[0]
+            app_args.append(",".join([f"'{k}':'{shlex.quote(str(v))}'" for k, v in t.items()]))
     # Assign job id and pack
     job_ids = list(range(len(job_types)))
-
+    print (app_args)
+    app_args_d = ['"{' + f"{arg}" + '}"' for arg in app_args]
     return (
-        list(zip([f"{runner} {s}" for s in job_types], num_qubits, job_ids, num_shots)),
-        set(job_types),
+        list(zip([f'{runner} {s}' for s in job_types], num_qubits, job_ids, num_shots, app_args_d)), 
+        set(job_types)
     )
 
 

@@ -1,5 +1,6 @@
 """QPU computation class and configuration dataclass"""
 
+import ast
 import json
 import os
 from abc import ABC, abstractmethod
@@ -11,6 +12,9 @@ from pandera import DataFrameSchema
 from qstone.connectors import connector
 from qstone.utils.utils import QpuConfiguration
 
+def string_to_dict(s: str) -> Dict:
+   """converts a json formatted string into a dictionary"""
+   return ast.literal_eval(s)
 
 class Computation(ABC):
     """
@@ -33,6 +37,7 @@ class Computation(ABC):
         for key, val in cfg.items():
             setattr(self, key, val)
         self._qpu_cfg = QpuConfiguration()
+        self._app_args = string_to_dict(os.environ.get("APP_ARGS"))
 
     @classmethod
     def from_json(cls, path: Optional[str] = None):

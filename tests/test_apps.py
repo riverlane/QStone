@@ -33,6 +33,7 @@ def env(tmp_path):
     os.environ["NUM_SHOTS"] = "12"
     os.environ["CONNECTIVITY_QPU_MODE"] = "RANDOM"
     os.environ["CONNECTIVITY_TARGET"] = "QPU0"
+    os.environ["APP_ARGS"] = '{"extra": 5}'
 
 def skip_if_package_missing(package_name):
     """
