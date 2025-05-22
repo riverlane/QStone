@@ -39,7 +39,7 @@ class Computation(ABC):
         for key, val in cfg.items():
             setattr(self, key, val)
         self._qpu_cfg = QpuConfiguration()
-        self._app_args = string_to_dict(os.environ.get("APP_ARGS"))
+        self._app_args = string_to_dict(os.environ.get("APP_ARGS", ""))
 
     @classmethod
     def from_json(cls, path: Optional[str] = None):

@@ -3,9 +3,9 @@ Generation of the testbench.
 """
 
 import argparse
-import shlex
 import math
 import os
+import shlex
 import shutil
 import tarfile
 from typing import Any, List, Union
