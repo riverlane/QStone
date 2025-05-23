@@ -1,4 +1,7 @@
 name: Build and publish documentation
+permissions:
+  contents: read
+  pull-requests: write
 
 # Controls when the action will run.
 on:
@@ -36,9 +39,6 @@ jobs:
 
   # Deploy job
   deploy:
-    permissions:
-      contents: read
-      pull-requests: write
 
     # Add a dependency to the build job
     needs: build
