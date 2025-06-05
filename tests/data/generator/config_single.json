@@ -1,7 +1,8 @@
 {
   "environment": {
   	"project_name": "test",
-  	"scheduling_mode": "LOCK",
+  	"job_count" : 10,
+        "scheduling_mode": "LOCK",
         "qpu": {
   		"mode": "RANDOM"
 	},
@@ -39,7 +40,6 @@
   "users": [
     {
       "user": "user0",
-      "weight": 1,
       "computations": {
         "VQE": 0.55,
         "RB": 0.44,

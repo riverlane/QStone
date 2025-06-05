@@ -1,4 +1,7 @@
 name: Build and publish documentation
+permissions:
+  contents: read
+  pull-requests: write
 
 # Controls when the action will run.
 on:
@@ -7,6 +10,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      pull-requests: write
     # Triggers the workflow on on tag pushes
     # Be sure to add tag rulesets to ensure only admins can push tags
     if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
@@ -33,6 +39,7 @@ jobs:
 
   # Deploy job
   deploy:
+
     # Add a dependency to the build job
     needs: build
 

@@ -52,6 +52,7 @@ Run QStone using Command Line Interface
   "environment": { 
      "project_name": "proj_name",
      "scheduling_mode" : "LOCK",
+     "job_count": 5,
      "qpu" : {
         "mode" : "RANDOM"
      },
@@ -93,7 +94,6 @@ Run QStone using Command Line Interface
   "users": [
     {
       "user": "user0",
-      "weight": 1,
       "computations": {
         "VQE": 0.05,
         "RB": 0.94,
@@ -115,7 +115,7 @@ from qstone.generators import generator
 
 def main():
     generator.generate_suite(config="config.json",
-        num_calls=100,output_folder=".",atomic=False, scheduler="bare_metal")
+        job_count=100, output_folder=".", atomic=False, scheduler="bare_metal")
 
 if __name__ == "__main__":
      main()
