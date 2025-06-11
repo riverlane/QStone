@@ -57,6 +57,7 @@ FULL_SCHEMA = {
                         "qubit": {"type": "array", "minItems": 1, "maxItems": 2},
                         "shots": {"type": "array", "minItems": 1, "maxItems": 2},
                         "walltime": {"type": "number"},
+                        "app_args": {"type": "object"},
                     },
                 },
             },
