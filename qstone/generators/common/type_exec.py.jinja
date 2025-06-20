@@ -55,8 +55,12 @@ def execute(compute_name: str, num_qubits: int, job_id: str, num_shots: int, app
 
 def main():
     """Main wrapper"""
-
-    execute(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+    try:
+         extra_args = sys.argv[5]
+    except IndexError as e:
+         extra_args = None 
+          
+    execute(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], extra_args)
 
 if __name__ == "__main__":
     main()

@@ -3,9 +3,10 @@ Generation of the testbench.
 """
 
 import argparse
+import base64
 import math
 import os
-import shlex
+import pickle
 import shutil
 import tarfile
 from typing import Any, List, Union
@@ -159,6 +160,8 @@ def _randomise(vals, def_val):
             value = values[0]
     return value
 
+def _to_bytes(ob: dict) -> bytes:
+    return base64.b64encode(pickle.dumps(ob)).decode('utf-8')
 
 def _generate_user_jobs(
     usr_cfg: "pa.Series[Any]",
@@ -198,15 +201,9 @@ def _generate_user_jobs(
             if "app_args" in app_cfg.columns:
                 t = app_cfg["app_args"].tolist()[0]
                 if not _check_nan(t):
-                    app_args.append(
-                        ",".join(
-                            [f"'{k}':'{shlex.quote(str(v))}'" for k, v in t.items()]
-                        )
-                    )
+                    app_args.append(_to_bytes(t))
     # Assign job id and pack
     job_ids = list(range(len(job_types)))
-    print(app_args)
-    app_args_d = ['"{' + f"{arg}" + '}"' for arg in app_args]
     return (
         list(
             zip(
@@ -214,7 +211,7 @@ def _generate_user_jobs(
                 num_qubits,
                 job_ids,
                 num_shots,
-                app_args_d,
+                app_args,
             )
         ),
         set(job_types),
