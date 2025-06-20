@@ -5,7 +5,7 @@ import logging
 import os
 
 import pandas as pd
-import pandera as pa
+import pandera.pandas as pa
 
 from qstone.utils.utils import ComputationStep, load_json_profile, parse_json
 
