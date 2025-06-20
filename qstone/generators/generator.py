@@ -160,8 +160,10 @@ def _randomise(vals, def_val):
             value = values[0]
     return value
 
-def _to_bytes(ob: dict) -> bytes:
-    return base64.b64encode(pickle.dumps(ob)).decode('utf-8')
+
+def _to_bytes(ob):
+    return base64.b64encode(pickle.dumps(ob)).decode("utf-8")
+
 
 def _generate_user_jobs(
     usr_cfg: "pa.Series[Any]",

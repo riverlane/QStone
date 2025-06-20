@@ -18,7 +18,7 @@ from qstone.utils.utils import QpuConfiguration
 
 def byte_to_dict(s: str) -> Dict:
     """converts a json formatted string into a dictionary"""
-    decoded = base64.b64decode(s.encode('utf-8')) 
+    decoded = base64.b64decode(s.encode("utf-8"))
     return pickle.loads(decoded)
 
 
