@@ -1,4 +1,7 @@
 name: Pylint Static Analysis and Tests
+permissions:
+  contents: read
+  pull-requests: write
 
 # Controls when the action will run.
 on:
