@@ -17,7 +17,7 @@ Currently supported platforms/architectures:
 - Intel: x86 (Ubuntu)
 - PowerPC: Power9 (RedHat)
 
-Tested on Python [3.9-3.12]
+Tested on Python [3.10-3.12]
 
 ## How
 

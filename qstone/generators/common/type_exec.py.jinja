@@ -34,7 +34,7 @@ def execute(compute_name: str, num_qubits: int, job_id: str, num_shots: int, app
     os.environ["JOB_ID"] = job_id
     os.environ["NUM_QUBITS"] = str(num_qubits)
     os.environ["NUM_SHOTS"] = str(num_shots)
-    os.environ["APP_ARGS"] = app_args
+    os.environ["APP_ARGS"] = app_args if app_args else "" 
     
     cmp_src = os.path.join(os.environ["EXEC_PATH"], f"type_exec_{compute_name}.{SCHED_EXT}")
 
@@ -55,8 +55,12 @@ def execute(compute_name: str, num_qubits: int, job_id: str, num_shots: int, app
 
 def main():
     """Main wrapper"""
-
-    execute(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+    try:
+         extra_args = sys.argv[5]
+    except IndexError as e:
+         extra_args = None 
+          
+    execute(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], extra_args)
 
 if __name__ == "__main__":
     main()

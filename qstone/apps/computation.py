@@ -1,8 +1,10 @@
 """QPU computation class and configuration dataclass"""
 
 import ast
+import base64
 import json
 import os
+import pickle
 from abc import ABC, abstractmethod
 from typing import Dict, Optional
 
@@ -13,9 +15,12 @@ from qstone.connectors import connector
 from qstone.utils.utils import QpuConfiguration
 
 
-def string_to_dict(s: str) -> Dict:
+def byte_to_dict(s: str) -> Dict:
     """converts a json formatted string into a dictionary"""
-    return ast.literal_eval(s)
+    if not s:
+        return {}
+    decoded = base64.b64decode(s.encode("utf-8"))
+    return pickle.loads(decoded)
 
 
 class Computation(ABC):
@@ -39,7 +44,7 @@ class Computation(ABC):
         for key, val in cfg.items():
             setattr(self, key, val)
         self._qpu_cfg = QpuConfiguration()
-        self._app_args = string_to_dict(os.environ.get("APP_ARGS", ""))
+        self._app_args = byte_to_dict(os.environ.get("APP_ARGS", ""))
 
     @classmethod
     def from_json(cls, path: Optional[str] = None):
