@@ -1,6 +1,7 @@
 """RB computations steps."""
 
 import os
+import json
 
 import numpy as np
 import ast
@@ -46,11 +47,12 @@ class RB(Computation):
 
     def __init__(self, cfg: dict):
         super().__init__(cfg)
+        app_args = ast.literal_eval(os.environ.get("APP_ARGS",""))
         self.num_required_qubits = int(os.environ.get("NUM_QUBITS", self.num_required_qubits))
-        self.benchmarks = ast.literal_eval(os.environ.get("RB_BENCHMARKS", str(self.benchmarks)))
-        self.depths = ast.literal_eval(os.environ.get("RB_DEPTHS", str(self.depths)))
-        self.reps = int(os.environ.get("RB_REPS", str(self.reps)))
-        self.shots = int(os.environ.get("RB_SHOTS", str(self.shots)))
+        if "benchmarks" in app_args.keys(): self.benchmarks = app_args["benchmarks"]
+        if "depths" in app_args.keys(): self.depths = app_args["depths"]
+        if "reps" in app_args.keys(): self.reps = app_args["reps"]
+        self.shots = int(os.environ.get("NUM_SHOTS", str(self.shots)))
 
 
     def _get_allowed_benchmarks(self):
@@ -73,6 +75,11 @@ class RB(Computation):
         self.benchmarks = benchs
 
 
+    @trace(
+        computation_type="RB",
+        computation_step=ComputationStep.PRE,
+        label="BENCHMARK_CONFIGURATION",
+    ) 
     def _get_configuration(self, bench):
         """
         Returns standard configuration for the RB
@@ -104,6 +111,43 @@ class RB(Computation):
         print(f"Generated benchmarking routing with {n_qubits} qubits")
         return (qubit_labels, pspec, design)
 
+    @trace(
+        computation_type="RB",
+        computation_step=ComputationStep.PRE,
+        label="QASM_GENERATION",
+    )
+    def _generate_rb_qasms(self):
+        self._get_allowed_benchmarks()
+        bench_qasms = []
+        idealouts = []
+
+        for bench in self.benchmarks:
+            # Here we get each benchmark configuration
+            qubit_labels, _, design = self._get_configuration(bench)
+
+            # Here we construct each benchmark circuits
+            circuit_list_nested = design.all_circuits_needing_data
+            bench_qasms.append(list(c.convert_to_openqasm(num_qubits=self.num_required_qubits,
+                                                          standard_gates_version="x-sx-rz",
+                                                          qubit_conversion=dict(zip(qubit_labels, bench))
+                                    )
+                                    for c in circuit_list_nested)
+                              )
+            idealouts += list(np.concatenate(design.idealout_lists).flat)
+        
+        # Here we combine the qasm files of circuits that can be run simultaneosly into one single qasm
+        qasms = []
+        for i in range(len(bench_qasms[0])):
+            qasm = []
+            for j in range(len(bench_qasms)):
+                temp = list(line for line in bench_qasms[j][i].splitlines() if line != '')
+                if j==0: qasm += temp
+                else: qasm += temp[5:]
+
+            qasms.append(''.join('{}\n'.format(line) for line in qasm))
+
+        return qasms, idealouts
+
     @trace(computation_type=COMPUTATION_NAME, computation_step=ComputationStep.PRE)
     def pre(self, datapath: str):
         """
@@ -111,35 +155,33 @@ class RB(Computation):
         the survival probability of each requested RB
         """
         run_file = f"{datapath}/RB_run_{os.environ['JOB_ID']}.npz"
-        self._get_allowed_benchmarks()
-        bench_qasms = []
-        idealouts = []
+
+
+        #self._get_allowed_benchmarks()
+        #bench_qasms = []
+        #idealouts = []
         
-        for bench in self.benchmarks:
-            '''
-            Generates qasm files for each allowed RB
-            '''
-            qubit_labels, _, design = self._get_configuration(bench)
-            circuit_list_nested = design.all_circuits_needing_data
-            bench_qasms.append([c.convert_to_openqasm(num_qubits=self.num_required_qubits,
-                                                standard_gates_version="x-sx-rz",
-                                                qubit_conversion=dict(zip(qubit_labels, bench)),
-                    )
-                    for c in circuit_list_nested
-                ]
-            )
-            idealouts += list(np.concatenate(design.idealout_lists).flat)
+        #for bench in self.benchmarks:
+        #    '''
+        #    Generates qasm files for each allowed RB
+        #    '''
+        #    qubit_labels, _, design = self._get_configuration(bench)
+        #    qasms, outputs = self._generate_rb_qasms(bench, design, qubit_labels)
+        #    bench_qasms.append(qasms)
+        #    idealouts += outputs
 
-        # Here we combine the qasm files of circuits that can be run simultaneosly into one
-        qasms = []
-        for i in range(len(bench_qasms[0])):
-            test = []
-            for j in range(len(bench_qasms)):
-                temp = list(line for line in bench_qasms[j][i].splitlines() if line != '')
-                if j==0: test += temp
-                else: test += temp[5:]
+        # Here we combine the qasm files of circuits that can be run simultaneosly into one single qasm
+        #qasms = []
+        #for i in range(len(bench_qasms[0])):
+        #    test = []
+        #    for j in range(len(bench_qasms)):
+        #        temp = list(line for line in bench_qasms[j][i].splitlines() if line != '')
+        #        if j==0: test += temp
+        #        else: test += temp[5:]
+        #
+        #    qasms.append(''.join('{}\n'.format(line) for line in test))
 
-            qasms.append(''.join('{}\n'.format(line) for line in test))
+        qasms, idealouts = self._generate_rb_qasms()
 
         np.savez(run_file, qasms=qasms, exp=idealouts, allow_pickle=True)
 
