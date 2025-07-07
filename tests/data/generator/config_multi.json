@@ -34,8 +34,11 @@
       "qubit_max": 4,
       "walltime": 1,
       "nthreads": 1,
-      "slurm/schedmd_opt": "--cpus-per-task=4"
-    }
+      "slurm/schedmd_opt": "--cpus-per-task=4",
+      "app_args": {
+        "special_param" : 5
+      }
+     }
   ],
   "users": [
     {

@@ -9,11 +9,9 @@ import pytest
 import importlib
 import functools
 
-
 from qstone.connectors import connector
 from qstone.apps import get_computation_src
-
-
+from qstone.generators.generator import _to_bytes
 
 DEFAULT_CONNECTOR=connector.Connector(connector.ConnectorType.NO_LINK, "RANDOM", "0", "0", "0", "0", "QPU0", None)
 
@@ -33,6 +31,7 @@ def env(tmp_path):
     os.environ["NUM_SHOTS"] = "12"
     os.environ["CONNECTIVITY_QPU_MODE"] = "RANDOM"
     os.environ["CONNECTIVITY_TARGET"] = "QPU0"
+    os.environ["APP_ARGS"] = 'gASVOwAAAAAAAAB9lCiMC2Fub3RoZXJfb25llF2UKIwEYmxhaJSMBWJsYWgylGWMBGhlbHCUfZSMBmhlbHBtZZRLBXN1Lg=='
 
 def skip_if_package_missing(package_name):
     """
@@ -203,6 +202,7 @@ def test_call_post_QBC(tmp_path, env):
 
 def test_pre_custom_app(tmp_path, env):
     """capability to call custom application"""
+    os.environ["APP_ARGS"] = _to_bytes({"content": "5"}) 
     compute_src = get_computation_src("tests.data.apps.custom1.Custom1").from_json()
     compute_src.pre(tmp_path)
     assert os.path.exists(os.path.join(tmp_path, "pre.txt"))
