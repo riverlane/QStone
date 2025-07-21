@@ -58,6 +58,7 @@ FULL_SCHEMA = {
                         "shots": {"type": "array", "minItems": 1, "maxItems": 2},
                         "walltime": {"type": "number"},
                         "app_args": {"type": "object"},
+                        "log_level": {"enum": ["NONE", "LOW", "HIGH"]},
                     },
                 },
             },

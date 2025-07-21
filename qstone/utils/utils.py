@@ -180,6 +180,7 @@ def trace(
     computation_type: str,
     computation_step: ComputationStep,
     label: Optional[str] = None,
+    logging_level : Optional[str] = None
 ):
     """General tracing of the function. Wrapper"""
 
@@ -216,6 +217,7 @@ def trace(
                     computation_step,
                     label,
                     False,
+                    logging_level
                 )
                 raise e
             end = time.perf_counter_ns()
@@ -226,6 +228,7 @@ def trace(
                 computation_step,
                 label,
                 True,
+                logging_level
             )
             return result
 
