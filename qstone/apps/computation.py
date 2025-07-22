@@ -1,6 +1,5 @@
 """QPU computation class and configuration dataclass"""
 
-import ast
 import base64
 import json
 import os
