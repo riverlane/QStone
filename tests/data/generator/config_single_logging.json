@@ -1,7 +1,7 @@
 {
   "environment": {
   	"project_name": "test",
-  	"job_count" : 10,
+  	"job_count" : 100,
         "scheduling_mode": "LOCK",
         "qpu": {
   		"mode": "RANDOM"
@@ -27,7 +27,7 @@
       "nthreads": 2,
       "bare_metal_opt": "",
       "lsf/jsrun_opt": "-special_setting=True",
-      "log_level": "HIGH" 
+      "app_logging_level": 2 
     },
     { 
       "type": "RB",

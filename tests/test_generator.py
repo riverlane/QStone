@@ -145,7 +145,7 @@ def test_logging_level(tmp_path):
     output_folder = tmp_path
     tmp_path.mkdir(exist_ok=True)
     generator.generate_suite(
-        config=f"tests/data/generator/config_single.json",
+        config=f"tests/data/generator/config_single_logging.json",
         job_count=5,
         output_folder=output_folder,
         atomic=False,
@@ -159,8 +159,8 @@ def test_logging_level(tmp_path):
     assert result.returncode == 0
     log_dir = os.path.join(tmp_path, "qstone_suite", "qstone_profile")
     log_file = next((f for f in os.listdir(log_dir) if "RUN_VQE" in f), None)
-    with open(os.path.join(log_dir, log_file)) as fid:
-        assert "Generated VQE-like circuit" in fid.read()
+    # We set the logging level in a way that VQE should not output files.
+    assert log_file is None
 
 
 @pytest.mark.parametrize(
