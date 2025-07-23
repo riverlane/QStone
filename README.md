@@ -13,7 +13,7 @@ loads of work. We believe we shoud use a data driven approach in which we measur
 
 Currently supported platforms/architectures:
 
-- MacOS: M1/M2 (Sequoia)
+- MacOS: M1-M4
 - Intel: x86 (Ubuntu)
 - PowerPC: Power9 (RedHat)
 
@@ -74,7 +74,8 @@ Run QStone using Command Line Interface
       "qubits": [4, 6],
       "num_shots": [100, 200],
       "walltime" : 10,
-      "nthreads" : 4
+      "nthreads" : 4,
+      "app_logging_level": 2 
     },
     {
       "type": "RB",
