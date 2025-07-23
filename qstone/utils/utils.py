@@ -180,13 +180,16 @@ def trace(
     computation_type: str,
     computation_step: ComputationStep,
     label: Optional[str] = None,
+    logging_level: Optional[int] = 2,
 ):
     """General tracing of the function. Wrapper"""
 
     def wrapper(func: Callable):
         @wraps(func)
         def wrapper_func(*args, **kwargs):
-
+            logging_level_met = logging_level > int(
+                os.environ.get("APP_LOGGING_LEVEL", "0")
+            )
             start = time.perf_counter_ns()
             profile_name = "_".join(
                 filter(
@@ -209,24 +212,27 @@ def trace(
                 result = func(*args, **kwargs)
             except Exception as e:  # pylint: disable=broad-except
                 result = None
+                if logging_level_met:
+                    _write_trace(
+                        profile_path,
+                        (start, 0),
+                        computation_type,
+                        computation_step,
+                        label,
+                        False,
+                        logging_level,
+                    )
+                raise e
+            end = time.perf_counter_ns()
+            if logging_level_met:
                 _write_trace(
                     profile_path,
-                    (start, 0),
+                    (start, end),
                     computation_type,
                     computation_step,
                     label,
-                    False,
+                    True,
                 )
-                raise e
-            end = time.perf_counter_ns()
-            _write_trace(
-                profile_path,
-                (start, end),
-                computation_type,
-                computation_step,
-                label,
-                True,
-            )
             return result
 
         return wrapper_func

@@ -21,8 +21,8 @@ from qstone.utils.utils import JobReturnCode, QpuConfiguration
 SCHED_EXT = {"slurm": "sbatch", "jsrun": "bsub", "bare_metal": None}
 
 DEFAULT_CFG = {
-    "PROJECT_NAME": "test", 
-    "SCHEDULING_MODE": "LOCK", 
+    "PROJECT_NAME": "test",
+    "SCHEDULING_MODE": "LOCK",
     "QPU_MODE": "RANDOM",
     "CONNECTIVITY_MODE": "NO_LINK",
     "CONNECTIVITY_QPU_IP_ADDRESS": "0.0.0.0",
@@ -35,7 +35,10 @@ def test_generate_correct_env(tmp_path, test_input):
     cfg = parse_json(f"tests/data/generator/{test_input}")
     env_vars = generator._environment_variables_exports(cfg["environment"])
     for key in DEFAULT_CFG:
-        assert any(key in env_var for env_var in env_vars), f"Missing key in env_vars: {key}"
+        assert any(
+            key in env_var for env_var in env_vars
+        ), f"Missing key in env_vars: {key}"
+
 
 @pytest.mark.parametrize("test_input", ["config_wrong_sum.json"])
 def test_config_checks(tmp_path, test_input):
@@ -126,10 +129,7 @@ def test_bare_metal_run(tmp_path, test_input, usrs):
         scheduler="bare_metal",
     )
     for usr in usrs:
-        sched = "bare_metal"
-        filename = os.path.join(
-            tmp_path, f'{sched.replace("/","_")}_{usr}.qstone.tar.gz'
-        )
+        filename = os.path.join(tmp_path, f"bare_metal_{usr}.qstone.tar.gz")
         assert os.path.isfile(filename)
         with tarfile.open(filename, "r|gz") as t:
             t.extractall(tmp_path)
@@ -139,6 +139,28 @@ def test_bare_metal_run(tmp_path, test_input, usrs):
             check=True,
         )
         assert result.returncode == 0
+
+
+def test_logging_level(tmp_path):
+    output_folder = tmp_path
+    tmp_path.mkdir(exist_ok=True)
+    generator.generate_suite(
+        config=f"tests/data/generator/config_single_logging.json",
+        job_count=5,
+        output_folder=output_folder,
+        atomic=False,
+        scheduler="bare_metal",
+    )
+    filename = os.path.join(tmp_path, f"bare_metal_user0.qstone.tar.gz")
+    with tarfile.open(filename, "r|gz") as t:
+        t.extractall(tmp_path)
+    runner_path = os.path.join(tmp_path, "qstone_suite", "qstone.sh")
+    result = subprocess.run(["bash", runner_path], check=True)
+    assert result.returncode == 0
+    log_dir = os.path.join(tmp_path, "qstone_suite", "qstone_profile")
+    log_file = next((f for f in os.listdir(log_dir) if "RUN_VQE" in f), None)
+    # We set the logging level in a way that VQE should not output files.
+    assert log_file is None
 
 
 @pytest.mark.parametrize(

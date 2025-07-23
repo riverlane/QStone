@@ -1,6 +1,5 @@
 """QPU computation class and configuration dataclass"""
 
-import ast
 import base64
 import json
 import os
@@ -45,6 +44,7 @@ class Computation(ABC):
             setattr(self, key, val)
         self._qpu_cfg = QpuConfiguration()
         self._app_args = byte_to_dict(os.environ.get("APP_ARGS", ""))
+        self._logging_level = os.environ.get("LOGGING_LEVEL", "")
 
     @classmethod
     def from_json(cls, path: Optional[str] = None):

@@ -1,0 +1,54 @@
+{
+  "environment": {
+  	"project_name": "test",
+  	"job_count" : 100,
+        "scheduling_mode": "LOCK",
+        "qpu": {
+  		"mode": "RANDOM"
+	},
+  	"connectivity": {
+  		"mode": "NO_LINK",
+                "qpu": {
+  			"ip_address": "0.0.0.0",
+  			"port": 55
+		}
+	},
+  	"lock_file": "my_lock.lock",
+  	"timeouts": {
+  	  "http": 5,
+  	  "lock": 4
+  	}
+  },
+  "jobs": [
+     { 
+      "type": "VQE",
+      "qubits": [2],
+      "walltime": 3,
+      "nthreads": 2,
+      "bare_metal_opt": "",
+      "lsf/jsrun_opt": "-special_setting=True",
+      "app_logging_level": 2 
+    },
+    { 
+      "type": "RB",
+      "qubits": [2, 4],
+      "num_shots": [2, 4],
+      "walltime": 1,
+      "nthreads": 1,
+      "slurm/schedmd_opt": "--special_setting=4",
+      "app_args": {
+        "special_param" : 5
+      }
+    }
+  ],
+  "users": [
+    {
+      "user": "user0",
+      "computations": {
+        "VQE": 0.95,
+        "RB": 0.04,
+        "PyMatching": 0.01
+      }
+    }
+  ]
+}
