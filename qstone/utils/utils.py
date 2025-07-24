@@ -190,7 +190,6 @@ def trace(
             logging_level_met = logging_level >= int(
                 os.environ.get("APP_LOGGING_LEVEL", "0")
             )
-            print (f"logging_level: {logging_level} - logging_level_met: {logging_level_met}")
             start = time.perf_counter_ns()
             profile_name = "_".join(
                 filter(
