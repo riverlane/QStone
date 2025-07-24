@@ -187,7 +187,7 @@ def trace(
     def wrapper(func: Callable):
         @wraps(func)
         def wrapper_func(*args, **kwargs):
-            logging_level_met = logging_level > int(
+            logging_level_met = logging_level >= int(
                 os.environ.get("APP_LOGGING_LEVEL", "0")
             )
             start = time.perf_counter_ns()
@@ -207,32 +207,24 @@ def trace(
             profile_path = os.path.join(
                 os.environ["PROFILE_PATH"], f"{profile_name}.json"
             )
-            # Values to store
             try:
                 result = func(*args, **kwargs)
+                success = True
             except Exception as e:  # pylint: disable=broad-except
                 result = None
+                success = False
+                raise e
+            finally:
+                end = time.perf_counter_ns()
                 if logging_level_met:
                     _write_trace(
                         profile_path,
-                        (start, 0),
+                        (start, end),
                         computation_type,
                         computation_step,
                         label,
-                        False,
-                        logging_level,
+                        success,
                     )
-                raise e
-            end = time.perf_counter_ns()
-            if logging_level_met:
-                _write_trace(
-                    profile_path,
-                    (start, end),
-                    computation_type,
-                    computation_step,
-                    label,
-                    True,
-                )
             return result
 
         return wrapper_func

@@ -146,7 +146,7 @@ def test_logging_level(tmp_path):
     tmp_path.mkdir(exist_ok=True)
     generator.generate_suite(
         config=f"tests/data/generator/config_single_logging.json",
-        job_count=5,
+        job_count=10,
         output_folder=output_folder,
         atomic=False,
         scheduler="bare_metal",
@@ -158,9 +158,15 @@ def test_logging_level(tmp_path):
     result = subprocess.run(["bash", runner_path], check=True)
     assert result.returncode == 0
     log_dir = os.path.join(tmp_path, "qstone_suite", "qstone_profile")
-    log_file = next((f for f in os.listdir(log_dir) if "RUN_VQE" in f), None)
-    # We set the logging level in a way that VQE should not output files.
-    assert log_file is None
+    # Check that logging filter is applied correctly
+    print(f"LOG_DI: {log_dir}")
+    pre_log_file = next((f for f in os.listdir(log_dir) if "PRE_Custom1" in f), None)
+    run_log_file = next((f for f in os.listdir(log_dir) if "RUN_Custom1" in f), None)
+    post_log_file = next((f for f in os.listdir(log_dir) if "POST_Custom1" in f), None)
+    # We set the logging level in a way that Custom1 should only output 2 files.
+    assert pre_log_file is None
+    assert run_log_file is not None
+    assert post_log_file is not None
 
 
 @pytest.mark.parametrize(
