@@ -159,7 +159,7 @@ def test_logging_level(tmp_path):
     assert result.returncode == 0
     log_dir = os.path.join(tmp_path, "qstone_suite", "qstone_profile")
     # Check that logging filter is applied correctly
-    print (f"LOG_DI: {log_dir}")
+    print(f"LOG_DI: {log_dir}")
     pre_log_file = next((f for f in os.listdir(log_dir) if "PRE_Custom1" in f), None)
     run_log_file = next((f for f in os.listdir(log_dir) if "RUN_Custom1" in f), None)
     post_log_file = next((f for f in os.listdir(log_dir) if "POST_Custom1" in f), None)
