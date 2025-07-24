@@ -208,7 +208,8 @@ if __name__ == "__main__":
 
 ## License
 
-[Add your license information here]
+[License](LICENSE)
+
 
 ---
 
