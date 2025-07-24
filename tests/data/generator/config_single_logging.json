@@ -26,8 +26,7 @@
       "walltime": 3,
       "nthreads": 2,
       "bare_metal_opt": "",
-      "lsf/jsrun_opt": "-special_setting=True",
-      "app_logging_level": 2
+      "lsf/jsrun_opt": "-special_setting=True"
     },
     {
       "type": "custom1.Custom1",
@@ -39,7 +38,8 @@
       "slurm/schedmd_opt": "--cpus-per-task=4",
       "app_logging_level": 1, 
       "app_args": {
-         "content": "Test"
+         "content": "Test",
+         "special_param" : 5
       }
     }
   ],
