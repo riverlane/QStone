@@ -146,7 +146,7 @@ def test_logging_level(tmp_path):
     tmp_path.mkdir(exist_ok=True)
     generator.generate_suite(
         config=f"tests/data/generator/config_single_logging.json",
-        job_count=10,
+        job_count=5,
         output_folder=output_folder,
         atomic=False,
         scheduler="bare_metal",
