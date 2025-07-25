@@ -47,8 +47,8 @@
     {
       "user": "user0",
       "computations": {
-        "VQE": 0.50,
-        "custom1.Custom1": 0.50
+        "VQE": 0.10,
+        "custom1.Custom1": 0.90
       }
     }
   ]
