@@ -10,7 +10,7 @@ QStone allows you to define a set of users for which configurable quantum applic
 - VQE (Variational Quantum Eigensolver)
 - PyMatching
 - RB (Randomized Benchmarking)
-- QBC (Quantum Benchmarking Circuit)
+- QBC (Quantum Binary Classifier)
 
 **Key features:**
 - Support for custom applications alongside core applications
