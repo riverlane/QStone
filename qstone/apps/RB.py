@@ -3,6 +3,9 @@
 import os
 import json
 
+import pickle
+import base64
+
 import numpy as np
 import ast
 import pygsti
@@ -14,6 +17,9 @@ from qstone.apps.computation import Computation
 from qstone.connectors import connector
 from qstone.utils.utils import ComputationStep, trace
 
+
+def _to_ob(string):
+    return pickle.loads(base64.b64decode(string.encode("utf-8")))
 
 class RB(Computation):
     """
@@ -47,7 +53,8 @@ class RB(Computation):
 
     def __init__(self, cfg: dict):
         super().__init__(cfg)
-        app_args = ast.literal_eval(os.environ.get("APP_ARGS",""))
+        app_args = os.environ.get("APP_ARGS","")
+        if app_args != "": app_args = _to_ob(app_args)        
         self.num_required_qubits = int(os.environ.get("NUM_QUBITS", self.num_required_qubits))
         if "benchmarks" in app_args.keys(): self.benchmarks = app_args["benchmarks"]
         if "depths" in app_args.keys(): self.depths = app_args["depths"]
@@ -155,31 +162,6 @@ class RB(Computation):
         the survival probability of each requested RB
         """
         run_file = f"{datapath}/RB_run_{os.environ['JOB_ID']}.npz"
-
-
-        #self._get_allowed_benchmarks()
-        #bench_qasms = []
-        #idealouts = []
-        
-        #for bench in self.benchmarks:
-        #    '''
-        #    Generates qasm files for each allowed RB
-        #    '''
-        #    qubit_labels, _, design = self._get_configuration(bench)
-        #    qasms, outputs = self._generate_rb_qasms(bench, design, qubit_labels)
-        #    bench_qasms.append(qasms)
-        #    idealouts += outputs
-
-        # Here we combine the qasm files of circuits that can be run simultaneosly into one single qasm
-        #qasms = []
-        #for i in range(len(bench_qasms[0])):
-        #    test = []
-        #    for j in range(len(bench_qasms)):
-        #        temp = list(line for line in bench_qasms[j][i].splitlines() if line != '')
-        #        if j==0: test += temp
-        #        else: test += temp[5:]
-        #
-        #    qasms.append(''.join('{}\n'.format(line) for line in test))
 
         qasms, idealouts = self._generate_rb_qasms()
 
