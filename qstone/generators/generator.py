@@ -187,6 +187,7 @@ def _generate_user_jobs(
     # Randomise number of qubits
     num_qubits = []
     num_shots = []
+    app_logging_level = []
     app_args = []
 
     def_qubits = 2
@@ -197,6 +198,7 @@ def _generate_user_jobs(
             num_qubits.append(def_qubits)
             num_shots.append(def_shots)
             app_args.append("")
+            app_logging_level.append(2)
         else:
             num_qubits.append(_randomise(app_cfg["qubits"], def_qubits))
             num_shots.append(_randomise(app_cfg["num_shots"], def_shots))
@@ -204,6 +206,10 @@ def _generate_user_jobs(
                 t = app_cfg["app_args"].tolist()[0]
                 if not _check_nan(t):
                     app_args.append(_to_bytes(t))
+            if "app_logging_level" in app_cfg.columns:
+                t = app_cfg["app_logging_level"].tolist()[0]
+                if not _check_nan(t):
+                    app_logging_level.append(int(t))
     # Assign job id and pack
     job_ids = list(range(len(job_types)))
     return (
@@ -213,6 +219,7 @@ def _generate_user_jobs(
                 num_qubits,
                 job_ids,
                 num_shots,
+                app_logging_level,
                 app_args,
             )
         ),

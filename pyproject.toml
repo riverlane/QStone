@@ -3,7 +3,7 @@ name = "qstone"
 authors = ["Riverlane  <team@riverlane.com>"]
 description = "Benchmarking suite for Quantum Computers integration into HPC Systems"
 readme = "README.md"
-version = "0.3.0"
+version = "0.4.1"
 license = "Apache 2.0"
 repository = "https://github.com/riverlane/QStone"
 packages = [{include = "qstone"}]

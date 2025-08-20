@@ -1,94 +1,156 @@
-## What
+# QStone
 
-An utility to benchmark the quality of an HPC and Quantum Computers integration. The benchmark allows the definition of a set of users for which a set of configurable quantum applications will be randomly selected. Example of currently supported quantum applications: VQE, PyMatching, RB. Users can create custom applications and use them together with the core applications.
-QStone generates different portable files (.tar.gz), each supporting a different user and a different scheduler (currently supporting: slurm, lsf, bare_metal). During execution of the benchmark, QStone gathers information on each steps of the applications, allowing investigations on bottlenecks and/or resource constraints at the interface between Quantum and HPC.
-The benchmark under the following [assumptions](ASSUMPTIONS.md).
+A utility to benchmark the quality of HPC and Quantum Computer integration.
 
-## Why
+## Overview
 
-Building an appropriate hardware/software infrastructure to support HPCQC requires
-loads of work. We believe we shoud use a data driven approach in which we measure, fix, measure again with every new version of Quantum Computers, software and HPC hardware.
+QStone allows you to define a set of users for which configurable quantum applications will be randomly selected and executed. The benchmark generates different portable files (`.tar.gz`), each supporting different users and schedulers.
 
-## Where
+**Currently supported quantum applications:**
+- VQE (Variational Quantum Eigensolver)
+- PyMatching
+- RB (Randomized Benchmarking)
+- QBC (Quantum Benchmarking Circuit)
 
-Currently supported platforms/architectures:
+**Key features:**
+- Support for custom applications alongside core applications
+- Multi-scheduler support (SLURM, LSF, bare metal)
+- Detailed performance metrics collection
+- Bottleneck and resource constraint analysis at the quantum-HPC interface
 
-- MacOS: M1/M2 (Sequoia)
-- Intel: x86 (Ubuntu)
-- PowerPC: Power9 (RedHat)
+The benchmark operates under specific [assumptions](ASSUMPTIONS.md).
 
-Tested on Python [3.10-3.12]
+## Why QStone?
 
-## How
+Building appropriate hardware/software infrastructure for HPCQC requires significant effort. QStone enables a data-driven approach where you can measure performance, implement fixes, and measure again with every new version of quantum computers, software, and HPC hardware.
 
-### Installation
+## Supported Platforms
 
-`pip install QStone`
+| Platform | Architecture | OS |
+|----------|-------------|-----|
+| Apple Silicon | M1-M4 | macOS |
+| Intel | x86_64 | Ubuntu |
+| IBM Power | Power9 | RedHat |
 
-To leverage MPI features, first install OpenMPI.
+**Python versions:** 3.10 - 3.12
 
-`sudo apt install openmpi` [On Ubuntu]
-`sudo yum install openmpi` [On Debian Systems]
-`brew install openmpi` [On Mac]
- 
-Followed by a full installation:
+## Installation
 
-`pip install QStone[mpi]`
+### Basic Installation
 
-### Execution
+```bash
+pip install QStone
+```
 
-Run QStone using Command Line Interface
+### Full Installation with MPI Support
 
-- Run the **generator** command
+First, install OpenMPI:
 
-  `qstone generate -i conf.json [--atomic/-a] [--scheduler/-s "slurm"/"jsrun"/"bare_metal"]`
+```bash
+# Ubuntu/Debian
+sudo apt install openmpi-bin openmpi-common libopenmpi-dev
 
-  Generates tar.gz files that contains all the scripts to run scheduler for each user. Currently supported schedulers: [baremetal, altair/fnc, slurm/schedmd]. QStone expects an input configuration describing the users to want to generate jobs for as well as the description of the quantum computer you are generating jobs for. The optional `--atomic` flag forces the generation of single step jobs, instead of the default repartition in three jobs (pre, run, post). The `-s` flag allows selecting the output scheduler, default is `bare_metal`.
+# RedHat/CentOS/Fedora  
+sudo yum install openmpi openmpi-devel
 
-  With `config.json`:
+# macOS
+brew install openmpi
+```
+
+Then install QStone with MPI support:
+
+```bash
+pip install QStone[mpi]
+```
+
+## Usage
+
+### 1. Generate Benchmark Suite
+
+```bash
+qstone generate -i config.json [--atomic/-a] [--scheduler/-s "slurm"/"jsrun"/"bare_metal"]
+```
+
+**Options:**
+- `--atomic` / `-a`: Generate single-step jobs instead of three-phase jobs (pre/run/post)
+- `--scheduler` / `-s`: Select output scheduler (default: `bare_metal`)
+
+**Supported schedulers:** bare metal, Altair/FNC, SLURM/SchedMD
+
+### 2. Execute Benchmark
+
+```bash
+qstone run -i scheduler.qstone.tar.gz [-o output_folder]
+```
+
+**Alternative:** Extract the tar.gz file and run manually:
+```bash
+tar -xzf scheduler.qstone.tar.gz
+cd qstone_suite
+sh qstone.sh
+```
+
+### 3. Profile Results
+
+**Single user:**
+```bash
+qstone profile --cfg config.json --folder qstone_profile
+```
+
+**Multiple users:**
+```bash
+qstone profile --cfg config.json --folder qstone_profile --folder qstone_profile2
+```
+
+## Configuration
+
+### Sample Configuration File
+
+Create a `config.json` file with the following structure:
 
 ```json
 {
   "environment": { 
-     "project_name": "proj_name",
-     "scheduling_mode" : "LOCK",
-     "job_count": 5,
-     "qpu" : {
-        "mode" : "RANDOM"
-     },
-     "connectivity": {
-     	"mode": "NO_LINK",
-     	"qpu": {
-           "ip_address": "0.0.0.0",
-     	   "port": 55
-        }
-     },
-     "timeouts" : {
-         "http": 5,
-         "lock": 4
-     } 
+    "project_name": "my_quantum_project",
+    "scheduling_mode": "LOCK",
+    "job_count": 5,
+    "qpu": {
+      "mode": "RANDOM"
+    },
+    "connectivity": {
+      "mode": "NO_LINK",
+      "qpu": {
+        "ip_address": "0.0.0.0",
+        "port": 55
+      }
+    },
+    "timeouts": {
+      "http": 5,
+      "lock": 4
+    } 
   },
   "jobs": [
     {
       "type": "VQE",
       "qubits": [4, 6],
       "num_shots": [100, 200],
-      "walltime" : 10,
-      "nthreads" : 4
+      "walltime": 10,
+      "nthreads": 4,
+      "app_logging_level": 2 
     },
     {
       "type": "RB",
       "qubits": [2],
       "num_shots": [100],
-      "walltime" : 10,
-      "nthreads" : 2
+      "walltime": 10,
+      "nthreads": 2
     },
     {
       "type": "QBC",
       "qubits": [4],
       "num_shots": [32],
       "walltime": 20,
-      "nthreads" : 2
+      "nthreads": 2
     }
   ],
   "users": [
@@ -104,56 +166,51 @@ Run QStone using Command Line Interface
 }
 ```
 
-For more information on the `config.json` format refer to the associated [json schema](qstone/utils/config_schema.py).
-Among the other things, the config file allows setting different polling/querying/scheduling policies for handling shared access to the QPU.
-Only SLURM currently supports the high-performance (lowest-latency) "SCHEDULER" mode" please refer to [SLURM](SLURM.md) for more information.
+For detailed configuration options, refer to the [JSON schema](qstone/utils/config_schema.py).
 
-- Alternatively call the generator in script:
+**Note:** Only SLURM currently supports the high-performance "SCHEDULER" mode with lowest latency. See [SLURM documentation](SLURM.md) for more details.
+
+## Programmatic Usage
 
 ```python
 from qstone.generators import generator
 
 def main():
-    generator.generate_suite(config="config.json",
-        job_count=100, output_folder=".", atomic=False, scheduler="bare_metal")
+    generator.generate_suite(
+        config="config.json",
+        job_count=100, 
+        output_folder=".", 
+        atomic=False, 
+        scheduler="bare_metal"
+    )
 
 if __name__ == "__main__":
-     main()
+    main()
 ```
 
-- Run the **run** command to execute chosen scheduler/workload selecting an optional output folder
+## Supported Backend Connectivities
 
-  `qstone run -i scheduler.qstone.tar.gz [-o folder]`
+- **Local no-link runner** - For testing without quantum hardware
+- **gRPC** - High-performance remote procedure calls
+- **HTTP/REST** - Standard web-based communication
+- **Rigetti** - Native Rigetti quantum computer integration
 
-The optional `-o` allows selecting the output folder in which to run the benchmark instance.
+## Examples and Resources
 
-- Alternatively may untar on your machine of choice and run as the selected user.
+- 📓 [Getting Started Notebook](examples/running/getting_started.ipynb)
+- 🔧 [Adding New Computation Types](examples/adding/computation/README.md)
+- 🌐 [Creating a Simple Gateway](examples/node/README.md)
 
-  - Run the jobs by executing `sh qstone_suite/qstone.sh`
+## Contributing
 
-  - Run the profiling tool to extract metrics of interest.
+- [Contributing Guidelines](contributing.md)
+- [Change Log](changelog.md)
 
-- Run the **profile** command providing the initial input configuration and output folder to run profiling tool on run information
+## License
 
-  `qstone profile --cfg conf.json --folder qstone_profile`
+[License](LICENSE)
 
-- Run the **profile** command providing the initial input configuration and multiple output folders (in case of multi-user run) to run profiling tool on run information
 
-  `qstone profile --cfg conf.json --folder qstone_profile --folder qstone_profile2`
+---
 
-### Supported backend connectivities
-
-- Local no-link runner
-- gRPC
-- Http
-- Rigetti
-
-### Examples
-
-- Getting started [notebook](examples/running/getting_started.ipynb)
-- How to add a [new type of computation](examples/adding/computation/README.md)
-- How to create a simple [gateway](examples/node/README.md)
-
-### Contributing
-
-Guidance on how to [contribute](contributing.md) and [change logs](changelog.md)
+*For questions, issues, or feature requests, please visit our [GitHub repository](https://github.com/your-org/qstone) or open an issue.*
