@@ -16,6 +16,7 @@ from qstone.utils.utils import ComputationStep, trace
     computation_type="QBC",
     computation_step=ComputationStep.RUN,
     label="QASM_GENERATION",
+    logging_level=4
 )
 def generate_vqc_qasm(pqc_number, num_qubits, datum, parameters):
     """
@@ -80,6 +81,7 @@ def generate_vqc_qasm(pqc_number, num_qubits, datum, parameters):
     computation_type="QBC",
     computation_step=ComputationStep.RUN,
     label="MPI_COMMUNICATION",
+    logging_level=4
 )
 def mpi_communication(data, comm, bcast=True):
     """MPI communication wrapper"""
@@ -90,6 +92,7 @@ def mpi_communication(data, comm, bcast=True):
     computation_type="QBC",
     computation_step=ComputationStep.RUN,
     label="LOSS_COMPUTATION",
+    logging_level=3
 )
 def loss(
     parameters,

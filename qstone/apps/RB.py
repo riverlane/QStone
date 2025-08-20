@@ -86,6 +86,7 @@ class RB(Computation):
         computation_type="RB",
         computation_step=ComputationStep.PRE,
         label="BENCHMARK_CONFIGURATION",
+        logging_level=4
     ) 
     def _get_configuration(self, bench):
         """
@@ -122,6 +123,7 @@ class RB(Computation):
         computation_type="RB",
         computation_step=ComputationStep.PRE,
         label="QASM_GENERATION",
+        logging_level=3
     )
     def _generate_rb_qasms(self):
         self._get_allowed_benchmarks()
@@ -155,7 +157,9 @@ class RB(Computation):
 
         return qasms, idealouts
 
-    @trace(computation_type=COMPUTATION_NAME, computation_step=ComputationStep.PRE)
+    @trace(computation_type=COMPUTATION_NAME,
+           computation_step=ComputationStep.PRE,
+           label='BENCHMARK_SET_UP')
     def pre(self, datapath: str):
         """
         Generates the quantum circuits required to extract
@@ -167,7 +171,9 @@ class RB(Computation):
 
         np.savez(run_file, qasms=qasms, exp=idealouts, allow_pickle=True)
 
-    @trace(computation_type=COMPUTATION_NAME, computation_step=ComputationStep.RUN)
+    @trace(computation_type=COMPUTATION_NAME,
+           computation_step=ComputationStep.RUN,
+           label='RUNNING_BENCHMARK')
     def run(self, datapath: str, connection: connector.Connector):
         """Runs the Quantum circuit N times
 
@@ -194,10 +200,12 @@ class RB(Computation):
         store = {"qasms": vals["qasms"], "exp": vals["exp"], "res": results}
         np.savez(run_file, **store, allow_pickle=True)
 
-    @trace(computation_type=COMPUTATION_NAME, computation_step=ComputationStep.POST)
+    @trace(computation_type=COMPUTATION_NAME,
+           computation_step=ComputationStep.POST,
+           label='SURVIVAL_ESTIMATION')
     def post(self, datapath: str):
-        """Runs the processing of the randomised benchmarking using the data provided by
-        datapath
+        """Runs the post-processing of the randomised benchmarking
+           using the data provided by datapath
         """
         run_file = f"{datapath}/RB_run_{os.environ['JOB_ID']}.npz"
         report_file = f"{datapath}/RB_report_{os.environ['JOB_ID']}.txt"
