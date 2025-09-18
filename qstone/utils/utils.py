@@ -48,6 +48,15 @@ CFG_ENVIRONMENT_VARIABLES = {
 
 
 def validate_computation_weights(config: Dict):
+    """
+    Validates that the sum of computation weights for each user is 1.0.
+
+    Args:
+        config: Configuration dictionary containing user computation weights.
+
+    Raises:
+        ValueError: If any user's computation weights do not sum to 1.0.
+    """
     users = config["users"]  #
     for user in users:
         weights_sum = sum(user["computations"].values())
