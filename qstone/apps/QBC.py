@@ -231,7 +231,7 @@ class QBC(Computation):  # pylint:disable=invalid-name
             totparameters = (
                 2 * numpy.pi * numpy.random.rand(2 * self.num_required_qubits)
             )
-        if self.pqc_number == 5:
+        elif self.pqc_number == 5:
             totparameters = (
                 2
                 * numpy.pi
@@ -239,6 +239,8 @@ class QBC(Computation):  # pylint:disable=invalid-name
                     pow(self.num_required_qubits, 2) + 3 * self.num_required_qubits
                 )
             )
+        else:
+            raise ValueError(f"Unknown pqc_number: {self.pqc_number}")
 
         mpi_communication(totparameters, self.comm)
 
