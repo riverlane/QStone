@@ -192,15 +192,19 @@ class QBC(Computation):  # pylint:disable=invalid-name
         )
         self.shots = int(os.environ.get("NUM_SHOTS", str(cfg.get("shots", 64))))
         app_args: dict = {}
-        env_app_args = os.environ.get("APP_ARGS","")
-        if env_app_args != "": loaded = _to_ob(env_app_args)
+        env_app_args = os.environ.get("APP_ARGS", "")
+        if env_app_args != "":
+            loaded = _to_ob(env_app_args)
         if isinstance(loaded, dict):
             app_args = loaded
         else:
             pass
-        if "pqc_number" in app_args.keys(): self.pqc_number = int(app_args["pqc_number"])
-        if "training_size" in app_args.keys(): self.benchmarks = int(app_args["training_size"])
-        if "max_iters" in app_args.keys(): self.depths = int(app_args["max_iters"])
+        if "pqc_number" in app_args.keys():
+            self.pqc_number = int(app_args["pqc_number"])
+        if "training_size" in app_args.keys():
+            self.benchmarks = int(app_args["training_size"])
+        if "max_iters" in app_args.keys():
+            self.depths = int(app_args["max_iters"])
 
     @trace(
         computation_type=COMPUTATION_NAME,

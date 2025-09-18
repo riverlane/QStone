@@ -76,15 +76,19 @@ class RB(Computation):
         )
         self.shots = int(os.environ.get("NUM_SHOTS", str(cfg.get("shots", 8))))
         app_args: dict = {}
-        env_app_args = os.environ.get("APP_ARGS","")
-        if env_app_args != "": loaded = _to_ob(env_app_args)
+        env_app_args = os.environ.get("APP_ARGS", "")
+        if env_app_args != "":
+            loaded = _to_ob(env_app_args)
         if isinstance(loaded, dict):
             app_args = loaded
         else:
             pass
-        if "benchmarks" in app_args.keys(): self.benchmarks = app_args["benchmarks"]
-        if "depths" in app_args.keys(): self.depths = app_args["depths"]
-        if "reps" in app_args.keys(): self.reps = app_args["reps"]
+        if "benchmarks" in app_args.keys():
+            self.benchmarks = app_args["benchmarks"]
+        if "depths" in app_args.keys():
+            self.depths = app_args["depths"]
+        if "reps" in app_args.keys():
+            self.reps = app_args["reps"]
 
     @trace(
         computation_type="RB",
@@ -265,10 +269,14 @@ class RB(Computation):
         vals = np.load(run_file, allow_pickle=True)
         if "exp" in vals:
             exp = vals["exp"]
-            if exp.size==len(self.benchmarks) * len(self.depths) * self.reps:
-                exp = vals["exp"].reshape(len(self.benchmarks), len(self.depths), self.reps)
+            if exp.size == len(self.benchmarks) * len(self.depths) * self.reps:
+                exp = vals["exp"].reshape(
+                    len(self.benchmarks), len(self.depths), self.reps
+                )
             else:
-                raise ValueError(f"Array exp has size {exp.size}, expected {len(self.benchmarks) * len(self.depths) * self.reps}")
+                raise ValueError(
+                    f"Array exp has size {exp.size}, expected {len(self.benchmarks) * len(self.depths) * self.reps}"
+                )
         else:
             raise KeyError("expected_key not found in npz file")
         res = list(r["counts"] for r in vals["res"])
