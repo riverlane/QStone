@@ -1,12 +1,12 @@
 """RB computations steps."""
 
+import ast
 import base64
 import json
 import os
 import pickle
 
 import numpy as np
-import ast
 import pygsti
 from pandera import Check, Column, DataFrameSchema, Object
 from pygsti.processors import CliffordCompilationRules as CCR
@@ -15,6 +15,7 @@ from pygsti.processors import QubitProcessorSpec as QPS
 from qstone.apps.computation import Computation
 from qstone.connectors import connector
 from qstone.utils.utils import ComputationStep, trace
+
 
 def _to_ob(string):
     return pickle.loads(base64.b64decode(string.encode("utf-8")))
