@@ -2,7 +2,6 @@
 
 import ast
 import base64
-from typint import Any
 import json
 import os
 import pickle
@@ -12,6 +11,7 @@ import pygsti
 from pandera import Check, Column, DataFrameSchema, Object
 from pygsti.processors import CliffordCompilationRules as CCR
 from pygsti.processors import QubitProcessorSpec as QPS
+from typing import Any
 
 from qstone.apps.computation import Computation
 from qstone.connectors import connector
@@ -99,8 +99,8 @@ class RB(Computation):
     )
     def _get_allowed_benchmarks(self):
         """
-        Takes the lists of requested randomized benchmarks
-        and returns a list with those that can be run simultaneously in a quantum circuit
+        Takes the lists of requested randomized benchmarks and returns a list
+        with those that can be run simultaneously in a quantum circuit
         """
 
         benchs = []
