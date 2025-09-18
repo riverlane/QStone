@@ -74,6 +74,8 @@ class RB(Computation):
         if app_args != "":
             try:
                 app_args = _to_ob(app_args)
+                if not isinstance(app_args, dict):
+                    app_args = {}
             except Exception:
                 app_args = {}
         if not isinstance(app_args, dict):

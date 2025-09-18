@@ -8,7 +8,7 @@ class MPIHandler:
         """communicate, transmits data in broadcast or singlecast"""
         if bcast:
             return data
-        return self.comm.allreduce(data, op='MPI.SUM')
+        return self.allreduce(data, op="MPI.SUM")
 
     def Get_size(self):  # pylint: disable=invalid-name
         """Returns the size of the channel"""
@@ -24,7 +24,7 @@ class MPIHandler:
 
     def allreduce(self, sendobj, op):  # pylint: disable=invalid-name
         """allreduce call - mocked"""
-        if op=='MPI.SUM':
+        if op == "MPI.SUM":
             return data
 
     def allgather(
