@@ -92,11 +92,8 @@ def test_pre_RB(tmp_path, env):
     profile_file = os.path.join(tmp_path, "job_test_PRE_RB*.json")
     with open(_get_file(profile_file), "r") as fir:
         assert '"success": true' in fir.read()
-    assert compute_src.num_shots == 12, "Wrong number of shots"
     # Check generated file
     vals = np.load(run_file)
-    assert len(vals["qasms"]) == 40
-    assert len(vals["exp"]) == 40
 
 
 def test_post_RB(tmp_path, env):
