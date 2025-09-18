@@ -72,6 +72,8 @@ class RB(Computation):
         app_args = os.environ.get("APP_ARGS", "")
         if app_args != "":
             app_args = _to_ob(app_args)
+            if not isinstance(app_args, dict):
+                app_args = {}
         else:
             app_args = {}
         self.num_required_qubits = int(
