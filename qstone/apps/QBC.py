@@ -127,16 +127,15 @@ def loss(
             counts = response["counts"]
         else:
             print("ERROR: counts not found in qpu response.")
-            quit()
-            counts = response
+            sys.exit()
         probs = {key: counts[key] / shots for key in counts.keys()}
         loss -= probs[str(labels[i])] / training_size
     print(f"partial loss for rank {comm.Get_rank()}: {loss}", flush=True)
     temp = mpi_communication(loss, comm, bcast=False)
-    loss = temp
+    total_loss = temp
     print(f"total loss: {loss}", flush=True)
 
-    return loss
+    return total_loss
 
 
 class QBC(Computation):  # pylint:disable=invalid-name
@@ -228,9 +227,6 @@ class QBC(Computation):  # pylint:disable=invalid-name
         starts = list(sum(jobsizes[:i]) for i in range(len(jobsizes)))
         idxs = numpy.arange(starts[self.rank], starts[self.rank] + jobsizes[self.rank])
 
-        totqasms: list = []
-        totresults: list = []
-        totlosses: list = []
         if self.pqc_number in [2, 15]:
             totparameters = (
                 2 * numpy.pi * numpy.random.rand(2 * self.num_required_qubits)

@@ -289,7 +289,7 @@ class RB(Computation):
                     )
                 )
 
-            print("RB on qubit(s) {}".format(bench))
+            print(f"RB on qubiit(s) {bench}")
             print(list(np.around(np.mean(probs), 3) for probs in survival_probs[i]))
 
         with open(report_file, "w", encoding="utf-8") as fid:
