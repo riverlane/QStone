@@ -74,9 +74,13 @@ class RB(Computation):
             app_args = _to_ob(app_args)
         else:
             app_args = {}
-        self.num_required_qubits = int(os.environ.get("NUM_QUBITS", cfg.get("num_required_qubits", 4)))
-        self.benchmarks = app_args.get("benchmarks", cfg.get("benchmarks", [[0],[1],[2],[3]]))
-        self.depths = app_args.get("depths", cfg.get("depths", [0,2,4,8]))
+        self.num_required_qubits = int(
+            os.environ.get("NUM_QUBITS", cfg.get("num_required_qubits", 4))
+        )
+        self.benchmarks = app_args.get(
+            "benchmarks", cfg.get("benchmarks", [[0], [1], [2], [3]])
+        )
+        self.depths = app_args.get("depths", cfg.get("depths", [0, 2, 4, 8]))
         self.reps = int(app_args.get("reps", cfg.get("reps", 10)))
         self.shots = int(os.environ.get("NUM_SHOTS", str(cfg.get("shots", 8))))
 
