@@ -190,7 +190,6 @@ class RB(Computation):
             )
             idealouts += list(np.concatenate(design.idealout_lists).flat)
 
-        
         # Here we combine the qasm files of circuits that can be run simultaneosly into one single qasm
         qasms = []
         for i in range(len(bench_qasms[0])):

@@ -130,7 +130,7 @@ def qasm_circuit_random_sample(qasm: str, repetitions: int) -> Dict:
         meas = list(list(random.randint(0, 1) for _ in range(num_cregs)))
         key = "".join(str(bit) for bit in meas)
         measurements.append(meas)
-        if key not in counts.keys():
+        if key not in counts:
             counts[key] = 1
         else:
             counts[key] += 1
