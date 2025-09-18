@@ -17,7 +17,6 @@ from qstone.apps.computation import Computation
 from qstone.connectors import connector
 from qstone.utils.utils import ComputationStep, trace
 
-
 def _to_ob(string):
     return pickle.loads(base64.b64decode(string.encode("utf-8")))
 
@@ -71,7 +70,7 @@ class RB(Computation):
     def __init__(self, cfg: dict):
         super().__init__(cfg)
 
-        app_args: dict = {str, Any}
+        app_args: dict[str, Any] = {}
         env_app_args = os.environ.get("APP_ARGS", "")
         if env_app_args:
             try:
