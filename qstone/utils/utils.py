@@ -11,7 +11,7 @@ from typing import Callable, Dict, Optional
 
 import jsonschema
 import pandas as pd
-import pandera.pandas as pa
+import pandera as pa
 
 from .config_schema import FULL_SCHEMA
 
