@@ -72,16 +72,13 @@ class RB(Computation):
         app_args = os.environ.get("APP_ARGS", "")
         if app_args != "":
             app_args = _to_ob(app_args)
-        self.num_required_qubits = int(
-            os.environ.get("NUM_QUBITS", self.num_required_qubits)
-        )
-        if "benchmarks" in app_args.keys():
-            self.benchmarks = app_args["benchmarks"]
-        if "depths" in app_args.keys():
-            self.depths = app_args["depths"]
-        if "reps" in app_args.keys():
-            self.reps = app_args["reps"]
-        self.shots = int(os.environ.get("NUM_SHOTS", str(self.shots)))
+        else:
+            app_args = {}
+        self.num_required_qubits = int(os.environ.get("NUM_QUBITS", cfg.get("num_required_qubits", 4)))
+        self.benchmarks = app_args.get("benchmarks", cfg.get("benchmarks", [[0],[1],[2],[3]]))
+        self.depths = app_args.get("depths", cfg.get("depths", [0,2,4,8]))
+        self.reps = int(app_args.get("reps", cfg.get("reps", 10)))
+        self.shots = int(os.environ.get("NUM_SHOTS", str(cfg.get("shots", 8))))
 
     @trace(
         computation_type="RB",
