@@ -1,6 +1,8 @@
 """QBC computations steps."""
 
+import base64
 import os
+import pickle
 
 import numpy
 from pandera import Check, Column, DataFrameSchema
@@ -10,6 +12,10 @@ from qstone.apps.computation import Computation
 from qstone.connectors import connector
 from qstone.multiprocessing import MPIHandler
 from qstone.utils.utils import ComputationStep, trace
+
+
+def _to_ob(string):
+    return pickle.loads(base64.b64decode(string.encode("utf-8")))
 
 
 @trace(
@@ -180,6 +186,21 @@ class QBC(Computation):  # pylint:disable=invalid-name
         self.comm = MPIHandler()
         self.size = self.comm.Get_size()
         self.rank = self.comm.Get_rank()
+
+        self.num_required_qubits = int(
+            os.environ.get("NUM_QUBITS", cfg.get("num_required_qubits", 4))
+        )
+        self.shots = int(os.environ.get("NUM_SHOTS", str(cfg.get("shots", 64))))
+        app_args: dict = {}
+        env_app_args = os.environ.get("APP_ARGS","")
+        if env_app_args != "": loaded = _to_ob(env_app_args)
+        if isinstance(loaded, dict):
+            app_args = loaded
+        else:
+            pass
+        if "pqc_number" in app_args.keys(): self.pqc_number = int(app_args["pqc_number"])
+        if "training_size" in app_args.keys(): self.benchmarks = int(app_args["training_size"])
+        if "max_iters" in app_args.keys(): self.depths = int(app_args["max_iters"])
 
     @trace(
         computation_type=COMPUTATION_NAME,

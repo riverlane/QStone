@@ -71,25 +71,20 @@ class RB(Computation):
     def __init__(self, cfg: dict):
         super().__init__(cfg)
 
-        app_args: dict[str, Any] = {}
-        env_app_args = os.environ.get("APP_ARGS", "")
-        if env_app_args:
-            try:
-                loaded = _to_ob(app_args)
-                if isinstance(loaded, dict):
-                    app_args = loaded
-            except Exception:
-                pass
-
         self.num_required_qubits = int(
             os.environ.get("NUM_QUBITS", cfg.get("num_required_qubits", 4))
         )
-        self.benchmarks = app_args.get(
-            "benchmarks", cfg.get("benchmarks", [[0], [1], [2], [3]])
-        )
-        self.depths = app_args.get("depths", cfg.get("depths", [0, 2, 4, 8]))
-        self.reps = int(app_args.get("reps", cfg.get("reps", 10)))
         self.shots = int(os.environ.get("NUM_SHOTS", str(cfg.get("shots", 8))))
+        app_args: dict = {}
+        env_app_args = os.environ.get("APP_ARGS","")
+        if env_app_args != "": loaded = _to_ob(env_app_args)
+        if isinstance(loaded, dict):
+            app_args = loaded
+        else:
+            pass
+        if "benchmarks" in app_args.keys(): self.benchmarks = app_args["benchmarks"]
+        if "depths" in app_args.keys(): self.depths = app_args["depths"]
+        if "reps" in app_args.keys(): self.reps = app_args["reps"]
 
     @trace(
         computation_type="RB",
@@ -104,7 +99,6 @@ class RB(Computation):
         """
 
         benchs = []
-        rejected = []
 
         for bench in self.benchmarks:
 
@@ -114,9 +108,6 @@ class RB(Computation):
                 and all(x < self.num_required_qubits for x in bench)
             ):
                 benchs.append(bench)
-
-            else:
-                rejected.append(bench)
 
         self.benchmarks = benchs
 
@@ -164,7 +155,7 @@ class RB(Computation):
             qubit_labels=qubit_labels,
         )
         print(f"Generated benchmarking routing with {n_qubits} qubits")
-        return (qubit_labels, pspec, design)
+        return qubit_labels, pspec, design
 
     @trace(
         computation_type="RB",
@@ -272,7 +263,14 @@ class RB(Computation):
         report_file = f"{datapath}/RB_report_{os.environ['JOB_ID']}.txt"
         self._get_allowed_benchmarks()
         vals = np.load(run_file, allow_pickle=True)
-        exp = vals["exp"].reshape(len(self.benchmarks), len(self.depths), self.reps)
+        if "exp" in vals:
+            exp = vals["exp"]
+            if exp.size==len(self.benchmarks) * len(self.depths) * self.reps:
+                exp = vals["exp"].reshape(len(self.benchmarks), len(self.depths), self.reps)
+            else:
+                raise ValueError(f"Array exp has size {exp.size}, expected {len(self.benchmarks) * len(self.depths) * self.reps}")
+        else:
+            raise KeyError("expected_key not found in npz file")
         res = list(r["counts"] for r in vals["res"])
         survival_probs = np.zeros(exp.shape)
 
@@ -291,7 +289,7 @@ class RB(Computation):
                     )
                 )
 
-            print(f"RB on qubiit(s) {bench}")
+            print(f"RB on qubit(s) {bench}")
             print(list(np.around(np.mean(probs), 3) for probs in survival_probs[i]))
 
         with open(report_file, "w", encoding="utf-8") as fid:
