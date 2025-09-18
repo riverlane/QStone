@@ -25,7 +25,7 @@ class MPIHandler:
     def allreduce(self, sendobj, op):  # pylint: disable=invalid-name
         """allreduce call - mocked"""
         if op == "MPI.SUM":
-            return data
+            return sendobj
 
     def allgather(
         self, sendobj=None, recvobj=None
@@ -35,4 +35,4 @@ class MPIHandler:
 
     def Barrier(self):  # pylint: disable=invalid-name
         """Barrier call - mocked"""
-        pass
+
