@@ -211,7 +211,6 @@ class PyMatching(Computation):  # pylint:disable=invalid-name
 
         model = stim_circuit.detector_error_model(decompose_errors=True)
         matching = pymatching.Matching.from_detector_error_model(model)
-        print(f"MARCO: datapath - {datapath}")
         syndrome_path = os.path.join(
             datapath, f"PyMatching_{os.environ['JOB_ID']}_syndromes.npz"
         )
