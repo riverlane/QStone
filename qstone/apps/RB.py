@@ -61,7 +61,12 @@ class RB(Computation):
         if "reps" in app_args.keys(): self.reps = app_args["reps"]
         self.shots = int(os.environ.get("NUM_SHOTS", str(self.shots)))
 
-
+    @trace(
+        computation_type="RB",
+        computation_step=ComputationStep.PRE,
+        label="BENCHMARK_VALIDATION",
+        logging_level=4
+    )
     def _get_allowed_benchmarks(self):
         '''
         Takes the lists of requested randomized benchmarks
@@ -173,7 +178,7 @@ class RB(Computation):
 
     @trace(computation_type=COMPUTATION_NAME,
            computation_step=ComputationStep.RUN,
-           label='RUNNING_BENCHMARK')
+           label='BENCHMARK_RUN')
     def run(self, datapath: str, connection: connector.Connector):
         """Runs the Quantum circuit N times
 
