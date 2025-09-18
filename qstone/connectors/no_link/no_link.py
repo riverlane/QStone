@@ -57,6 +57,6 @@ class NoLinkConnection(connection.Connection):
     ) -> dict:
         """Local simulated run of circuit"""
         qasm_circuit = self.preprocess(qasm_ptr)
-        #outcomes = qasm_circuit_random_sample(qasm_circuit, reps)
+        # outcomes = qasm_circuit_random_sample(qasm_circuit, reps)
         outcomes = self._get_outcomes(qasm_circuit, reps)
         return outcomes
