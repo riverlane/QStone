@@ -33,7 +33,7 @@ class RB(Computation):
       "cfg":
       {
          "num_required_qubits" : 4,
-         "benchmarks" : [[0],[1],[2],[3]],
+         "benchmarks" : [[0]],
          "depths" : [0,2,4,8],
          "reps" : 10,
          "shots": 8
