@@ -288,10 +288,10 @@ class RB(Computation):
                 rep = j % self.reps
                 survival_probs[i, depth, rep] = sum(
                     list(
-                        value / self.shots
-                        for key, value in counts.items()
+                        counts[key] / self.shots
+                        for key in counts
                         if key[
-                            len(key) - bench[len(bench) - 1] - 1 : len(key) - bench[0]
+                            int(len(key) - bench[len(bench) - 1] - 1) : int(len(key) - bench[0])
                         ]
                         == exp[i, depth, rep]
                     )
