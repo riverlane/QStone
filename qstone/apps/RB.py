@@ -284,16 +284,13 @@ class RB(Computation):
 
         for i, bench in enumerate(self.benchmarks):
             for j, counts in enumerate(res):
-                depth = j // self.reps
-                rep = j % self.reps
+                depth = int(j // self.reps)
+                rep = int(j % self.reps)
                 survival_probs[i, depth, rep] = sum(
                     list(
                         counts[key] / self.shots
                         for key in counts
-                        if key[
-                            int(len(key) - bench[len(bench) - 1] - 1) : int(len(key) - bench[0])
-                        ]
-                        == exp[i, depth, rep]
+                        if key[len(key) - bench[len(bench) - 1] - 1 : len(key) - bench[0]] == str(exp[i, depth, rep])
                     )
                 )
 
