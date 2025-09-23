@@ -4,9 +4,15 @@
 class MPIHandler:
     """MPIHandler wraps MPI calls"""
 
+    def communicate(self, data, bcast: bool):
+        """communicate, transmits data in broadcast or singlecast"""
+        if bcast:
+            return data
+        return self.allreduce(data, op="MPI.SUM")
+
     def Get_size(self):  # pylint: disable=invalid-name
         """Returns the size of the channel"""
-        return 0
+        return 1
 
     def Get_rank(self):  # pylint: disable=invalid-name
         """Returns the rank of the channel"""
@@ -16,9 +22,10 @@ class MPIHandler:
         """BCast call - mocked"""
         raise NotImplementedError("Requires MPI support")
 
-    def allreduce(self, **kwargs):  # pylint: disable=invalid-name
+    def allreduce(self, sendobj, op):  # pylint: disable=invalid-name
         """allreduce call - mocked"""
-        raise NotImplementedError("Requires MPI support")
+        if op == "MPI.SUM":
+            return sendobj
 
     def allgather(
         self, sendobj=None, recvobj=None
@@ -28,4 +35,3 @@ class MPIHandler:
 
     def Barrier(self):  # pylint: disable=invalid-name
         """Barrier call - mocked"""
-        pass

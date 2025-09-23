@@ -262,6 +262,7 @@ def _environment_variables_exports(env_vars: dict) -> List[str]:
 
     # Start processing from the root dictionary
     process_dict(env_vars)
+
     return exports_list
 
 
@@ -325,6 +326,7 @@ def generate_suite(
                 "--gres=qpu:1" if env_cfg["scheduling_mode"] == "SCHEDULER" else ""
             ),
         }
+
         # Pack project files
         filename = os.path.join(output_folder, f"{scheduler}_{user_name}.qstone.tar.gz")
         # render and pack all the files

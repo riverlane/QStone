@@ -48,6 +48,15 @@ CFG_ENVIRONMENT_VARIABLES = {
 
 
 def validate_computation_weights(config: Dict):
+    """
+    Validates that the sum of computation weights for each user is 1.0.
+
+    Args:
+        config: Configuration dictionary containing user computation weights.
+
+    Raises:
+        ValueError: If any user's computation weights do not sum to 1.0.
+    """
     users = config["users"]  #
     for user in users:
         weights_sum = sum(user["computations"].values())
@@ -121,7 +130,7 @@ def qasm_circuit_random_sample(qasm: str, repetitions: int) -> Dict:
         meas = list(list(random.randint(0, 1) for _ in range(num_cregs)))
         key = "".join(str(bit) for bit in meas)
         measurements.append(meas)
-        if key not in counts.keys():
+        if key not in counts:
             counts[key] = 1
         else:
             counts[key] += 1
