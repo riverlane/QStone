@@ -290,7 +290,13 @@ class RB(Computation):
                     list(
                         int(counts[str(key)]) / self.shots
                         for key in counts
-                        if str(key)[len(str(key)) - bench[len(bench) - 1] - 1 : len(str(key)) - bench[0]] == str(exp[i, depth, rep])
+                        if str(key)[
+                            len(str(key))
+                            - bench[len(bench) - 1]
+                            - 1 : len(str(key))
+                            - bench[0]
+                        ]
+                        == str(exp[i, depth, rep])
                     )
                 )
 
