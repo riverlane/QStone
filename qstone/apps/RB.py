@@ -288,7 +288,7 @@ class RB(Computation):
                 rep = int(j % self.reps)
                 survival_probs[i, depth, rep] = sum(
                     list(
-                        counts[str(key)] / self.shots
+                        int(counts[str(key)]) / self.shots
                         for key in counts
                         if str(key)[len(str(key)) - bench[len(bench) - 1] - 1 : len(str(key)) - bench[0]] == str(exp[i, depth, rep])
                     )
