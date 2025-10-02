@@ -202,7 +202,7 @@ class RB(Computation):
                 if j != 0: 
                     for k, line in enumerate(temp):
                         if line.startswith('creg'):
-                            initial_line=k+1
+                            initial_line = k + 1
                             break
                 qasm += temp[initial_line:]
 

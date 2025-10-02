@@ -1,9 +1,9 @@
 """QBC computations steps."""
 
 import base64
-import sys
 import os
 import pickle
+import sys
 
 import numpy
 from pandera import Check, Column, DataFrameSchema
