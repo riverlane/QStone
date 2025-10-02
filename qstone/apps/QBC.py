@@ -136,7 +136,8 @@ def loss(
             print("ERROR: counts not found in qpu response.")
             sys.exit()
         probs = {key: counts[key] / shots for key in counts.keys()}
-        loss -= probs[str(labels[i])] / training_size
+        if str(labels[i]) in probs.keys():
+            loss -= probs[str(labels[i])] / training_size
     print(f"partial loss for rank {comm.Get_rank()}: {loss}", flush=True)
     total_loss = mpi_communication(loss, comm, bcast=False)
     print(f"total loss: {total_loss}", flush=True)
