@@ -198,10 +198,10 @@ class RB(Computation):
                 temp = list(
                     line for line in bench_qasms[j][i].splitlines() if line != ""
                 )
-                initial_line=0
-                if j != 0: 
+                initial_line = 0
+                if j != 0:
                     for k, line in enumerate(temp):
-                        if line.startswith('creg'):
+                        if line.startswith("creg"):
                             initial_line = k + 1
                             break
                 qasm += temp[initial_line:]
