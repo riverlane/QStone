@@ -1,6 +1,7 @@
 """QBC computations steps."""
 
 import base64
+import sys
 import os
 import pickle
 
@@ -137,9 +138,8 @@ def loss(
         probs = {key: counts[key] / shots for key in counts.keys()}
         loss -= probs[str(labels[i])] / training_size
     print(f"partial loss for rank {comm.Get_rank()}: {loss}", flush=True)
-    temp = mpi_communication(loss, comm, bcast=False)
-    total_loss = temp
-    print(f"total loss: {loss}", flush=True)
+    total_loss = mpi_communication(loss, comm, bcast=False)
+    print(f"total loss: {total_loss}", flush=True)
 
     return total_loss
 
@@ -195,8 +195,8 @@ class QBC(Computation):  # pylint:disable=invalid-name
         env_app_args = os.environ.get("APP_ARGS", "")
         if env_app_args != "":
             loaded = _to_ob(env_app_args)
-        if isinstance(loaded, dict):
-            app_args = loaded
+            if isinstance(loaded, dict):
+                app_args = loaded
         else:
             pass
         if "pqc_number" in app_args.keys():

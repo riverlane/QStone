@@ -79,8 +79,8 @@ class RB(Computation):
         env_app_args = os.environ.get("APP_ARGS", "")
         if env_app_args != "":
             loaded = _to_ob(env_app_args)
-        if isinstance(loaded, dict):
-            app_args = loaded
+            if isinstance(loaded, dict):
+                app_args = loaded
         else:
             pass
         if "benchmarks" in app_args.keys():
@@ -198,10 +198,13 @@ class RB(Computation):
                 temp = list(
                     line for line in bench_qasms[j][i].splitlines() if line != ""
                 )
-                if j == 0:
-                    qasm += temp
-                else:
-                    qasm += temp[5:]
+                initial_line=0
+                if j != 0: 
+                    for k, line in enumerate(temp):
+                        if line.startswith('creg'):
+                            initial_line=k+1
+                            break
+                qasm += temp[initial_line:]
 
             qasms.append("".join("{}\n".format(line) for line in qasm))
 
@@ -278,7 +281,7 @@ class RB(Computation):
                     f"Array exp has size {exp.size}, expected {len(self.benchmarks) * len(self.depths) * self.reps}"
                 )
         else:
-            raise KeyError("expected_key not found in npz file")
+            raise KeyError("'exp' key not found in npz file")
         res = list(r["counts"] for r in vals["res"])
         survival_probs = np.zeros(exp.shape)
 
