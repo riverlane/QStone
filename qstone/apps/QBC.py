@@ -1,6 +1,9 @@
 """QBC computations steps."""
 
+import base64
 import os
+import pickle
+import sys
 
 import numpy
 from pandera import Check, Column, DataFrameSchema
@@ -12,10 +15,15 @@ from qstone.multiprocessing import MPIHandler
 from qstone.utils.utils import ComputationStep, trace
 
 
+def _to_ob(string):
+    return pickle.loads(base64.b64decode(string.encode("utf-8")))
+
+
 @trace(
     computation_type="QBC",
     computation_step=ComputationStep.RUN,
     label="QASM_GENERATION",
+    logging_level=4,
 )
 def generate_vqc_qasm(pqc_number, num_qubits, datum, parameters):
     """
@@ -80,6 +88,7 @@ def generate_vqc_qasm(pqc_number, num_qubits, datum, parameters):
     computation_type="QBC",
     computation_step=ComputationStep.RUN,
     label="MPI_COMMUNICATION",
+    logging_level=4,
 )
 def mpi_communication(data, comm, bcast=True):
     """MPI communication wrapper"""
@@ -90,6 +99,7 @@ def mpi_communication(data, comm, bcast=True):
     computation_type="QBC",
     computation_step=ComputationStep.RUN,
     label="LOSS_COMPUTATION",
+    logging_level=3,
 )
 def loss(
     parameters,
@@ -124,16 +134,15 @@ def loss(
             counts = response["counts"]
         else:
             print("ERROR: counts not found in qpu response.")
-            quit()
-            counts = response
+            sys.exit()
         probs = {key: counts[key] / shots for key in counts.keys()}
-        loss -= probs[str(labels[i])] / training_size
+        if str(labels[i]) in probs.keys():
+            loss -= probs[str(labels[i])] / training_size
     print(f"partial loss for rank {comm.Get_rank()}: {loss}", flush=True)
-    temp = mpi_communication(loss, comm, bcast=False)
-    loss = temp
-    print(f"total loss: {loss}", flush=True)
+    total_loss = mpi_communication(loss, comm, bcast=False)
+    print(f"total loss: {total_loss}", flush=True)
 
-    return loss
+    return total_loss
 
 
 class QBC(Computation):  # pylint:disable=invalid-name
@@ -178,6 +187,25 @@ class QBC(Computation):  # pylint:disable=invalid-name
         self.comm = MPIHandler()
         self.size = self.comm.Get_size()
         self.rank = self.comm.Get_rank()
+
+        self.num_required_qubits = int(
+            os.environ.get("NUM_QUBITS", cfg.get("num_required_qubits", 4))
+        )
+        self.shots = int(os.environ.get("NUM_SHOTS", str(cfg.get("shots", 64))))
+        app_args: dict = {}
+        env_app_args = os.environ.get("APP_ARGS", "")
+        if env_app_args != "":
+            loaded = _to_ob(env_app_args)
+            if isinstance(loaded, dict):
+                app_args = loaded
+        else:
+            pass
+        if "pqc_number" in app_args.keys():
+            self.pqc_number = int(app_args["pqc_number"])
+        if "training_size" in app_args.keys():
+            self.benchmarks = int(app_args["training_size"])
+        if "max_iters" in app_args.keys():
+            self.depths = int(app_args["max_iters"])
 
     @trace(
         computation_type=COMPUTATION_NAME,
@@ -225,14 +253,11 @@ class QBC(Computation):  # pylint:disable=invalid-name
         starts = list(sum(jobsizes[:i]) for i in range(len(jobsizes)))
         idxs = numpy.arange(starts[self.rank], starts[self.rank] + jobsizes[self.rank])
 
-        totqasms: list = []
-        totresults: list = []
-        totlosses: list = []
         if self.pqc_number in [2, 15]:
             totparameters = (
                 2 * numpy.pi * numpy.random.rand(2 * self.num_required_qubits)
             )
-        if self.pqc_number == 5:
+        elif self.pqc_number == 5:
             totparameters = (
                 2
                 * numpy.pi
@@ -240,6 +265,8 @@ class QBC(Computation):  # pylint:disable=invalid-name
                     pow(self.num_required_qubits, 2) + 3 * self.num_required_qubits
                 )
             )
+        else:
+            raise ValueError(f"Unknown pqc_number: {self.pqc_number}")
 
         mpi_communication(totparameters, self.comm)
 
