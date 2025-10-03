@@ -29,7 +29,7 @@ jobs:
 
       - name: Pip-Audit
         continue-on-error: false
-        run: tox -e pip-audit --ignore-vuln GHSA-4xh5-x5gv-qwph
+        run: tox -e pip-audit
 
       - name: Bandit
         continue-on-error: false
