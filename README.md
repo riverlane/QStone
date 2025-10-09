@@ -165,6 +165,29 @@ Create a `config.json` file with the following structure:
   ]
 }
 ```
+### Additional arguments
+
+Additional arguments can be passed to quantum applications in the "jobs" array though `app_args' objects:
+
+```
+{ "type": "RB",
+  "app_args": {
+    "benchmarks": list of lists, each containing the qubit numbers on which one- or two-qubit RBs will be run, # [[0],[1,2]]
+    "depths":     list of integers representing the different number of Clifford gates employed in the RB, # [2,4,8,16]
+    "reps":       integer representing the number of times circuits of a particular depth are generated, # 10
+  }
+}
+
+{ "type": "QBC",
+  "app_args": {
+    "pqc_number" :    integer in [2,5,15] representing the parametrized quantum circuit with the same number
+                      in figure 2 of Adv. Quantum Technol. 2, 1900070 (2019)
+    "training_size" : integer representing the number of feature vectors in the training dataset # 20
+    "max_iters" :     integer representing the maximum number of iterations in the model's training
+  }
+}
+```
+
 
 For detailed configuration options, refer to the [JSON schema](qstone/utils/config_schema.py).
 
