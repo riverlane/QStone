@@ -11,6 +11,9 @@ from typing import Callable, Dict, Optional
 
 import jsonschema
 import pandas as pd
+
+# we disable the import warning 
+os.environ["DISABLE_PANDERA_IMPORT_WARNING"] = "True"
 import pandera.pandas as pa
 
 from .config_schema import FULL_SCHEMA
