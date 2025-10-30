@@ -139,9 +139,7 @@ def _compute_job_pdf(usr_cfg: "pa.Series[Any]") -> List[float]:
     """Computes the normalized pdf to assign to different jobs based on user
     configurations and speciified qubit capacity
     """
-
     pdf = [prob for comp, prob in usr_cfg["computations"].items()]
-
     normalized = [float(p) / sum(pdf) for p in pdf]
 
     return normalized
@@ -179,6 +177,7 @@ def _generate_user_jobs(
     job_types = numpy.random.choice(
         list(usr_cfg["computations"].keys()), p=job_pdf, size=(job_count)
     )
+
     # Check that we have generated a not empty
     assert (
         len(job_types) > 0
@@ -192,6 +191,7 @@ def _generate_user_jobs(
 
     def_qubits = 2
     def_shots = 100
+    def_app_logging_level = 2
     for j in job_types:
         app_cfg = jobs_cfg[jobs_cfg["type"] == j]
         if app_cfg.empty:
@@ -204,14 +204,22 @@ def _generate_user_jobs(
             num_shots.append(_randomise(app_cfg["num_shots"], def_shots))
             if "app_args" in app_cfg.columns:
                 t = app_cfg["app_args"].tolist()[0]
-                if not _check_nan(t):
-                    app_args.append(_to_bytes(t))
+                app_args.append(_to_bytes(t))
+            else:
+                app_args.append(_to_bytes(""))
             if "app_logging_level" in app_cfg.columns:
                 t = app_cfg["app_logging_level"].tolist()[0]
                 if not _check_nan(t):
                     app_logging_level.append(int(t))
+                else:
+                    # If we can't properly parse the logging level, we use the default
+                    app_logging_level.append(def_app_logging_level)
+            else:
+                app_logging_level.append(def_app_logging_level)
+
     # Assign job id and pack
     job_ids = list(range(len(job_types)))
+
     return (
         list(
             zip(
