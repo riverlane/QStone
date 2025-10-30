@@ -251,6 +251,7 @@ class QBC(Computation):  # pylint:disable=invalid-name
             jobs_per_rank += 1
         jobsizes = self.comm.allgather(jobs_per_rank)  # type: ignore [attr-defined]
         starts = list(sum(jobsizes[:i]) for i in range(len(jobsizes)))
+
         idxs = numpy.arange(starts[self.rank], starts[self.rank] + jobsizes[self.rank])
 
         if self.pqc_number in [2, 15]:

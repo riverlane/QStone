@@ -27,11 +27,9 @@ class MPIHandler:
         if op == "MPI.SUM":
             return sendobj
 
-    def allgather(
-        self, sendobj=None, recvobj=None
-    ):  # pylint: disable=[invalid-name, unused-argument]
+    def allgather(self, sendobj):  # pylint: disable=[invalid-name, unused-argument]
         """allgather call - mocked"""
-        return []
+        return [sendobj]
 
     def Barrier(self):  # pylint: disable=invalid-name
         """Barrier call - mocked"""
