@@ -30,3 +30,6 @@ class MPIHandler:
     def allgather(self, sendobj):  # pylint: disable=invalid-name
         """Redirects call to MPI allgather"""
         return self.comm.allgather(sendobj)
+
+    def isMPI(self):
+        return True
