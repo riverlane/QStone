@@ -32,4 +32,5 @@ class MPIHandler:
         return self.comm.allgather(sendobj)
 
     def isMPI(self):
+        """Returns True to indicate this handler has real MPI support."""
         return True
