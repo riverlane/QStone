@@ -1,5 +1,8 @@
 name: Build and publish artefacts to PyPI
 
+permissions:
+  contents: read
+
 # Controls when the action will run.
 on:
   push:
