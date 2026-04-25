@@ -34,7 +34,7 @@ class NoLinkConnection(connection.Connection):
     @trace(
         computation_type="CONNECTION",
         computation_step=ComputationStep.POST,
-        label="get_outcomes",
+        label="GET_OUTCOMES",
     )
     def _get_outcomes(self, qasm_circuit: str, reps: int) -> dict:
         return qasm_circuit_random_sample(qasm_circuit, reps)
