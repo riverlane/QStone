@@ -17,7 +17,6 @@ from qstone.utils.utils import parse_json
 from qstone.apps import PyMatching
 from qstone.utils.utils import JobReturnCode, QpuConfiguration
 
-
 SCHED_EXT = {"slurm": "sbatch", "jsrun": "bsub", "bare_metal": None}
 
 DEFAULT_CFG = {

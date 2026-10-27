@@ -55,7 +55,7 @@ class Computation(ABC):
         """
         if cls.CFG_STRING is None:
             if path is None:
-                path = os.path.join(cls.BASEPATH, cls.CFG_PATH)  # type:ignore
+                path = os.path.join(cls.BASEPATH, cls.CFG_PATH)  # type: ignore
             with open(path, encoding="utf-8") as fo:
                 json_obj = json.load(fo)
         else:

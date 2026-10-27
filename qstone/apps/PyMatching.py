@@ -37,7 +37,10 @@ class PyMatching(Computation):  # pylint:disable=invalid-name
         super().__init__(cfg)
         # Hints - do not remove
         self.repetitions: int
-        self.num_shots = int(os.environ.get("NUM_SHOTS", self.repetitions))
+        env_num_shots = os.environ.get("NUM_SHOTS", self.repetitions)
+        self.num_shots = (
+            int(env_num_shots) if env_num_shots is not None else self.repetitions
+        )
 
     def _initialise_circuit(self):
         """Initialise the circuit using Stim"""
