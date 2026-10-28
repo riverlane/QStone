@@ -42,7 +42,10 @@ class VQE(Computation):
         self.repetitions: int
         self.iterations: int
         self.compute_duration: int
-        self.num_shots = int(os.environ.get("NUM_SHOTS", self.repetitions))
+        env_num_shots = os.environ.get("NUM_SHOTS", self.repetitions)
+        self.num_shots = (
+            int(env_num_shots) if env_num_shots is not None else self.repetitions
+        )
 
     def _generate_circuit(self, datapath: str, num_qubits: int):
         """Generate a random (small) quantum circuit"""
