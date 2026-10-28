@@ -1550,10 +1550,9 @@ i18n = ["Babel (>=2.7)"]
 name = "joblib"
 version = "1.5.2"
 description = "Lightweight pipelining with Python functions"
-optional = true
+optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"security\""
 files = [
     {file = "joblib-1.5.2-py3-none-any.whl", hash = "sha256:4e1f0bdbb987e6d843c70cf43714cb276623def372df3c22fe5266b2670bc241"},
     {file = "joblib-1.5.2.tar.gz", hash = "sha256:3faa5c39054b2f03ca547da9b2f52fde67c06240c31853f306aea97f13647b55"},
@@ -2508,19 +2507,19 @@ test-extras = ["pytest-mpl", "pytest-randomly"]
 
 [[package]]
 name = "nltk"
-version = "3.9.1"
+version = "3.10.4"
 description = "Natural Language Toolkit"
-optional = true
-python-versions = ">=3.8"
+optional = false
+python-versions = ">=3.10"
 groups = ["main"]
-markers = "extra == \"security\""
 files = [
-    {file = "nltk-3.9.1-py3-none-any.whl", hash = "sha256:4fa26829c5b00715afe3061398a8989dc643b92ce7dd93fb4585a70930d168a1"},
-    {file = "nltk-3.9.1.tar.gz", hash = "sha256:87d127bd3de4bd89a4f81265e5fa59cb1b199b27440175370f7417d2bc7ae868"},
+    {file = "nltk-3.10.4-py3-none-any.whl", hash = "sha256:769ba5413f265b7d3e87cd163cc28efa01e29eeef8bb6080bc907949d9fcfb51"},
+    {file = "nltk-3.10.4.tar.gz", hash = "sha256:44679f4e9220abfd496d2c8cdb22f8425ccbe557604f9aa5cacb1c44003dabc1"},
 ]
 
 [package.dependencies]
 click = "*"
+defusedxml = "*"
 joblib = "*"
 regex = ">=2021.8.3"
 tqdm = "*"
@@ -4030,10 +4029,9 @@ typer = "*"
 name = "regex"
 version = "2025.9.1"
 description = "Alternative regular expression module, to replace re."
-optional = true
+optional = false
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"security\""
 files = [
     {file = "regex-2025.9.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:c5aa2a6a73bf218515484b36a0d20c6ad9dc63f6339ff6224147b0e2c095ee55"},
     {file = "regex-2025.9.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:8c2ff5c01d5e47ad5fc9d31bcd61e78c2fa0068ed00cab86b7320214446da766"},
@@ -5201,10 +5199,9 @@ files = [
 name = "tqdm"
 version = "4.67.1"
 description = "Fast, Extensible Progress Meter"
-optional = true
+optional = false
 python-versions = ">=3.7"
 groups = ["main"]
-markers = "extra == \"security\""
 files = [
     {file = "tqdm-4.67.1-py3-none-any.whl", hash = "sha256:26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2"},
     {file = "tqdm-4.67.1.tar.gz", hash = "sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2"},
