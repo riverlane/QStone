@@ -14,7 +14,7 @@ jobs:
   pytest_multiplatform:
     strategy:
       matrix:
-        python-version: ['3.10', '3.11', '3.12']
+        python-version: ['3.11', '3.12']
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     permissions: write-all
@@ -46,7 +46,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
       - name: Install OpenMPI dependencies
         run: |
           sudo apt-get update
@@ -63,7 +63,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
       - name: Install OpenMPI dependencies
         run: |
           sudo apt-get update
@@ -80,7 +80,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
       - name: Install OpenMPI dependencies
         run: |
           sudo apt-get update
@@ -97,7 +97,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
       - name: Installing dependencies
         run: pip install -U tox
       - name: Running isortcheck
@@ -114,7 +114,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.11'
       - run: python3 -m pip install --upgrade pip
       - run: python3 -m venv $POETRY_HOME
       - run: $POETRY_HOME/bin/pip install poetry==1.8.3

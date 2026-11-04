@@ -19,7 +19,7 @@ documentation = "https://riverlane.github.io/QStone"
 changelog = "https://github.com/riverlane/QStone/blob/main/CHANGELOG.md"
 
 [tool.poetry.dependencies]
-python = ">=3.10, <=3.13"
+python = ">=3.11, <=3.13"
 cryptography = ">=44.0.1"
 matplotlib = "*"
 pyGSTi = "0.9.13"
@@ -45,7 +45,7 @@ pytest-manual-marker = {version = "*", optional = true}
 pytest-mock = {version = "*", optional = true}
 pytest-depends = {version = "*", optional = true}
 ochrona = { version = "*", optional = true }
-safety = { version = "*", optional = true }
+pip-audit = { version = "*", optional = true }
 bandit = { version = "*", optional = true }
 pylint = { version = "*", optional = true }
 mypy =  { version = "*", optional = true }
@@ -55,7 +55,6 @@ types-protobuf = { version = "*", optional = true }
 requests-mock = { version = "*", optional = true }
 flask = "*" 
 pandas-stubs = "*"
-pip-audit = "*"
 
 sphinx-mdinclude = { version = "*", optional = true }
 sphinx = { version = "*", optional = true }
@@ -69,7 +68,7 @@ sphinx-copybutton = { version = "*", optional = true }
 [tool.poetry.extras]
 test = ["pytest", "pytest-cov", "pytest-depends", "pytest-manual-marker", "requests-mock", "types-protobuf", "grpcio-tools", "imageio", "nbmake", "ipython", "pytest-xdist", "pytest-mock"]
 lint = ["pylint", "mypy", "pycodestyle", "black", "isort"]
-security = ["ochrona", "safety", "bandit"]
+security = ["ochrona", "pip-audit", "bandit"]
 docs = ["sphinx", "sphinx-mdinclude", "sphinx_rtd_theme", "nbsphinx", "sphinx-copybutton"]
 mpi = ["mpi4py"]
 
