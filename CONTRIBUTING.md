@@ -40,6 +40,11 @@ Want to add a new feature or change an existing one?
 Want to fix a bug, add a feature, or change an existing feature?
 
 - Fork the project
+- Set up a development environment with [uv](https://docs.astral.sh/uv/):
+  `uv sync` installs the `test`, `lint` and `security` dependency groups;
+  add `--extra mpi` for MPI support (needs OpenMPI) and `--group docs` for the documentation tools
+- Run the checks with `uv run pytest`, or the CI equivalents with
+  `uvx --with tox-uv tox -e pytest-all,pylint,mypy,black,isort`
 - Create a pull request following the guidance at:
 - Wait for the review and potentially for your contribution to be part of QStone
 

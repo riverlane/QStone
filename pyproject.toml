@@ -1,76 +1,87 @@
-[tool.poetry]
+[project]
 name = "qstone"
-authors = ["Riverlane  <team@riverlane.com>"]
+version = "0.4.1"
 description = "Benchmarking suite for Quantum Computers integration into HPC Systems"
 readme = "README.md"
-version = "0.4.1"
-license = "Apache 2.0"
-repository = "https://github.com/riverlane/QStone"
-packages = [{include = "qstone"}]
+authors = [{ name = "Riverlane", email = "team@riverlane.com" }]
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 keywords = ["Quantum", "HPC"]
 classifiers = [
   "Development Status :: 4 - Beta",
-  "Programming Language :: Python"
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
-include = ["CHANGELOG.md", "CONFIG_JSON.md"]
+requires-python = ">=3.11,<3.15"
+dependencies = [
+  "click",
+  "cryptography>=44.0.1",
+  "flask",
+  "grpcio",
+  "jinja2",
+  "json5",
+  "jsonschema",
+  "matplotlib",
+  "numpy>=1.22",
+  "pandas-stubs",
+  "pandera>=0.24.0",
+  "protobuf",
+  "pyGSTi>=0.9.13",
+  "PyMatching>=2.2.1",
+  # pyquil and quil do not support Python >= 3.13; the Rigetti connector is unavailable there.
+  # pyquil >= 4.18 pulls in jax.
+  "pyquil<4.18; python_version < '3.13'",
+  "qcs-sdk-python>=0.21.12; python_version < '3.13'",
+  "requests",
+  "simple_slurm",
+  "stim>=1.14.0",
+  "waiting",
+]
 
-[tool.poetry.urls]
+[project.optional-dependencies]
+mpi = ["mpi4py"]
+
+[project.urls]
+repository = "https://github.com/riverlane/QStone"
 documentation = "https://riverlane.github.io/QStone"
 changelog = "https://github.com/riverlane/QStone/blob/main/CHANGELOG.md"
 
-[tool.poetry.dependencies]
-python = ">=3.11, <=3.13"
-cryptography = ">=44.0.1"
-matplotlib = "*"
-pyGSTi = "0.9.13"
-PyMatching = ">=2.2.1"
-numpy = "^1.22"
-json5 = "*"
-pandera = ">=0.24.0"
-stim = "1.14.0"
-jinja2 = "*"
-simple_slurm = "*"
-protobuf = "*"
-requests = "*"
-click = "*"
-waiting = "*"
-jsonschema = "*"
-mpi4py = {version="*", optional = true}
-pyquil = "<4.18"  # >=4.18 pulls in jax, which requires numpy>=2
-qcs-sdk-python = ">=0.21.12"
-grpcio = {version = "*", optional = true, markers = "platform_machine == 'amd64'" }
-pytest = { version = "*", optional = true }
-pytest-cov = {version = "*", optional = true}
-pytest-manual-marker = {version = "*", optional = true}
-pytest-mock = {version = "*", optional = true}
-pytest-depends = {version = "*", optional = true}
-ochrona = { version = "*", optional = true }
-pip-audit = { version = "*", optional = true }
-bandit = { version = "*", optional = true }
-pylint = { version = "*", optional = true }
-mypy =  { version = "*", optional = true }
-black = { version = "*", optional = true} 
-grpcio-tools = { version = "*", optional = true }
-types-protobuf = { version = "*", optional = true }
-requests-mock = { version = "*", optional = true }
-flask = "*" 
-pandas-stubs = "*"
+[project.scripts]
+qstone = "qstone.__main__:main"
 
-sphinx-mdinclude = { version = "*", optional = true }
-sphinx = { version = "*", optional = true }
-sphinx_rtd_theme = { version = "*", optional = true }
-myst_parser = { version = "*", optional = true }
-nbsphinx = { version = "*", optional = true }
-sphinx-copybutton = { version = "*", optional = true }
+[dependency-groups]
+test = [
+  "grpcio-tools",
+  "pytest",
+  "pytest-cov",
+  "pytest-depends",
+  "pytest-manual-marker",
+  "pytest-mock",
+  "requests-mock",
+  "types-protobuf",
+]
+lint = ["black", "isort", "mypy", "pylint"]
+security = ["bandit", "ochrona", "pip-audit"]
+docs = ["nbsphinx", "sphinx", "sphinx-copybutton", "sphinx-mdinclude", "sphinx_rtd_theme"]
+dev = [
+  { include-group = "test" },
+  { include-group = "lint" },
+  { include-group = "security" },
+]
 
+[build-system]
+requires = ["uv_build>=0.12,<0.13"]
+build-backend = "uv_build"
 
+[tool.uv]
+default-groups = ["dev"]
 
-[tool.poetry.extras]
-test = ["pytest", "pytest-cov", "pytest-depends", "pytest-manual-marker", "requests-mock", "types-protobuf", "grpcio-tools", "imageio", "nbmake", "ipython", "pytest-xdist", "pytest-mock"]
-lint = ["pylint", "mypy", "pycodestyle", "black", "isort"]
-security = ["ochrona", "pip-audit", "bandit"]
-docs = ["sphinx", "sphinx-mdinclude", "sphinx_rtd_theme", "nbsphinx", "sphinx-copybutton"]
-mpi = ["mpi4py"]
+[tool.uv.build-backend]
+module-root = ""
+source-include = ["CHANGELOG.md"]
 
 [tool.pylint.MASTER]
 ignore-paths = 'qstone/connectors/riverlane/grpc.*$'
@@ -85,10 +96,6 @@ disable = """
     too-many-instance-attributes
 """
 
-
-[tool.poetry.scripts]
-qstone = "qstone.__main__:main"
-
 [tool.coverage.run]
 omit = [
     "qstone/utils/config_schema.py",
@@ -96,17 +103,3 @@ omit = [
 
 [tool.mypy]
 exclude = "(qstone/connectors/riverlane/grpc.*$)|(qstone/generators/slurm/schedmd)|(tests)|(my_venv)"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.setuptools.packages.find]
-where = ["qstone/conf/steps"]
-
-[tool.setuptools.package-data]
-"*" = ["*.json", ".md"]
-
-
-ignore_missing_imports = true
-disallow_any_unimported = true

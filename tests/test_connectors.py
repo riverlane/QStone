@@ -17,9 +17,6 @@ import qstone.connectors.http.runner as http_client
 import tests.mocks.grpc.server as grpc_server
 from qstone.connectors.no_link import no_link
 
-# For Rigetti connectors
-from qstone.connectors.backends.rigetti import runner as rigetti
-
 
 def _get_file(regex):
     return glob.glob(regex)[0]
@@ -153,6 +150,8 @@ def test_http(tmp_path, env, capsys, mocker, http, retcode, lock, locked, expect
 
 def test_rigetti_run(tmp_path, env, mocker):
     """Test that Rigetti connection runs without error code"""
+    # pyquil is only installed on Python < 3.13
+    rigetti = pytest.importorskip("qstone.connectors.backends.rigetti.runner")
 
     mock_circuit = tmp_path / "circuit.qasm"
     with open(mock_circuit, "w", encoding="utf-8") as fid:

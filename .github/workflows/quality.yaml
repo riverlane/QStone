@@ -14,7 +14,7 @@ jobs:
   pytest_multiplatform:
     strategy:
       matrix:
-        python-version: ['3.11', '3.12']
+        python-version: ['3.11', '3.12', '3.13', '3.14']
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     permissions: write-all
@@ -35,7 +35,7 @@ jobs:
           brew update
           brew install open-mpi
       - name: Installing dependencies
-        run: pip install -U tox
+        run: pip install -U tox tox-uv
       - name: Testing
         run: tox -r -e pytest-all-mpi
       
@@ -52,7 +52,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openmpi-bin openmpi-doc libopenmpi-dev
       - name: Installing dependencies
-        run: pip install -U tox
+        run: pip install -U tox tox-uv
       - name: Running pylint
         run: tox -r -e pylint -- --output-format text:pylint.log,text
 
@@ -69,7 +69,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openmpi-bin openmpi-doc libopenmpi-dev
       - name: Installing dependencies
-        run: pip install -U tox
+        run: pip install -U tox tox-uv
       - name: Running mypy
         run: tox -r -e mypy -- --junit-xml mypy.xml
 
@@ -86,7 +86,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openmpi-bin openmpi-doc libopenmpi-dev
       - name: Installing dependencies
-        run: pip install -U tox
+        run: pip install -U tox tox-uv
       - name: Running black
         run: tox -e black -- --check --color --diff
 
@@ -99,29 +99,24 @@ jobs:
         with:
           python-version: '3.11'
       - name: Installing dependencies
-        run: pip install -U tox
+        run: pip install -U tox tox-uv
       - name: Running isortcheck
         run: tox -e isort -- --check-only --diff
 
   wheel:
     name: Build distribution
     runs-on: ubuntu-latest
-    env:
-      POETRY_HOME: /opt/poetry
     steps:
       - uses: actions/checkout@v4
-      - run: sudo apt-get install openmpi-bin openmpi-doc libopenmpi-dev 
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: python3 -m pip install --upgrade pip
-      - run: python3 -m venv $POETRY_HOME
-      - run: $POETRY_HOME/bin/pip install poetry==1.8.3
-      - run: $POETRY_HOME/bin/poetry --version
-      - run: echo "$POETRY_HOME/bin" >> $GITHUB_PATH
-      - run: poetry install --all-extras
-      - run: poetry build
-      - run: pip3 install dist/qstone-*.whl
-      - run: python3 -c "import qstone"
-
+      - run: uv lock --check
+      - run: uv build
+      # Install the wheel with plain pip in a clean venv, as users would
+      - run: python3 -m venv /tmp/wheel-venv
+      - run: /tmp/wheel-venv/bin/pip install dist/qstone-*.whl
+      - run: /tmp/wheel-venv/bin/python -c "import qstone"
