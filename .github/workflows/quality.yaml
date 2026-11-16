@@ -119,4 +119,4 @@ jobs:
       # Install the wheel with plain pip in a clean venv, as users would
       - run: python3 -m venv /tmp/wheel-venv
       - run: /tmp/wheel-venv/bin/pip install dist/qstone-*.whl
-      - run: /tmp/wheel-venv/bin/python -c "import qstone"
+      - run: /tmp/wheel-venv/bin/python -I -m qstone --help
