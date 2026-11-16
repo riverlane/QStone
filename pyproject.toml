@@ -36,7 +36,7 @@ click = "*"
 waiting = "*"
 jsonschema = "*"
 mpi4py = {version="*", optional = true}
-pyquil = "*"
+pyquil = "<4.18"  # >=4.18 pulls in jax, which requires numpy>=2
 qcs-sdk-python = ">=0.21.12"
 grpcio = {version = "*", optional = true, markers = "platform_machine == 'amd64'" }
 pytest = { version = "*", optional = true }

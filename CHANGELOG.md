@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - dropped support for Python 3.10; minimum supported version is now 3.11
 - removed `safety` from the `security` extra (it pins vulnerable `filelock<4.0`)
 - moved `pip-audit` from runtime dependencies to the `security` extra
+- capped `pyquil<4.18`: newer releases depend on `jax`, which requires `numpy>=2` and conflicts with our `numpy<2` pin
 
 ## [0.2.1] - 2025-01-03
 
