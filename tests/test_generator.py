@@ -7,6 +7,7 @@ import subprocess
 import tarfile
 import time
 
+import pandas as pd
 import pytest
 from pytest_mock import mocker
 
@@ -199,3 +200,22 @@ def test_jsrun_batch_valid(tmp_path, test_input, usrs):
         assert "jsrun -special_setting=True" in bsub_script
 
         assert scheduler.run(bsub_script)
+
+
+@pytest.mark.parametrize(
+    "test_input",
+    [
+        "config_single.json",
+        "config_multi.json",
+        "config_single_logging.json",
+    ],
+)
+def test_generate_user_jobs_count(test_input):
+    """Each user gets job_count jobs even when apps omit app_args or app_logging_level"""
+    config_dict = parse_json(f"tests/data/generator/{test_input}")
+    users_cfg = pd.DataFrame(config_dict["users"])
+    jobs_cfg = pd.DataFrame(config_dict["jobs"])
+    for _, user_cfg in users_cfg.iterrows():
+        pdf = generator._compute_job_pdf(user_cfg)
+        jobs, _ = generator._generate_user_jobs(user_cfg, jobs_cfg, pdf, 20)
+        assert len(jobs) == 20

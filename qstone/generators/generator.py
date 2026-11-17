@@ -161,6 +161,14 @@ def _randomise(vals, def_val):
     return value
 
 
+def _optional_field(app_cfg: pa.DataFrame, key: str):
+    """Return the job's value for an optional field, or None when it is not set"""
+    if key not in app_cfg.columns:
+        return None
+    val = app_cfg[key].tolist()[0]
+    return None if _check_nan(val) else val
+
+
 def _to_bytes(ob):
     return base64.b64encode(pickle.dumps(ob)).decode("utf-8")
 
@@ -192,24 +200,24 @@ def _generate_user_jobs(
 
     def_qubits = 2
     def_shots = 100
+    def_app_args = ""
+    def_app_logging_level = 2
     for j in job_types:
         app_cfg = jobs_cfg[jobs_cfg["type"] == j]
         if app_cfg.empty:
             num_qubits.append(def_qubits)
             num_shots.append(def_shots)
-            app_args.append("")
-            app_logging_level.append(2)
+            app_args.append(def_app_args)
+            app_logging_level.append(def_app_logging_level)
         else:
             num_qubits.append(_randomise(app_cfg["qubits"], def_qubits))
             num_shots.append(_randomise(app_cfg["num_shots"], def_shots))
-            if "app_args" in app_cfg.columns:
-                t = app_cfg["app_args"].tolist()[0]
-                if not _check_nan(t):
-                    app_args.append(_to_bytes(t))
-            if "app_logging_level" in app_cfg.columns:
-                t = app_cfg["app_logging_level"].tolist()[0]
-                if not _check_nan(t):
-                    app_logging_level.append(int(t))
+            # Every job needs an entry in each list, otherwise zip() below
+            # silently drops jobs when an app leaves these fields out.
+            t = _optional_field(app_cfg, "app_args")
+            app_args.append(def_app_args if t is None else _to_bytes(t))
+            t = _optional_field(app_cfg, "app_logging_level")
+            app_logging_level.append(def_app_logging_level if t is None else int(t))
     # Assign job id and pack
     job_ids = list(range(len(job_types)))
     return (
