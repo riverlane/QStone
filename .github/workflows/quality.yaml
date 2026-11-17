@@ -116,7 +116,21 @@ jobs:
           python-version: '3.11'
       - run: uv lock --check
       - run: uv build
+      # The CLI skips missing templates silently, so check the wheel contents directly
+      - name: Check the wheel contains every tracked package file
+        run: |
+          missing=$(comm -23 <(git ls-files qstone | sort) <(unzip -Z1 dist/qstone-*.whl | sort))
+          if [ -n "$missing" ]; then echo "Missing from wheel:"; echo "$missing"; exit 1; fi
       # Install the wheel with plain pip in a clean venv, as users would
       - run: python3 -m venv /tmp/wheel-venv
       - run: /tmp/wheel-venv/bin/pip install dist/qstone-*.whl
-      - run: /tmp/wheel-venv/bin/python -I -m qstone --help
+      # Run outside the checkout so the installed package is used, not ./qstone
+      - name: Smoke-test the installed package and CLI
+        working-directory: ${{ runner.temp }}
+        run: |
+          /tmp/wheel-venv/bin/python -I -c "import qstone; assert 'site-packages' in qstone.__file__, qstone.__file__"
+          /tmp/wheel-venv/bin/python -I -m qstone --help
+          /tmp/wheel-venv/bin/qstone --help
+          mkdir qstone-out
+          /tmp/wheel-venv/bin/qstone generate -i "$GITHUB_WORKSPACE/tests/data/generator/config_single.json" -o qstone-out -n 3 -s bare_metal
+          tar tzf qstone-out/bare_metal_user0.qstone.tar.gz | grep qstone_suite/type_exec_VQE.sh
