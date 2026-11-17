@@ -5,7 +5,7 @@ This is a simple server to provide an interface for a QPU that can be used by QS
 
 To install:
 - Follow QStone installation
-- Install flask (pip or poetry)
+- Install flask (pip or uv)
 - Check test run `pytest "examples/node/tests"`
 - Define the `PORT` and  `ADDRESS` in `remote_qpu.py`
 - Start the server `python remote_qpu.py`

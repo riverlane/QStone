@@ -10,7 +10,11 @@ try:
     from qstone.connectors.grpc.runner import GRPCConnecction
 except ImportError:
     warnings.warn("grpc failed to import", ImportWarning)
-from qstone.connectors.backends.rigetti.runner import RigettiConnection
+try:
+    # pyquil is only installed on Python < 3.13
+    from qstone.connectors.backends.rigetti.runner import RigettiConnection
+except ImportError:
+    warnings.warn("pyquil failed to import", ImportWarning)
 from qstone.connectors.http.runner import HttpConnection
 from qstone.connectors.no_link.no_link import NoLinkConnection
 

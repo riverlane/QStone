@@ -32,7 +32,7 @@ Building appropriate hardware/software infrastructure for HPCQC requires signifi
 | Intel | x86_64 | Ubuntu |
 | IBM Power | Power9 | RedHat |
 
-**Python versions:** 3.11 - 3.12
+**Python versions:** 3.11 - 3.14 (the Rigetti connector needs Python 3.11 - 3.12, as `pyquil` does not support 3.13+ yet)
 
 ## Installation
 
