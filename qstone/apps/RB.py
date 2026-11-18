@@ -158,7 +158,7 @@ class RB(Computation):
             circuits_per_depth=self.reps,
             qubit_labels=qubit_labels,
         )
-        print(f"Generated benchmarking routing with {n_qubits} qubits")
+        # print(f"Generated benchmarking routing with {n_qubits} qubits")
         return qubit_labels, pspec, design
 
     @trace(
@@ -303,8 +303,8 @@ class RB(Computation):
                     )
                 )
 
-            print(f"RB on qubit(s) {bench}")
-            print(list(np.around(np.mean(probs), 3) for probs in survival_probs[i]))
+            # print(f"RB on qubit(s) {bench}")
+            # print(list(np.around(np.mean(probs), 3) for probs in survival_probs[i]))
 
         with open(report_file, "w", encoding="utf-8") as fid:
             fid.write(f"survival_probs: {survival_probs}")
