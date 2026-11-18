@@ -35,3 +35,7 @@ class MPIHandler:
 
     def Barrier(self):  # pylint: disable=invalid-name
         """Barrier call - mocked"""
+
+    def isMPI(self):
+        """Returns False to indicate this is a mock MPI handler without real MPI support"""
+        return False

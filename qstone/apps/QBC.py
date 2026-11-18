@@ -185,6 +185,10 @@ class QBC(Computation):  # pylint:disable=invalid-name
         self.qpu_cfg.num_required_qubits = self.num_required_qubits
 
         self.comm = MPIHandler()
+        if not self.comm.isMPI():
+            raise ImportError(
+                "QBC application requires open-mpi support and associated libraries"
+            )
         self.size = self.comm.Get_size()
         self.rank = self.comm.Get_rank()
 
